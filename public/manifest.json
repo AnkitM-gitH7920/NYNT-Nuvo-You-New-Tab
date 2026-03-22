@@ -1,0 +1,14 @@
+{
+     "manifest_version": 3,
+     "name": "Nuvo You New tab",
+     "version": "1.0",
+     "description": "A new tab chrome extension, it contains all the essential widgets that improves the user experience such as music player, to-do list, weather, different browsers to search on and many more",
+     "chrome_url_overrides": {
+          "newtab": "index.html"
+     },
+     "icons": {
+          "16": "favicon16.png",
+          "48": "favicon48.png",
+          "128": "favicon128.png"
+     }
+}

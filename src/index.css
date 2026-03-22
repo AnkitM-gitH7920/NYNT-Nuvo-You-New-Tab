@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+     /* fonts styles */
+     --main-font: "Poppins";
+     --gm-font: "Geist Mono";
+     --plus-jakarta-font: "Plus Jakarta Sans";
+
+     /* Is use root colors */
+     --bg: #13131f;
+     --surface: #1c1c2e;
+     --surface2: #24243a;
+     --border: rgba(252, 251, 249, 0.08);
+     --border2: rgba(240, 233, 223, 0.16);
+
+     --text: #f0e9df;
+     --muted: #b8a99a;
+     --dim: #888197;
+     --accent: #c9a0a0;
+
+     --radius-sm: 8px;
+     --radius-md: 12px;
+     --radius-lg: 18px;
+     --transition: 0.2s ease;
+
+     /* font sizes */
+     /* text color (using pallete second :- earthtones )*/
+     --primary-text: #1a1a1b;
+
+     /* bg theme colors (mixed for textbg, bgs) */
+     /* (First pallete) */
+     --pallete-purp-1: #231942;
+     --pallete-purp-2: #5e548e;
+     --pallete-purp-3: #9f86c0;
+     --pallete-purp-4: #be95c4;
+     --pallete-purp-5: #e0b1cb;
+
+     /* (second pallete) */
+     --pallete-earthtones-1: #0a0908;
+     --pallete-earthtones-2: #22333b;
+     --pallete-earthtones-3: #eae0d5;
+     --pallete-earthtones-4: #c6ac8f;
+     --pallete-earthtones-5: #5e503f;
+
+     /* (third pallete) */
+     --pallete-softlavender-1: #9381ff;
+     --pallete-softlavender-2: #b8b8ff;
+     --pallete-softlavender-3: #f8f7ff;
+     --pallete-softlavender-4: #ffeedd;
+     --pallete-softlavender-5: #ffd8be;
+
+     /* (fourth pallete) */
+     --pallete-serenelavender-1: #f5e6e8;
+     --pallete-serenelavender-2: #d5c6e0;
+     --pallete-serenelavender-3: #aaa1c8;
+     --pallete-serenelavender-4: #967aa1;
+     --pallete-serenelavender-5: #192a51;
+
+     /* Shadows, transition, border-radius and others */
+     --div-br: 7px;
+     --input-br: 4px;
+     --prim-transition-speed: 0.3s
+
+}
+
+* {
+     padding: 0;
+     margin: 0;
+     box-sizing: border-box;
+}
