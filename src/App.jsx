@@ -1,8 +1,9 @@
 import "./App.css";
+// import axios from "axios";
 import TodoList from "./TodoList";
 import AddShortcutPane from "./AddShortcutPane";
 import { useState, useEffect } from "react";
-import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, X } from "lucide-react";
+import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert } from "lucide-react";
 
 const SEARCH_ENGINES = [
      { label: "Google", url: "https://google.com/search?q=" },
@@ -37,8 +38,9 @@ export default function App() {
      const [todoOpen, setTodoOpen] = useState(false);
      const [showShortcuts, setShowShortcuts] = useState(false);
      const [showAddShortcut, setShowAddShortcut] = useState(false);
-     const [shortcuts, setShortcuts] = useState([{ name: "YouTube", url: "https://youtube.com", faviconURL: "▶" }]);
+     const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || "[]");
      const [temperature, setTemperature] = useState("");
+     const [isSongPlaying, setIsSongPlaying] = useState(false);
 
      const hours = String(time.getHours()).padStart(2, "0");
      const minutes = String(time.getMinutes()).padStart(2, "0");
@@ -49,14 +51,28 @@ export default function App() {
 
      function saveShortcuts(arr) { setShortcuts(arr); localStorage.setItem("shortcuts", JSON.stringify(arr)); }
      function removeShortcut(i) { saveShortcuts(shortcuts.filter((_, j) => j !== i)); }
-     function doSearch(e) { e.preventDefault(); if (query.trim()) window.open(SEARCH_ENGINES[engine].url + encodeURIComponent(query), "_self"); }
+     function doSearch(e) {
+          e.preventDefault();
+          if (query.trim()) {
+               let target = isSongPlaying ? "_blank" : "_self";
+               window.open(SEARCH_ENGINES[engine].url + encodeURIComponent(query), target);
+          }
+     }
+
+     async function addShortcut(requestedShortcutObj) {
+          const { name, url } = requestedShortcutObj;
+          const domainName = new URL(url).host; //returns the domain name
+
+          const currentShortcuts = [...shortcuts, { faviconURL: `https://www.google.com/s2/favicons?domain=${domainName}&sz=32`, name, url }]
+          saveShortcuts(currentShortcuts);
+     }
 
      return (
           <>
                <main className="root">
                     <nav className="main-nav">
                          <div className="nav-left">
-                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo size={19} /></button>
+                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo size={19} color="var(--text)" /></button>
                          </div>
                          <div className="nav-right">
                               <form className="search-wrapper" onSubmit={doSearch}>
@@ -65,7 +81,7 @@ export default function App() {
                                    <img src="google.png" alt="Google" loading="lazy" height={18} width={18} />
                               </form>
                               <button className="icon-btn" title="Spotify"><img src="spotify.svg" alt="Spotify" width={22} height={22} style={{ filter: "contrast(0.8)" }} /></button>
-                              <button className="icon-btn" title="Weather"><Cloud size={19} /></button>
+                              <button className="icon-btn" title="Weather"><Cloud size={19} color="var(--text)" /></button>
                          </div>
                     </nav>
 
@@ -115,37 +131,40 @@ export default function App() {
                     </div>
 
                     <footer className="main-footer">
-                         <button className="icon-btn footer-btn" title="Settings"><Settings size={19} /><span className="footer-label">Settings</span></button>
+                         <button className="icon-btn footer-btn" title="Settings"><Settings size={19} color="var(--text)" /><span className="footer-label">Settings</span></button>
+                         {/* Mounts the ai tools in the footer */}
                          <div className="ai-tools center">
                               {AI_TOOLS.map((tool, i) => (
-                                   <button key={i} onClick={() => window.open(tool.targetURL, "_self")} className="ai-btn center">
+                                   <button key={i} onClick={() => window.open(tool.targetURL, isSongPlaying ? "_blank" : "_self")} className="ai-btn center">
                                         <img height={15} width={15} style={{ borderRadius: "100px", flexShrink: "0" }} src={tool.favicon} alt={tool.name} />
                                         {tool.name}
                                    </button>
                               ))}
                          </div>
-                         <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 size={19} /><span className="footer-label">Shortcuts</span></button>
+                         <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 size={19} color="var(--text)" /><span className="footer-label">Shortcuts</span></button>
                     </footer>
-
                     {showShortcuts && (
                          <div className="shortcuts-panel">
                               <div className="center" style={{ justifyContent: "space-between", marginBottom: "12px" }}>
                                    <div className="panel-label" style={{ margin: "0px" }}>Quick Shortcuts</div>
                                    <button onClick={() => setShowAddShortcut(true)} className="add-shortcut-btn">+</button>
                               </div>
-                              {shortcuts.length ? (
-                                   shortcuts.map((s, i) => (
-                                        <div key={i} className="shortcut-item" style={{ justifyContent: "space-between" }}>
-                                             <a style={{ gap: "8px" }} className="alignC" href={s.url} target="_self" title={s.name}>
-                                                  <span className="shortcut-icon">{s.faviconURL}</span>
-                                                  <span className="shortcut-name">{s.name}</span>
-                                             </a>
-                                             <button onClick={() => removeShortcut(i)} className="remove-shortcut-btn">✕</button>
-                                        </div>
-                                   ))
-                              ) : (
-                                   <div style={{ textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", fontStyle: "italic" }}>No added shortcuts</div>
-                              )}
+                              {/* Mounts all shortcuts added */}
+                              <div className="shortcut-list">
+                                   {shortcuts.length ? (
+                                        shortcuts.map((s, i) => (
+                                             <div key={i} className="shortcut-item" style={{ justifyContent: "space-between" }}>
+                                                  <a style={{ gap: "8px" }} className="alignC" href={s.url} target={isSongPlaying ? "_blank" : "_self"} title={s.name}>
+                                                       <img height={19} width={19} src={s.faviconURL} alt={() => (<SearchAlert />)} style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
+                                                       <span className="shortcut-name">{s.name}</span>
+                                                  </a>
+                                                  <button onClick={() => removeShortcut(i)} className="remove-shortcut-btn">✕</button>
+                                             </div>
+                                        ))
+                                   ) : (
+                                        <div style={{ textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", fontStyle: "italic" }}>No added shortcuts</div>
+                                   )}
+                              </div>
                          </div>
                     )}
 
@@ -159,7 +178,9 @@ export default function App() {
                     {showAddShortcut && (
                          <AddShortcutPane
                               onClose={() => setShowAddShortcut(false)}
-                              onAdd={(shortcut) => {
+                              onAdd={(requestedShortcutObj) => {
+                                   if (!requestedShortcutObj.name && !requestedShortcutObj.url) return;
+                                   addShortcut(requestedShortcutObj)
                                    setShowAddShortcut(false);
                               }}
                          />

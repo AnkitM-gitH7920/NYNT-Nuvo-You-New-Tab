@@ -13,7 +13,7 @@
      --border: rgba(248, 245, 238, 0.151);
      --border2: rgba(240, 233, 223, 0.16);
 
-     --text: #f0e9df;
+     --text: #eee7e0;
      --muted: #b8a99a;
      --dim: #888197;
      --accent: #c9a0a0;
@@ -67,4 +67,7 @@
      padding: 0;
      margin: 0;
      box-sizing: border-box;
+}
+*::-webkit-scrollbar{
+     display: none;
 }

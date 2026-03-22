@@ -501,6 +501,12 @@ body,
 .shortcuts-panel {
      right: 20px;
      width: 220px;
+     max-height: 350px;
+}
+
+.shortcut-list {
+     overflow-y: auto;
+     max-height: 260px;
 }
 
 .add-shortcut-btn {
@@ -516,12 +522,14 @@ body,
      justify-content: center;
      transition: all var(--transition);
 }
-.remove-shortcut-btn{
+
+.remove-shortcut-btn {
      background: transparent;
      color: var(--dim);
      border: none;
      outline: none;
-
+     opacity: 0;
+     transition: opacity var(--transition);
 }
 
 .todo-panel {
@@ -554,20 +562,12 @@ body,
      transform: scale(0.91);
 }
 
-.shortcut-item:hover {
-     background: var(--surface2);
+.shortcut-item:hover button {
+     opacity: 1;
 }
 
-.shortcut-icon {
-     width: 28px;
-     height: 28px;
-     display: flex;
-     align-items: center;
-     justify-content: center;
+.shortcut-item:hover {
      background: var(--surface2);
-     border-radius: 6px;
-     font-size: 13px;
-     color: var(--muted);
 }
 
 .shortcut-name {
