@@ -1,9 +1,11 @@
 import "./App.css";
+import "./weather-panel.css";
 // import axios from "axios";
 import TodoList from "./TodoList";
 import AddShortcutPane from "./AddShortcutPane";
+import ToggleButton from "./ToggleButton";
 import { useState, useEffect } from "react";
-import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert } from "lucide-react";
+import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X } from "lucide-react";
 
 const SEARCH_ENGINES = [
      { label: "Google", url: "https://google.com/search?q=" },
@@ -36,11 +38,12 @@ export default function App() {
      const [query, setQuery] = useState("");
      const [engine, setEngine] = useState(0);
      const [todoOpen, setTodoOpen] = useState(false);
+     const [temperature, setTemperature] = useState("");
+     const [showWeatherPanel, setShowWeatherPanel] = useState(false);
+     const [isSongPlaying, setIsSongPlaying] = useState(false);
      const [showShortcuts, setShowShortcuts] = useState(false);
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || "[]");
-     const [temperature, setTemperature] = useState("");
-     const [isSongPlaying, setIsSongPlaying] = useState(false);
 
      const hours = String(time.getHours()).padStart(2, "0");
      const minutes = String(time.getMinutes()).padStart(2, "0");
@@ -81,7 +84,12 @@ export default function App() {
                                    <img src="google.png" alt="Google" loading="lazy" height={18} width={18} />
                               </form>
                               <button className="icon-btn" title="Spotify"><img src="spotify.svg" alt="Spotify" width={22} height={22} style={{ filter: "contrast(0.8)" }} /></button>
-                              <button className="icon-btn" title="Weather"><Cloud size={19} color="var(--text)" /></button>
+                              <button
+                                   onClick={() => setShowWeatherPanel(true)}
+                                   className="icon-btn"
+                                   title="Weather">
+                                   <Cloud size={19} color="var(--text)" />
+                              </button>
                          </div>
                     </nav>
 
@@ -185,7 +193,47 @@ export default function App() {
                               }}
                          />
                     )}
+
+                    {/* <WeatherPanel onClose={() => setShowWeatherPanel(false)}/> */}
+                    {showWeatherPanel && (<WeatherPanel onClose={() => setShowWeatherPanel(false)} />)}
                </main>
           </>
      );
+}
+
+
+function WeatherPanel({ onClose }) {
+     const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("locationAccessed") || false);
+     const [coordinates, setCoordinates] = useState([]);
+
+     return (
+          <div className="weather-panel-overlay">
+               <div className="weather-panel">
+                    <div className="weather-panel-head">
+                         <span className="weather-panel-title">Weather</span>
+                         <button onClick={onClose} className="weather-panel-close"><X size={14} /></button>
+                    </div>
+                    <div className="weather-panel-body">
+                         {isLocationAllowed ? (
+                              <span style={{ border: "1px solid red" }}>Location access</span>
+                         ) : (
+                              <div style={{
+                                   display: "flex",
+                                   justifyContent: "space-between",
+                                   marginTop: "10px"
+
+                              }} className="weather-no-location center">
+                                   <span style={{
+                                        fontFamily: "var(--gm-font)",
+                                        fontSize: "0.8rem",
+                                        color: "var(--dim)",
+                                        fontStyle: "italic"
+                                   }}>No location access</span>
+                                   <button title="Allow location" style={{ background: "transparent", border: "none", outline: "none" }}><ToggleButton /></button>
+                              </div>
+                         )}
+                    </div>
+               </div>
+          </div >
+     )
 }
