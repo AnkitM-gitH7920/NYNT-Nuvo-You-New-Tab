@@ -393,6 +393,9 @@ body,
 }
 
 .ai-tools {
+     display: flex;
+     align-items: center;
+     justify-content: center;
      gap: 5px;
      overflow-x: auto;
      scrollbar-width: none;
@@ -412,7 +415,7 @@ body,
      font-size: 11px;
      border: 1px solid var(--border2);
      background-color: transparent;
-     border-radius: var(--radius-sm);
+     border-radius: 100px;
      color: var(--text);
      transition: all var(--transition);
      white-space: nowrap;
@@ -525,7 +528,6 @@ body,
      text-transform: uppercase;
      color: var(--dim);
      font-weight: 500;
-     margin-bottom: 12px;
      font-family: var(--plus-jakarta-font);
 }
 
@@ -669,4 +671,128 @@ body,
      color: var(--dim);
      text-align: center;
      padding: 12px 0;
+}
+
+/* ── Add Shortcut Modal ── */
+.add-shortcutpane-wrapper {
+     position: fixed;
+     inset: 0;
+     background: rgba(0, 0, 0, 0.6);
+     backdrop-filter: blur(8px);
+     -webkit-backdrop-filter: blur(8px);
+     z-index: 200;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+     from {
+          opacity: 0;
+     }
+
+     to {
+          opacity: 1;
+     }
+}
+
+.add-shortcutpane-container {
+     background: var(--surface);
+     border: 1px solid var(--border2);
+     border-radius: var(--radius-lg);
+     padding: 24px;
+     width: 340px;
+     animation: scaleIn 0.2s ease;
+}
+
+@keyframes scaleIn {
+     from {
+          opacity: 0;
+          transform: scale(0.95) translateY(8px);
+     }
+
+     to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+     }
+}
+
+.add-shortcutpane-head {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     margin-bottom: 20px;
+}
+
+.add-shortcutpane-title {
+     font-size: 13px;
+     font-weight: 500;
+     color: var(--text);
+     letter-spacing: 0.5px;
+}
+
+.add-shortcutpane-close {
+     width: 28px;
+     height: 28px;
+     background: var(--surface2);
+     border: 1px solid var(--border);
+     border-radius: var(--radius-sm);
+     color: var(--muted);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     transition: all var(--transition);
+}
+
+.add-shortcutpane-close:hover {
+     border-color: var(--border2);
+     color: var(--text);
+}
+
+.add-shortcutpane-body {
+     display: flex;
+     flex-direction: column;
+     gap: 12px;
+}
+
+.add-shortcutpane-input {
+     width: 100%;
+     background: var(--surface2);
+     border: 1px solid var(--border);
+     border-radius: var(--radius-sm);
+     padding: 10px 14px;
+     color: var(--text);
+     font-size: 13px;
+     outline: none;
+     transition: border-color var(--transition);
+}
+
+.add-shortcutpane-input::placeholder {
+     color: var(--dim);
+}
+
+.add-shortcutpane-input:focus {
+     border-color: var(--accent);
+}
+
+.add-shortcutpane-submit {
+     width: 100%;
+     padding: 10px;
+     background: var(--accent);
+     border: none;
+     border-radius: var(--radius-sm);
+     color: var(--bg);
+     font-size: 13px;
+     font-family: var(--main-font);
+     font-weight: 500;
+     transition: opacity var(--transition);
+}
+
+.add-shortcutpane-submit:hover {
+     opacity: 0.85;
+}
+
+.add-shortcutpane-submit:active {
+     transform: scale(0.98);
 }
