@@ -2,8 +2,9 @@ import "./App.css";
 import TodoList from "./TodoList";
 import { useState, useEffect } from "react";
 import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight } from "lucide-react";
-import axios from "axios";
+// import axios from "axios";
 
+// const default_icon_color = ""
 const SEARCH_ENGINES = [
      { label: "Google", url: "https://google.com/search?q=", short: "G" },
      { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=", short: "D" },
@@ -12,13 +13,13 @@ const SEARCH_ENGINES = [
      { label: "Tor Project", url: "https://torproject.org/search?q=", short: "T" }
 ];
 const AI_TOOLS = [
-     { name: "ChatGPT", favicon: "", targetURL: "https://chatgpt.com/" },
-     { name: "Perplexity", favicon: "", targetURL: "https://www.perplexity.ai/" },
-     { name: "Gemini", favicon: "", targetURL: "http://gemini.google.com/" },
-     { name: "Claude", favicon: "", targetURL: "https://claude.ai/" },
-     { name: "Meta", favicon: "", targetURL: "https://www.meta.ai/" },
-     { name: "Grok", favicon: "", targetURL: "https://grok.com/" },
-     { name: "Copilot", favicon: "", targetURL: "https://copilot.microsoft.com/" }
+     { name: "Gemini", favicon: "https://www.google.com/s2/favicons?domain=gemini.google.com&sz=32", targetURL: "https://gemini.google.com" },
+     { name: "Claude", favicon: "https://www.google.com/s2/favicons?domain=claude.ai&sz=32", targetURL: "https://claude.ai" },
+     { name: "Meta", favicon: "https://www.google.com/s2/favicons?domain=meta.ai&sz=32", targetURL: "https://www.meta.ai" },
+     { name: "ChatGPT", favicon: "https://www.google.com/s2/favicons?domain=chatgpt.com&sz=32", targetURL: "https://chatgpt.com" },
+     { name: "Perplexity", favicon: "https://www.google.com/s2/favicons?domain=perplexity.ai&sz=32", targetURL: "https://www.perplexity.ai" },
+     { name: "Grok", favicon: "https://www.google.com/s2/favicons?domain=grok.com&sz=32", targetURL: "https://grok.com" },
+     { name: "Copilot", favicon: "https://www.google.com/s2/favicons?domain=copilot.microsoft.com&sz=32", targetURL: "https://copilot.microsoft.com" },
 ];
 
 function useClock() {
@@ -36,7 +37,9 @@ export default function App() {
      const [engine, setEngine] = useState(0);
      const [todoOpen, setTodoOpen] = useState(false);
      const [showShortcuts, setShowShortcuts] = useState(false);
-     // const [shortcuts, setShortcuts] = useState([]);
+     const [shortcuts, setShortcuts] = useState([
+          { name: "YouTube", url: "https://youtube.com", faviconURL: "▶" }
+     ]);
      const [temprature, setTemperature] = useState("");
 
      const hours = String(time.getHours()).padStart(2, "0");
@@ -162,11 +165,17 @@ export default function App() {
                               <span className="footer-label">Settings</span>
                          </button>
                          <div className="ai-tools center">
-                              {AI_TOOLS.map((tool, index) => {
-                                   console.log(tool);
-                                   console.log(index);
-                                   // Start by loading ai tools list
-                              })}
+                              {AI_TOOLS.map((tool, index) => (
+                                   <button
+                                        key={index}
+                                        onClick={() => window.open(tool.targetURL, "_self")}
+                                        className="ai-btn center">
+
+                                        <img height={22} width={22} style={{ borderRadius: "100px", flexShrink: "0", margin: "0px 3px" }} src={tool.favicon} alt={tool.name} />
+                                        {tool.name}
+
+                                   </button>
+                              ))}
                          </div>
                          <button className="icon-btn footer-btn shortcuts-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts">
                               <Grid2X2 size={19} />
@@ -177,17 +186,15 @@ export default function App() {
                     {/* Shortcuts panel */}
                     {showShortcuts && (
                          <div className="shortcuts-panel">
-                              <div className="panel-label">Quick Shortcuts</div>
-                              {[
-                                   { name: "YouTube", url: "https://youtube.com", faviconURL: "▶" }, // place actual icons
-                                   { name: "GitHub", url: "https://github.com", faviconURL: "⌥" }, // place actual icons
-                                   { name: "Gmail", url: "https://mail.google.com", faviconURL: "✉" }, // place actual icons
-                                   { name: "Notion", url: "https://notion.so", favicon: "◻" }, // place actual icons
-                                   { name: "Twitter", url: "https://twitter.com", favicon: "✦" }, // place actual icons
-                                   { name: "Reddit", url: "https://reddit.com", favicon: "◈" }, // place actual icons
-                              ].map(s => (
+                              <div className="center" style={{ justifyContent: "space-between", marginBottom: "12px" }}>
+                                   <div className="panel-label" style={{ margin: "0px" }}>Quick Shortcuts</div>
+                                   <button className="add-shortcut-btn">
+                                        +
+                                   </button>
+                              </div>
+                              {shortcuts.map(s => (
                                    <a key={s.name} href={s.url} target="_blank" rel="noreferrer" className="shortcut-item">
-                                        <span className="shortcut-icon">{s.favicon}</span>
+                                        <span className="shortcut-icon">{s.faviconURL}</span>
                                         <span className="shortcut-name">{s.name}</span>
                                    </a>
                               ))}
@@ -202,7 +209,8 @@ export default function App() {
                          </div>
                     )}
 
-               </main>
+               </main >
+               {/* start by component for adding shortcuts */}
           </>
      );
 }
