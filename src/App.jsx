@@ -4,8 +4,8 @@ import axios from "axios";
 import TodoList from "./TodoList";
 import AddShortcutPane from "./AddShortcutPane";
 import ToggleButton from "./ToggleButton";
-import { useState, useEffect, useRef } from "react";
-import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X, CloudOff, Wind } from "lucide-react";
 
 const SEARCH_ENGINES = [
      { label: "Google", url: "https://google.com/search?q=" },
@@ -35,6 +35,12 @@ function useClock() {
 
 export default function App() {
      const time = useClock();
+
+     // Start by:-
+     /*
+     1. Introducing TTL in weather fetching api
+     2. Mapping weather icons according to nigth and day, and rename icons too
+     */
 
      const [query, setQuery] = useState("");
      const [engine, setEngine] = useState(0);
@@ -80,6 +86,7 @@ export default function App() {
           try {
                console.log("Weather api called")
                const { data: fetchedWeather } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=c62fad4c780b699f4565a7bad44dfa47&units=metric`);
+               console.log(fetchedWeather)
                const reqWeatherInfo = {
                     locationName: fetchedWeather?.name,
                     tempInC: Math.round(fetchedWeather.main.temp),
@@ -135,13 +142,13 @@ export default function App() {
                } else {
                     console.log("Coords found, fetching weather");
                     fetchAndStoreWeather(userCoordinates)
-                }
+               }
 
           } else {
                console.log("Weather info found, doing nothing")
                console.log(weatherInfo)
                return
-           }
+          }
 
 
      }, [isLocationAllowed]);
@@ -164,7 +171,8 @@ export default function App() {
                                    onClick={() => setShowWeatherPanel(true)}
                                    className="icon-btn"
                                    title="Weather">
-                                   <Cloud size={19} color="var(--text)" />
+                                   {isLocationAllowed ? <Cloud size={19} color="var(--text)" /> : <CloudOff size={19} color="var(--dim)" />}
+
                               </button>
                          </div>
                     </nav>
@@ -194,19 +202,19 @@ export default function App() {
                          </section>
 
                          <section className="right-pane">
-                              <div className="right-card spotify-card">
+                              <div className="right-card right-spotify-card">
                                    <div className="card-label">Now Playing</div>
                                    <div className="spotify-art">♫</div>
                                    <div className="spotify-track">Not connected</div>
                                    <div className="spotify-artist">Connect Spotify to play music</div>
                                    <button className="connect-btn">Connect Spotify</button>
                               </div>
-                              <div className="right-card weather-card">
+                              <div className="right-card right-weather-card">
                                    <div className="card-label">Weather</div>
                                    <div className="weather-temp">{temperature.length ? temperature : "_"}°</div>
                                    <div className="weather-desc">Allow location access</div>
                               </div>
-                              <div className="right-card quote-card">
+                              <div className="right-card right-quote-card">
                                    <div className="card-label">Quote</div>
                                    <p className="quote-text">"The only way to do great work is to love what you do."</p>
                                    <span className="quote-author">— Steve Jobs</span>
@@ -310,6 +318,38 @@ export default function App() {
                                              </button>
                                         </div>
                                    </div>
+                                   {Object.keys(weatherInfo) === 0 ? (
+                                        <span>Please allow location first</span>
+                                   ) : (
+                                        <div className="weather-loaded-info">
+                                             <span className="loc-name">
+                                                  Yamunanagar
+                                             </span>
+                                             <div style={{ gap: "20px" }} className="weather-icon-temp alignC">
+                                                  <img height={70} width={70} src="/weather_icons/cloud.png" alt="Loading..." loading="lazy" />
+                                                  <div style={{ marginTop: "10px", display: "flex", alignContent: "flex-start", flexDirection: "column" }} className="temp-humidity">
+                                                       <span
+                                                            style={{
+                                                                 fontSize: "2.5rem",
+                                                                 fontWeight: "600",
+                                                                 lineHeight:"45px"
+                                                            }}>
+                                                            32&deg;C
+                                                       </span>
+                                                       <span style={{
+                                                            color: "var(--dim)",
+                                                            fontSize: "0.9rem",
+                                                            letterSpacing: "1px"
+                                                       }}>Clear sky</span>
+                                                  </div>
+                                             </div>
+                                             <div style={{gap: "10px", marginTop: "25px"}} className="alignC">
+                                                  <div className="humidity-card"></div>
+                                                  <div className="wind-card"></div>
+                                                  <div className="precipitation-card"></div>
+                                             </div>
+                                        </div>
+                                   )}
                               </div>
                          </div >
                     )}

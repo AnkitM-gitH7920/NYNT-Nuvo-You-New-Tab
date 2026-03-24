@@ -135,7 +135,7 @@
      padding: 10px;
      background: var(--surface2);
      border-radius: var(--radius-sm);
-     border: 1px solid var(--border);
+     border-top: 1px solid var(--border);
      font-size: 13px;
      color: var(--text);
 }
@@ -144,4 +144,26 @@
      font-size: 10px;
      color: var(--dim);
      letter-spacing: 0.5px;
+}
+.weather-loaded-info{
+     height: fit-content;
+     width: 100%;
+     border-top: 1px solid var(--border);
+     margin-top: 22px;
+     padding: 10px 0px;
+}
+.loc-name{
+     font-size: 0.8rem;
+     font-weight: 600;
+     font-family: var(--plus-jakarta-font);
+     letter-spacing: 2px;
+     color: var(--dim);
+}
+.humidity-card,
+.wind-card,
+.precipitation-card{
+     border-radius: var(--radius-lg);
+     height: 100px;
+     width: 100px;
+     border: 1px solid var(--border);
 }
