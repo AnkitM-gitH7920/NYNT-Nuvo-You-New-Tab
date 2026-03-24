@@ -4,7 +4,7 @@ import axios from "axios";
 import TodoList from "./TodoList";
 import AddShortcutPane from "./AddShortcutPane";
 import ToggleButton from "./ToggleButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X } from "lucide-react";
 
 const SEARCH_ENGINES = [
@@ -35,15 +35,22 @@ function useClock() {
 
 export default function App() {
      const time = useClock();
+
      const [query, setQuery] = useState("");
      const [engine, setEngine] = useState(0);
      const [todoOpen, setTodoOpen] = useState(false);
      const [temperature, setTemperature] = useState("");
-     const [showWeatherPanel, setShowWeatherPanel] = useState(false);
-     const [isSongPlaying, setIsSongPlaying] = useState(false);
      const [showShortcuts, setShowShortcuts] = useState(false);
+     const [isSongPlaying, setIsSongPlaying] = useState(false);
      const [showAddShortcut, setShowAddShortcut] = useState(false);
+     const [showWeatherPanel, setShowWeatherPanel] = useState(false);
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
+     const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
+     const [userCoordinates, setUserCoordinates] = useState(() => JSON.parse(localStorage.getItem("user-coords")) || {});
+     const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("isLocationAllowed") === "true");
+
+     // UI useState
+     const [weatherLoading, setWeatherLoading] = useState(false);
 
      const hours = String(time.getHours()).padStart(2, "0");
      const minutes = String(time.getMinutes()).padStart(2, "0");
@@ -65,10 +72,79 @@ export default function App() {
      async function addShortcut(requestedShortcutObj) {
           const { name, url } = requestedShortcutObj;
           const domainName = new URL(url).host; //returns the domain name
-
-          const currentShortcuts = [...shortcuts, { faviconURL: `https://www.google.com/s2/favicons?domain=${domainName}&sz=32`, name, url }]
-          saveShortcuts(currentShortcuts);
+          saveShortcuts([...shortcuts, { faviconURL: `https://www.google.com/s2/favicons?domain=${domainName}&sz=32`, name, url }]);
      }
+     async function fetchAndStoreWeather(userCoordinatesObj) {
+          const { latitude, longitude } = userCoordinatesObj;
+
+          try {
+               console.log("Weather api called")
+               const { data: fetchedWeather } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=c62fad4c780b699f4565a7bad44dfa47&units=metric`);
+               const reqWeatherInfo = {
+                    locationName: fetchedWeather?.name,
+                    tempInC: Math.round(fetchedWeather.main.temp),
+                    windSpeed: fetchedWeather.wind.speed,
+                    windAngle: fetchedWeather.wind.deg,
+                    mainWeather: fetchedWeather.weather[0].main,
+                    humidity: fetchedWeather.main.humidity,
+                    fetchTimestamp: Date.now()
+               }
+               setWeatherInfo(reqWeatherInfo);
+               localStorage.setItem("weatherInfo", JSON.stringify(reqWeatherInfo));
+
+
+          } catch (weatherFetchError) {
+               console.log(weatherFetchError);
+               alert("Seems like something went wrong, please reload the page. If the issue persists, please report the bug to the developer")
+               return;
+
+          }
+     }
+
+     // useEffects
+     useEffect(() => {
+          if (!isLocationAllowed) {
+               setUserCoordinates({});
+               localStorage.setItem("user-coords", JSON.stringify({}));
+               return;
+          }
+
+          if (Object.keys(weatherInfo).length === 0) {
+               if (Object.keys(userCoordinates).length === 0) {
+                    console.log("No coords found, fetching coords and weather...")
+                    navigator.geolocation.getCurrentPosition(
+                         async (position) => {
+                              const { latitude, longitude } = position.coords;
+                              if (!latitude || !longitude) return;
+                              setUserCoordinates({ latitude, longitude });
+                              localStorage.setItem("user-coords", JSON.stringify({ latitude, longitude }));
+
+                              fetchAndStoreWeather({ latitude, longitude });
+
+                         }, (error) => {
+                              if (error.code === 1) {
+                                   setIsLocationAllowed(false);
+                                   localStorage.setItem("isLocationAllowed", false);
+                                   setUserCoordinates({})
+                                   localStorage.removeItem("user-coords")
+                                   throw new Error("User denied location access")
+                              }
+                         }
+                    )
+                    return;
+               } else {
+                    console.log("Coords found, fetching weather");
+                    fetchAndStoreWeather(userCoordinates)
+                }
+
+          } else {
+               console.log("Weather info found, doing nothing")
+               console.log(weatherInfo)
+               return
+           }
+
+
+     }, [isLocationAllowed]);
 
      return (
           <>
@@ -185,7 +261,10 @@ export default function App() {
 
                     {showAddShortcut && (
                          <AddShortcutPane
-                              onClose={() => setShowAddShortcut(false)}
+                              onClose={() => {
+                                   setShowAddShortcut(false);
+                                   setShowShortcuts(false);
+                              }}
                               onAdd={(requestedShortcutObj) => {
                                    if (!requestedShortcutObj.name && !requestedShortcutObj.url) return;
                                    addShortcut(requestedShortcutObj)
@@ -194,76 +273,47 @@ export default function App() {
                          />
                     )}
 
-                    {/* <WeatherPanel onClose={() => setShowWeatherPanel(false)}/> */}
-                    {showWeatherPanel && (<WeatherPanel onClose={() => setShowWeatherPanel(false)} />)}
+                    {/* <WeatherPane /> */}
+                    {showWeatherPanel && (
+                         <div className="weather-panel-overlay">
+                              <div className="weather-panel">
+                                   <div className="weather-panel-head">
+                                        <span className="weather-panel-title">Weather</span>
+                                        <button onClick={() => setShowWeatherPanel(false)} className="weather-panel-close"><X size={14} /></button>
+                                   </div>
+                                   <div className="weather-panel-body">
+                                        <div style={{
+                                             display: "flex",
+                                             justifyContent: "space-between",
+                                             marginTop: "10px"
+
+                                        }} className="center">
+                                             <span style={{
+                                                  fontFamily: "var(--gm-font)",
+                                                  fontSize: "0.8rem",
+                                                  color: "var(--dim)",
+                                                  fontStyle: "italic"
+                                             }}>{isLocationAllowed ? "Location access granted" : "No location access"}</span>
+                                             <button
+                                                  onClick={() => {
+                                                       localStorage.setItem("isLocationAllowed", !isLocationAllowed);
+                                                       setIsLocationAllowed(!isLocationAllowed);
+                                                  }}
+                                                  title="Allow location"
+                                                  style={{ background: "transparent", border: "none", outline: "none" }}>
+                                                  <ToggleButton
+                                                       defaultChecked={isLocationAllowed}
+                                                       onChange={(checked) => {
+                                                            localStorage.setItem("isLocationAllowed", checked);
+                                                            setIsLocationAllowed(checked);
+                                                       }} />
+                                             </button>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div >
+                    )}
                </main>
           </>
      );
-}
-
-
-function WeatherPanel({ onClose }) {
-     const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("islocationAllowed") || false);
-     const [coordinates, setCoordinates] = useState([]);
-     const [usercoords, setUserCoords] = useState(() => JSON.parse(localStorage.getItem("user-coords") || "{}"))
-
-     useEffect(() => {
-          if (!isLocationAllowed) return;
-          navigator.geolocation.getCurrentPosition(
-               async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    localStorage.setItem("user-coords", JSON.stringify({ latitude, longitude }))
-                    try {
-                         // start by using open weather FREE api key and fetching location and weather usong that website
-                         const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=relativehumidity_2m,windspeed_10m,visibility`);
-                         const { data: fetchedAddress } = await axios.get(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
-
-                         console.log(fetchedWeather);
-                         console.log(fetchedAddress)
-
-                    } catch (fetchError) {
-                         console.log(fetchError)
-                         alert("Something went wrong, please reload the window. If the issue persists, then please report the issue to the developer")
-                    }
-               }
-          ), (weatherApiError) => { console.log(weatherApiError) },
-          {
-               enableHighAccuracy: true,
-               timeout: 10000,
-               maximumAge: 0
-          }
-     }, [isLocationAllowed])
-
-     return (
-          <div className="weather-panel-overlay">
-               <div className="weather-panel">
-                    <div className="weather-panel-head">
-                         <span className="weather-panel-title">Weather</span>
-                         <button onClick={onClose} className="weather-panel-close"><X size={14} /></button>
-                    </div>
-                    <div className="weather-panel-body">
-                         <div style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              marginTop: "10px"
-
-                         }} className="weather-no-location center">
-                              <span style={{
-                                   fontFamily: "var(--gm-font)",
-                                   fontSize: "0.8rem",
-                                   color: "var(--dim)",
-                                   fontStyle: "italic"
-                              }}>{isLocationAllowed ? "Location access granted" : "No location access"}</span>
-                              <button
-                                   onClick={() => {
-                                        localStorage.setItem("isLocationAllowed", !isLocationAllowed);
-                                        setIsLocationAllowed(!isLocationAllowed);
-                                   }}
-                                   title="Allow location"
-                                   style={{ background: "transparent", border: "none", outline: "none" }}><ToggleButton /></button>
-                         </div>
-                    </div>
-               </div>
-          </div >
-     )
 }
