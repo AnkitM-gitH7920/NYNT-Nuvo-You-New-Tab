@@ -6,7 +6,7 @@ import TodoList from "./TodoList";
 import AddShortcutPane from "./AddShortcutPane";
 import ToggleButton from "./ToggleButton";
 import { useState, useEffect } from "react";
-import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X, CloudOff, MapPin } from "lucide-react";
+import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X, CloudOff, MapPin, Droplets, Wind, CloudRain, Shield } from "lucide-react";
 
 const SEARCH_ENGINES = [
      { label: "Google", url: "https://google.com/search?q=" },
@@ -79,13 +79,13 @@ export default function App() {
 
           try {
                console.log("Weather api called")
-               const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
+               const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude + 10}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
                const { data: fetchedGeoCoding } = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
 
                console.log(fetchedWeather);
                console.log(fetchedGeoCoding)
                const reqWeatherInfo = {
-                    locationName: fetchedGeoCoding.address.state_district,
+                    locationName: fetchedGeoCoding.address.state_district || fetchedGeoCoding.address.town,
                     address: fetchedGeoCoding.display_name,
                     temperature: {
                          tempInC: Math.round(fetchedWeather?.current.temperature_2m),
@@ -307,95 +307,136 @@ export default function App() {
 
                     {/* <WeatherPane /> */}
                     {showWeatherPanel && (
-                         <div className="weather-panel-overlay">
-                              <div className="weather-panel">
+                         <div className="weather-panel-overlay" onClick={() => setShowWeatherPanel(false)}>
+                              <div className="weather-panel" onClick={(e) => e.stopPropagation()}>
+                                   {/* Header */}
                                    <div className="weather-panel-head">
-                                        <span className="weather-panel-title">Weather</span>
-                                        <button onClick={() => setShowWeatherPanel(false)} className="weather-panel-close"><X size={14} /></button>
-                                   </div>
-                                   <div className="weather-panel-body">
-                                        <div style={{
-                                             display: "flex",
-                                             justifyContent: "space-between",
-                                             margin: "10px 0px"
-
-                                        }} className="center">
-                                             <span style={{
-                                                  fontFamily: "var(--gm-font)",
-                                                  fontSize: "0.8rem",
-                                                  color: "var(--dim)",
-                                                  fontStyle: "italic"
-                                             }}>{isLocationAllowed ? "Location access granted" : "No location access"}</span>
-                                             <button
-                                                  onClick={() => {
-                                                       localStorage.setItem("isLocationAllowed", !isLocationAllowed);
-                                                       setIsLocationAllowed(!isLocationAllowed);
-                                                  }}
-                                                  title="Allow location"
-                                                  style={{ background: "transparent", border: "none", outline: "none" }}>
-                                                  <ToggleButton
-                                                       defaultChecked={isLocationAllowed}
-                                                       onChange={(checked) => {
-                                                            localStorage.setItem("isLocationAllowed", checked);
-                                                            setIsLocationAllowed(checked);
-                                                       }} />
-                                             </button>
+                                        <div className="weather-panel-title-wrapper">
+                                             <div className="weather-title-icon">
+                                                  <Cloud size={16} />
+                                             </div>
+                                             <span className="weather-panel-title">Weather</span>
                                         </div>
+                                        <button
+                                             onClick={() => setShowWeatherPanel(false)}
+                                             className="weather-panel-close"
+                                        >
+                                             <X size={14} />
+                                        </button>
                                    </div>
-                                   {Object.keys(weatherInfo).length === 0 ? (
-                                        <span style={{
-                                             marginTop: "4990px",
-                                             color: "var(--dim)",
-                                             fontSize: "0.7rem",
-                                             fontFamily: "var(--main-font)",
 
-                                        }}>Please allow location first</span>
+                                   {/* Location Permission */}
+                                   <div className="weather-permission-card">
+                                        <div className="permission-info">
+                                             <div className={`permission-status ${isLocationAllowed ? 'active' : ''}`}>
+                                                  <div className="status-dot"></div>
+                                                  <span>{isLocationAllowed ? "Location enabled" : "Location disabled"}</span>
+                                             </div>
+                                             <p className="permission-desc">
+                                                  {isLocationAllowed
+                                                       ? "Fetching weather for your area"
+                                                       : "Enable to see local weather"
+                                                  }
+                                             </p>
+                                        </div>
+                                        <ToggleButton
+                                             defaultChecked={isLocationAllowed}
+                                             onChange={(checked) => {
+                                                  localStorage.setItem("isLocationAllowed", checked);
+                                                  setIsLocationAllowed(checked);
+                                             }}
+                                        />
+                                   </div>
+
+                                   {/* Weather Content */}
+                                   {Object.keys(weatherInfo).length === 0 ? (
+                                        <div className="weather-empty-state">
+                                             <div className="empty-icon">
+                                                  <CloudOff size={32} />
+                                             </div>
+                                             <span className="empty-title">No Weather Data</span>
+                                             <span className="empty-desc">Enable location access to see current weather conditions</span>
+                                        </div>
                                    ) : (
-                                        <div className="weather-loaded-info">
-                                             <span style={{ margin: "10px 0px", gap: "5px" }} className="loc-name alignC">
-                                                  <MapPin className="magpin" height={19} />
-                                                  {weatherInfo.locationName}
-                                             </span>
-                                             <div style={{ gap: "2rem", margin: "25px 0px" }} className="weather-icon-temp alignC">
-                                                  <img style={{borderRadius: "4px"}} height={90} width={90} src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl} alt="Loading..." loading="lazy" />
-                                                  <div style={{ marginTop: "10px", display: "flex", alignContent: "flex-start", flexDirection: "column" }} className="temp-humidity">
-                                                       <span
-                                                            style={{
-                                                                 fontSize: "3.0rem",
-                                                                 fontWeight: "600",
-                                                                 lineHeight: "55px"
-                                                            }}>
-                                                            {weatherInfo.temperature.tempInC} {weatherInfo.temperature.tempUnit}
+                                        <div className="weather-content">
+                                             {/* Location */}
+                                             <div className="weather-location">
+                                                  <MapPin className="location-pin" size={14} />
+                                                  <span>{weatherInfo.locationName}</span>
+                                             </div>
+
+                                             {/* Main Weather Display */}
+                                             <div className="weather-main-display">
+                                                  <div className="weather-icon-wrapper">
+                                                       <img
+                                                            src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl}
+                                                            alt="Weather"
+                                                            loading="lazy"
+                                                       />
+                                                       <div className="icon-glow"></div>
+                                                  </div>
+                                                  <div className="weather-temp-info">
+                                                       <div className="temp-value">
+                                                            <span className="temp-number">{weatherInfo.temperature.tempInC}</span>
+                                                            <span className="temp-unit">{weatherInfo.temperature.tempUnit}</span>
+                                                       </div>
+                                                       <span className="weather-condition">
+                                                            {returnMappedWeatherIcon(weatherInfo.weatherCode).main}
                                                        </span>
-                                                       <span style={{
-                                                            fontFamily: "var(--gm-font)",
-                                                            color: "var(--dim)",
-                                                            fontSize: "0.85rem",
-                                                            letterSpacing: "1px"
-                                                       }}>{returnMappedWeatherIcon(weatherInfo.weatherCode).main}</span>
                                                   </div>
                                              </div>
-                                             <div style={{ gap: "10px", marginTop: "25px" }} className="alignC">
-                                                  <div className="humidity-card center alignC">
-                                                       <img height={30} width={30} loading="lazy" src="/weather_icons/humidity.svg" alt="Humidity..." />
-                                                       <span className="weather-panel-card-value">{weatherInfo.humidity.humidity}{weatherInfo.humidity.humidityUnit}</span>
-                                                       <span className="weather-panel-card-titles">Humidity</span>
+
+                                             {/* Stats Grid */}
+                                             <div className="weather-stats-grid">
+                                                  <div className="weather-stat-card humidity">
+                                                       <div className="stat-icon-wrapper">
+                                                            <Droplets size={20} />
+                                                       </div>
+                                                       <div className="stat-details">
+                                                            <span className="stat-value">
+                                                                 {weatherInfo.humidity.humidity}
+                                                                 <small>{weatherInfo.humidity.humidityUnit}</small>
+                                                            </span>
+                                                            <span className="stat-label">Humidity</span>
+                                                       </div>
                                                   </div>
-                                                  <div className="wind-card center alignC">
-                                                       <img height={30} width={30} loading="lazy" src="/weather_icons/wind.svg" alt="Wind..." />
-                                                       <span className="weather-panel-card-value">{weatherInfo.wind.windSpeed}{weatherInfo.wind.windSpeedUnit}</span>
-                                                       <span className="weather-panel-card-titles">Wind</span>
+
+                                                  <div className="weather-stat-card wind">
+                                                       <div className="stat-icon-wrapper">
+                                                            <Wind size={20} />
+                                                       </div>
+                                                       <div className="stat-details">
+                                                            <span className="stat-value">
+                                                                 {weatherInfo.wind.windSpeed}
+                                                                 <small>{weatherInfo.wind.windSpeedUnit}</small>
+                                                            </span>
+                                                            <span className="stat-label">Wind Speed</span>
+                                                       </div>
                                                   </div>
-                                                  <div className="precipitation-card center alignC">
-                                                       <img height={30} width={30} loading="lazy" src="/weather_icons/precipitation.svg" alt="Precipitation..." />
-                                                       <span className="weather-panel-card-value">{weatherInfo.rain.rain}{weatherInfo.rain.rainUnit}</span>
-                                                       <span className="weather-panel-card-titles">Rain</span>
+
+                                                  <div className="weather-stat-card rain">
+                                                       <div className="stat-icon-wrapper">
+                                                            <CloudRain size={20} />
+                                                       </div>
+                                                       <div className="stat-details">
+                                                            <span className="stat-value">
+                                                                 {weatherInfo.rain.rain}
+                                                                 <small>{weatherInfo.rain.rainUnit}</small>
+                                                            </span>
+                                                            <span className="stat-label">Rain</span>
+                                                       </div>
                                                   </div>
+                                             </div>
+
+                                             {/* Privacy Notice */}
+                                             <div className="weather-privacy-notice">
+                                                  <Shield size={12} />
+                                                  <span>Your location data stays private and is only used for weather</span>
                                              </div>
                                         </div>
                                    )}
                               </div>
-                         </div >
+                         </div>
                     )}
                </main>
           </>

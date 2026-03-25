@@ -1,4 +1,4 @@
-.toggle-btn-body {
+/* .toggle-btn-body {
      position: relative;
      background-color: var(--surface);
      width: 3.2rem;
@@ -32,4 +32,54 @@
      height: 1.35em;
      width: 1.35em;
      top: 4px;
+} */
+
+
+/* --- 🔴⚪🟡style for toggle buttons---- */
+.switch {
+     position: relative;
+     display: inline-block;
+     min-width: 60px;
+     height: 28px;
+     margin-inline-start: 8px;
+}
+
+/* Styling for the slider */
+.toggle {
+     position: absolute;
+     cursor: pointer;
+     inset: 0;
+     background-color: rgba(255, 255, 255, 0.1);
+     transition: 0.4s;
+     border-radius: 28px;
+     direction: ltr;
+     unicode-bidi: isolate;
+}
+
+/* Styling for the slider when it's in the "on" position */
+.toggle::before {
+     position: absolute;
+     content: "";
+     height: 16px;
+     width: 16px;
+     inset-inline-start: 9px;
+     bottom: 6px;
+     background-color: var(--surface);
+     transition: 0.175s;
+     border-radius: 50%;
+}
+
+/* Apply styles when the input is checked (on) */
+input:checked+.toggle {
+     background-color: #489c62;
+     /* Background color when on */
+}
+
+input:checked+.toggle::before {
+     /* height: 24px;
+     width: 24px; */
+     inset-inline-start: 5px;
+     bottom: 6px;
+     transform: translateX(30px);
+     background-color: #ffffff;
 }
