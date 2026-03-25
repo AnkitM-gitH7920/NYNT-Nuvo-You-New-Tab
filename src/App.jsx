@@ -353,15 +353,15 @@ export default function App() {
                                    ) : (
                                         <div className="weather-loaded-info">
                                              <span style={{ margin: "10px 0px", gap: "5px" }} className="loc-name alignC">
-                                                  <MapPin height={19} />
+                                                  <MapPin className="magpin" height={19} />
                                                   {weatherInfo.locationName}
                                              </span>
-                                             <div style={{ gap: "2rem", margin: "20px 0px" }} className="weather-icon-temp alignC">
-                                                  <img height={80} width={80} src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl} alt="Loading..." loading="lazy" />
+                                             <div style={{ gap: "2rem", margin: "25px 0px" }} className="weather-icon-temp alignC">
+                                                  <img style={{borderRadius: "4px"}} height={90} width={90} src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl} alt="Loading..." loading="lazy" />
                                                   <div style={{ marginTop: "10px", display: "flex", alignContent: "flex-start", flexDirection: "column" }} className="temp-humidity">
                                                        <span
                                                             style={{
-                                                                 fontSize: "2.9rem",
+                                                                 fontSize: "3.0rem",
                                                                  fontWeight: "600",
                                                                  lineHeight: "55px"
                                                             }}>
