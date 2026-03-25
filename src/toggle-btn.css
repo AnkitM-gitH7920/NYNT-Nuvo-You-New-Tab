@@ -2,7 +2,7 @@
      position: relative;
      background-color: var(--surface);
      width: 3.2rem;
-     height: 1.6rem;
+     height: 1.7rem;
      border-radius: 100px;
      border: 1px solid var(--border);
      cursor: pointer;
@@ -19,8 +19,8 @@
      position: absolute;
      left: 4px;
      top: 4px;
-     width: 15px;
-     height: 15px;
+     width: 1.2em;
+     height: 1.2em;
      border-radius: 100px;
      background-color: var(--surface2);
      transition: all 0.25s ease, background-color 0.25s ease;
@@ -29,7 +29,7 @@
 .toggle-btn-body:has(input:checked)::before {
      transform: translateX(1.5rem);
      background-color: rgb(34, 197, 94);
-     height: 18px;
-     width: 18px;
-     top: 3px;
+     height: 1.35em;
+     width: 1.35em;
+     top: 4px;
 }

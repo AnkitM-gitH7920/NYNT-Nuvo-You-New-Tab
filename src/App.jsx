@@ -1,11 +1,12 @@
 import "./App.css";
 import "./weather-panel.css";
 import axios from "axios";
+import returnMappedWeatherIcon from "./mappedWeatherIcons"
 import TodoList from "./TodoList";
 import AddShortcutPane from "./AddShortcutPane";
 import ToggleButton from "./ToggleButton";
 import { useState, useEffect } from "react";
-import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X, CloudOff, Wind } from "lucide-react";
+import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X, CloudOff, MapPin } from "lucide-react";
 
 const SEARCH_ENGINES = [
      { label: "Google", url: "https://google.com/search?q=" },
@@ -36,16 +37,9 @@ function useClock() {
 export default function App() {
      const time = useClock();
 
-     // Start by:-
-     /*
-     1. Introducing TTL in weather fetching api
-     2. Mapping weather icons according to nigth and day, and rename icons too
-     */
-
      const [query, setQuery] = useState("");
      const [engine, setEngine] = useState(0);
      const [todoOpen, setTodoOpen] = useState(false);
-     const [temperature, setTemperature] = useState("");
      const [showShortcuts, setShowShortcuts] = useState(false);
      const [isSongPlaying, setIsSongPlaying] = useState(false);
      const [showAddShortcut, setShowAddShortcut] = useState(false);
@@ -56,7 +50,7 @@ export default function App() {
      const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("isLocationAllowed") === "true");
 
      // UI useState
-     const [weatherLoading, setWeatherLoading] = useState(false);
+     // const [weatherLoading, setWeatherLoading] = useState(false);
 
      const hours = String(time.getHours()).padStart(2, "0");
      const minutes = String(time.getMinutes()).padStart(2, "0");
@@ -85,15 +79,33 @@ export default function App() {
 
           try {
                console.log("Weather api called")
-               const { data: fetchedWeather } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=c62fad4c780b699f4565a7bad44dfa47&units=metric`);
-               console.log(fetchedWeather)
+               const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
+               const { data: fetchedGeoCoding } = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+
+               console.log(fetchedWeather);
+               console.log(fetchedGeoCoding)
                const reqWeatherInfo = {
-                    locationName: fetchedWeather?.name,
-                    tempInC: Math.round(fetchedWeather.main.temp),
-                    windSpeed: fetchedWeather.wind.speed,
-                    windAngle: fetchedWeather.wind.deg,
-                    mainWeather: fetchedWeather.weather[0].main,
-                    humidity: fetchedWeather.main.humidity,
+                    locationName: fetchedGeoCoding.address.state_district,
+                    address: fetchedGeoCoding.display_name,
+                    temperature: {
+                         tempInC: Math.round(fetchedWeather?.current.temperature_2m),
+                         tempUnit: fetchedWeather.current_units.temperature_2m
+                    },
+                    wind: {
+                         windSpeed: fetchedWeather?.current.wind_speed_10m,
+                         windAngle: fetchedWeather?.current.wind_direction_10m,
+                         windSpeedUnit: fetchedWeather?.current_units.wind_speed_10m,
+                         windAngleUnit: fetchedWeather?.current_units.wind_direction_10m
+                    },
+                    humidity: {
+                         humidity: fetchedWeather?.current.relative_humidity_2m,
+                         humidityUnit: fetchedWeather?.current_units.relative_humidity_2m
+                    },
+                    rain: {
+                         rain: fetchedWeather?.current.precipitation,
+                         rainUnit: fetchedWeather?.current_units.precipitation,
+                    },
+                    weatherCode: fetchedWeather?.current.weather_code,
                     fetchTimestamp: Date.now()
                }
                setWeatherInfo(reqWeatherInfo);
@@ -116,8 +128,8 @@ export default function App() {
                return;
           }
 
-          if (Object.keys(weatherInfo).length === 0) {
-               if (Object.keys(userCoordinates).length === 0) {
+          if (Object.keys(weatherInfo).length === 0 || !weatherInfo) {
+               if (Object.keys(userCoordinates).length === 0 || !userCoordinates) {
                     console.log("No coords found, fetching coords and weather...")
                     navigator.geolocation.getCurrentPosition(
                          async (position) => {
@@ -133,7 +145,7 @@ export default function App() {
                                    setIsLocationAllowed(false);
                                    localStorage.setItem("isLocationAllowed", false);
                                    setUserCoordinates({})
-                                   localStorage.removeItem("user-coords")
+                                   localStorage.setItem("user-coords", JSON.stringify({}))
                                    throw new Error("User denied location access")
                               }
                          }
@@ -145,9 +157,21 @@ export default function App() {
                }
 
           } else {
-               console.log("Weather info found, doing nothing")
-               console.log(weatherInfo)
-               return
+               const isLastFetchWeatherExpired = weatherInfo.fetchTimestamp + 1000 * 60 * 15 < Date.now();
+               if (!isLastFetchWeatherExpired) {
+                    console.log("Weather data is not expired, not fetching anything")
+                    return;
+               } else {
+                    navigator.geolocation.getCurrentPosition(
+                         async (position) => {
+                              const { longitude, latitude } = position.coords;
+                              fetchAndStoreWeather({ longitude, latitude })
+                         }, (error) => {
+                              if (error.code === 1) alert("Please allow this page to acces GPS location");
+                              return;
+                         }, { enableHighAccuracy: true }
+                    )
+               }
           }
 
 
@@ -211,7 +235,7 @@ export default function App() {
                               </div>
                               <div className="right-card right-weather-card">
                                    <div className="card-label">Weather</div>
-                                   <div className="weather-temp">{temperature.length ? temperature : "_"}°</div>
+                                   <div className="weather-temp">{weatherInfo.length ? weatherInfo.temperature.tempInC : "_"}°</div>
                                    <div className="weather-desc">Allow location access</div>
                               </div>
                               <div className="right-card right-quote-card">
@@ -293,7 +317,7 @@ export default function App() {
                                         <div style={{
                                              display: "flex",
                                              justifyContent: "space-between",
-                                             marginTop: "10px"
+                                             margin: "10px 0px"
 
                                         }} className="center">
                                              <span style={{
@@ -318,35 +342,55 @@ export default function App() {
                                              </button>
                                         </div>
                                    </div>
-                                   {Object.keys(weatherInfo) === 0 ? (
-                                        <span>Please allow location first</span>
+                                   {Object.keys(weatherInfo).length === 0 ? (
+                                        <span style={{
+                                             marginTop: "4990px",
+                                             color: "var(--dim)",
+                                             fontSize: "0.7rem",
+                                             fontFamily: "var(--main-font)",
+
+                                        }}>Please allow location first</span>
                                    ) : (
                                         <div className="weather-loaded-info">
-                                             <span className="loc-name">
-                                                  Yamunanagar
+                                             <span style={{ margin: "10px 0px", gap: "5px" }} className="loc-name alignC">
+                                                  <MapPin height={19} />
+                                                  {weatherInfo.locationName}
                                              </span>
-                                             <div style={{ gap: "20px" }} className="weather-icon-temp alignC">
-                                                  <img height={70} width={70} src="/weather_icons/cloud.png" alt="Loading..." loading="lazy" />
+                                             <div style={{ gap: "2rem", margin: "20px 0px" }} className="weather-icon-temp alignC">
+                                                  <img height={80} width={80} src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl} alt="Loading..." loading="lazy" />
                                                   <div style={{ marginTop: "10px", display: "flex", alignContent: "flex-start", flexDirection: "column" }} className="temp-humidity">
                                                        <span
                                                             style={{
-                                                                 fontSize: "2.5rem",
+                                                                 fontSize: "2.9rem",
                                                                  fontWeight: "600",
-                                                                 lineHeight:"45px"
+                                                                 lineHeight: "55px"
                                                             }}>
-                                                            32&deg;C
+                                                            {weatherInfo.temperature.tempInC} {weatherInfo.temperature.tempUnit}
                                                        </span>
                                                        <span style={{
+                                                            fontFamily: "var(--gm-font)",
                                                             color: "var(--dim)",
-                                                            fontSize: "0.9rem",
+                                                            fontSize: "0.85rem",
                                                             letterSpacing: "1px"
-                                                       }}>Clear sky</span>
+                                                       }}>{returnMappedWeatherIcon(weatherInfo.weatherCode).main}</span>
                                                   </div>
                                              </div>
-                                             <div style={{gap: "10px", marginTop: "25px"}} className="alignC">
-                                                  <div className="humidity-card"></div>
-                                                  <div className="wind-card"></div>
-                                                  <div className="precipitation-card"></div>
+                                             <div style={{ gap: "10px", marginTop: "25px" }} className="alignC">
+                                                  <div className="humidity-card center alignC">
+                                                       <img height={30} width={30} loading="lazy" src="/weather_icons/humidity.svg" alt="Humidity..." />
+                                                       <span className="weather-panel-card-value">{weatherInfo.humidity.humidity}{weatherInfo.humidity.humidityUnit}</span>
+                                                       <span className="weather-panel-card-titles">Humidity</span>
+                                                  </div>
+                                                  <div className="wind-card center alignC">
+                                                       <img height={30} width={30} loading="lazy" src="/weather_icons/wind.svg" alt="Wind..." />
+                                                       <span className="weather-panel-card-value">{weatherInfo.wind.windSpeed}{weatherInfo.wind.windSpeedUnit}</span>
+                                                       <span className="weather-panel-card-titles">Wind</span>
+                                                  </div>
+                                                  <div className="precipitation-card center alignC">
+                                                       <img height={30} width={30} loading="lazy" src="/weather_icons/precipitation.svg" alt="Precipitation..." />
+                                                       <span className="weather-panel-card-value">{weatherInfo.rain.rain}{weatherInfo.rain.rainUnit}</span>
+                                                       <span className="weather-panel-card-titles">Rain</span>
+                                                  </div>
                                              </div>
                                         </div>
                                    )}
