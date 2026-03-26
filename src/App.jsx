@@ -1,5 +1,6 @@
 import "./App.css";
 import "./weather-panel.css";
+import "./weather-card.css";
 import axios from "axios";
 import returnMappedWeatherIcon from "./mappedWeatherIcons"
 import TodoList from "./TodoList";
@@ -44,6 +45,8 @@ export default function App() {
      const [isSongPlaying, setIsSongPlaying] = useState(false);
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
+     const [quotes, setQuotes] = useState(() => JSON.parse(localStorage.getItem("quotes") || "[]"));
+     const [todayQuote, setTodayQuote] = useState(() => JSON.parse(localStorage.getItem("todayQuote")) || {});
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
      const [userCoordinates, setUserCoordinates] = useState(() => JSON.parse(localStorage.getItem("user-coords")) || {});
@@ -78,12 +81,8 @@ export default function App() {
           const { latitude, longitude } = userCoordinatesObj;
 
           try {
-               console.log("Weather api called")
-               const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude + 10}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
+               const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
                const { data: fetchedGeoCoding } = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-
-               console.log(fetchedWeather);
-               console.log(fetchedGeoCoding)
                const reqWeatherInfo = {
                     locationName: fetchedGeoCoding.address.state_district || fetchedGeoCoding.address.town,
                     address: fetchedGeoCoding.display_name,
@@ -110,27 +109,45 @@ export default function App() {
                }
                setWeatherInfo(reqWeatherInfo);
                localStorage.setItem("weatherInfo", JSON.stringify(reqWeatherInfo));
-
-
+               
           } catch (weatherFetchError) {
-               console.log(weatherFetchError);
                alert("Seems like something went wrong, please reload the page. If the issue persists, please report the bug to the developer")
-               return;
+               throw weatherFetchError;
 
           }
      }
 
      // useEffects
      useEffect(() => {
+          const controller = new AbortController();
+          if (quotes.length) { return } else {
+               axios.get("/src/quotes.json").then((quotes) => {
+                    localStorage.setItem("quotes", JSON.stringify(quotes.data));
+                    setQuotes(quotes.data);
+               }).catch((err) => {
+                    if (err.name !== 'AbortError') { throw err }
+                    localStorage.setItem("quotes", JSON.stringify([]));
+                    setQuotes([]);
+                    return;
+               });
+          }
+          return () => controller.abort();
+     }, [quotes]);
+
+     useEffect(() => {
           if (!isLocationAllowed) {
                setUserCoordinates({});
                localStorage.setItem("user-coords", JSON.stringify({}));
+               if (!isLocationAllowed && weatherInfo.fetchTimestamp + 1000 * 60 * 10 < Date.now()) {
+                    setWeatherInfo({});
+                    localStorage.setItem("weatherInfo", JSON.stringify({}));
+                    return;
+               }
                return;
           }
 
           if (Object.keys(weatherInfo).length === 0 || !weatherInfo) {
                if (Object.keys(userCoordinates).length === 0 || !userCoordinates) {
-                    console.log("No coords found, fetching coords and weather...")
                     navigator.geolocation.getCurrentPosition(
                          async (position) => {
                               const { latitude, longitude } = position.coords;
@@ -151,15 +168,11 @@ export default function App() {
                          }
                     )
                     return;
-               } else {
-                    console.log("Coords found, fetching weather");
-                    fetchAndStoreWeather(userCoordinates)
-               }
+               } else { fetchAndStoreWeather(userCoordinates) }
 
           } else {
-               const isLastFetchWeatherExpired = weatherInfo.fetchTimestamp + 1000 * 60 * 15 < Date.now();
+               const isLastFetchWeatherExpired = weatherInfo.fetchTimestamp + 1000 * 60 * 10 < Date.now();
                if (!isLastFetchWeatherExpired) {
-                    console.log("Weather data is not expired, not fetching anything")
                     return;
                } else {
                     navigator.geolocation.getCurrentPosition(
@@ -225,7 +238,71 @@ export default function App() {
                               </div>
                          </section>
 
-                         <section className="right-pane">
+                         <div className="right-pane">
+                              <div className="right-card right-quote-card">
+                                   <div className="card-label">Quote</div>
+                                   <p className="quote-text">"The only way to do great work is to love what you do."</p>
+                                   <span className="quote-author">— Steve Jobs</span>
+                              </div>
+                              <div className="home-weather-card">
+                                   <div className="hwc-header">
+                                        <span className="hwc-label">Weather</span>
+                                        {Object.keys(weatherInfo).length > 0 && (
+                                             <div className="hwc-location">
+                                                  <MapPin size={10} />
+                                                  <span className="hwc-location-name">{weatherInfo.locationName}</span>
+                                             </div>
+                                        )}
+                                   </div>
+
+                                   {Object.keys(weatherInfo).length === 0 ? (
+                                        <div className="hwc-empty">
+                                             <CloudOff size={28} />
+                                             <span className="hwc-empty-title">No Weather Data</span>
+                                             <span className="hwc-empty-desc">Enable location access from the weather panel</span>
+                                        </div>
+                                   ) : (
+                                        <>
+                                             <div className="hwc-main">
+                                                  <div className="hwc-icon-wrap">
+                                                       <img
+                                                            src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl}
+                                                            alt="Weather"
+                                                            loading="lazy"
+                                                       />
+                                                       <div className="hwc-icon-glow"></div>
+                                                  </div>
+                                                  <div className="hwc-temp-block">
+                                                       <div className="hwc-temp-row">
+                                                            <span className="hwc-temp-number">{weatherInfo.temperature.tempInC}</span>
+                                                            <span className="hwc-temp-unit">{weatherInfo.temperature.tempUnit}</span>
+                                                       </div>
+                                                       <span style={{
+                                                            width: "fit-content",
+                                                            fontFamily: "var(--gm-font)",
+                                                            fontSize: "0.75rem",
+                                                            color: "var(--dim)",
+                                                            margin: "5px 0px",
+                                                            fontWeight: "500"
+                                                       }} className="hwc-condition">{returnMappedWeatherIcon(weatherInfo.weatherCode).main}</span>
+                                                  </div>
+                                             </div>
+
+                                             <div className="hwc-stats">
+                                                  <div className="hwc-stat humidity">
+                                                       <div className="hwc-stat-icon"><Droplets size={13} /></div>
+                                                       <span className="hwc-stat-label">Humidity</span>
+                                                       <span className="hwc-stat-value">{weatherInfo.humidity.humidity}<small>{weatherInfo.humidity.humidityUnit}</small></span>
+                                                  </div>
+                                                  <div className="hwc-stat rain">
+                                                       <div className="hwc-stat-icon"><CloudRain size={13} /></div>
+                                                       <span className="hwc-stat-label">Rain</span>
+                                                       <span className="hwc-stat-value">{weatherInfo.rain.rain}<small>{weatherInfo.rain.rainUnit}</small></span>
+                                                  </div>
+                                             </div>
+                                        </>
+                                   )}
+                              </div>
                               <div className="right-card right-spotify-card">
                                    <div className="card-label">Now Playing</div>
                                    <div className="spotify-art">♫</div>
@@ -233,17 +310,7 @@ export default function App() {
                                    <div className="spotify-artist">Connect Spotify to play music</div>
                                    <button className="connect-btn">Connect Spotify</button>
                               </div>
-                              <div className="right-card right-weather-card">
-                                   <div className="card-label">Weather</div>
-                                   <div className="weather-temp">{weatherInfo.length ? weatherInfo.temperature.tempInC : "_"}°</div>
-                                   <div className="weather-desc">Allow location access</div>
-                              </div>
-                              <div className="right-card right-quote-card">
-                                   <div className="card-label">Quote</div>
-                                   <p className="quote-text">"The only way to do great work is to love what you do."</p>
-                                   <span className="quote-author">— Steve Jobs</span>
-                              </div>
-                         </section>
+                         </div>
                     </div>
 
                     <footer className="main-footer">
@@ -259,13 +326,13 @@ export default function App() {
                          </div>
                          <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 size={19} color="var(--text)" /><span className="footer-label">Shortcuts</span></button>
                     </footer>
+
                     {showShortcuts && (
                          <div className="shortcuts-panel">
                               <div className="center" style={{ justifyContent: "space-between", marginBottom: "12px" }}>
                                    <div className="panel-label" style={{ margin: "0px" }}>Quick Shortcuts</div>
                                    <button onClick={() => setShowAddShortcut(true)} className="add-shortcut-btn">+</button>
                               </div>
-                              {/* Mounts all shortcuts added */}
                               <div className="shortcut-list">
                                    {shortcuts.length ? (
                                         shortcuts.map((s, i) => (
@@ -305,30 +372,26 @@ export default function App() {
                          />
                     )}
 
-                    {/* <WeatherPane /> */}
                     {showWeatherPanel && (
-                         <div className="weather-panel-overlay" onClick={() => setShowWeatherPanel(false)}>
+                         <div className="weather-panel-overlay center" onClick={() => setShowWeatherPanel(false)}>
                               <div className="weather-panel" onClick={(e) => e.stopPropagation()}>
-                                   {/* Header */}
-                                   <div className="weather-panel-head">
-                                        <div className="weather-panel-title-wrapper">
-                                             <div className="weather-title-icon">
+                                   <div className="weather-panel-head alignC">
+                                        <div className="weather-panel-title-wrapper alignC">
+                                             <div className="weather-title-icon center">
                                                   <Cloud size={16} />
                                              </div>
                                              <span className="weather-panel-title">Weather</span>
                                         </div>
                                         <button
                                              onClick={() => setShowWeatherPanel(false)}
-                                             className="weather-panel-close"
+                                             className="weather-panel-close center"
                                         >
                                              <X size={14} />
                                         </button>
                                    </div>
-
-                                   {/* Location Permission */}
-                                   <div className="weather-permission-card">
-                                        <div className="permission-info">
-                                             <div className={`permission-status ${isLocationAllowed ? 'active' : ''}`}>
+                                   <div className="weather-permission-card alignC">
+                                        <div className="permission-info flex">
+                                             <div className={`permission-status alignC ${isLocationAllowed ? 'active' : ''}`}>
                                                   <div className="status-dot"></div>
                                                   <span>{isLocationAllowed ? "Location enabled" : "Location disabled"}</span>
                                              </div>
@@ -344,30 +407,24 @@ export default function App() {
                                              onChange={(checked) => {
                                                   localStorage.setItem("isLocationAllowed", checked);
                                                   setIsLocationAllowed(checked);
+                                                  setTimeout(() => { window.location.reload() }, 300);
                                              }}
                                         />
                                    </div>
-
-                                   {/* Weather Content */}
                                    {Object.keys(weatherInfo).length === 0 ? (
-                                        <div className="weather-empty-state">
-                                             <div className="empty-icon">
-                                                  <CloudOff size={32} />
-                                             </div>
+                                        <div className="weather-empty-state center">
+                                             <div className="empty-icon center"><CloudOff size={32} /> </div>
                                              <span className="empty-title">No Weather Data</span>
                                              <span className="empty-desc">Enable location access to see current weather conditions</span>
                                         </div>
                                    ) : (
                                         <div className="weather-content">
-                                             {/* Location */}
-                                             <div className="weather-location">
+                                             <div className="weather-location center">
                                                   <MapPin className="location-pin" size={14} />
                                                   <span>{weatherInfo.locationName}</span>
                                              </div>
-
-                                             {/* Main Weather Display */}
-                                             <div className="weather-main-display">
-                                                  <div className="weather-icon-wrapper">
+                                             <div className="weather-main-display center">
+                                                  <div className="weather-icon-wrapper center">
                                                        <img
                                                             src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl}
                                                             alt="Weather"
@@ -375,8 +432,8 @@ export default function App() {
                                                        />
                                                        <div className="icon-glow"></div>
                                                   </div>
-                                                  <div className="weather-temp-info">
-                                                       <div className="temp-value">
+                                                  <div className="weather-temp-info flex">
+                                                       <div className="temp-value flex">
                                                             <span className="temp-number">{weatherInfo.temperature.tempInC}</span>
                                                             <span className="temp-unit">{weatherInfo.temperature.tempUnit}</span>
                                                        </div>
@@ -385,8 +442,6 @@ export default function App() {
                                                        </span>
                                                   </div>
                                              </div>
-
-                                             {/* Stats Grid */}
                                              <div className="weather-stats-grid">
                                                   <div className="weather-stat-card humidity">
                                                        <div className="stat-icon-wrapper">
@@ -427,10 +482,8 @@ export default function App() {
                                                        </div>
                                                   </div>
                                              </div>
-
-                                             {/* Privacy Notice */}
                                              <div className="weather-privacy-notice">
-                                                  <Shield size={12} />
+                                                  <Shield size={23} />
                                                   <span>Your location data stays private and is only used for weather</span>
                                              </div>
                                         </div>

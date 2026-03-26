@@ -22,6 +22,10 @@
      --radius-md: 12px;
      --radius-lg: 18px;
      --transition: 0.2s ease;
+     --prim-shadow: rgba(0, 0, 0, 0.35);
+
+     --svg-color-1: #60a5fa;
+     --svg-color-2: #f59e0b;
 
      /* font sizes */
      /* text color (using pallete second :- earthtones )*/
