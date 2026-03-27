@@ -1,0 +1,226 @@
+/* ---- Home Weather Card ---- */
+.home-weather-card {
+     position: relative;
+     background: linear-gradient(145deg,
+               rgba(30, 30, 48, 0.9) 0%,
+               rgba(20, 20, 35, 0.95) 100%);
+     border: 1px solid var(--border);
+     border-radius: var(--radius-md);
+     padding: 14px;
+     transition: border-color var(--transition), box-shadow var(--transition);
+     cursor: default;
+}
+
+.hwc-header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     margin-bottom: 10px;
+}
+
+.hwc-label {
+     font-size: 10px;
+     letter-spacing: 2px;
+     text-transform: uppercase;
+     color: var(--dim);
+     font-weight: 600;
+     font-family: var(--plus-jakarta-font);
+}
+
+.hwc-location {
+     display: flex;
+     align-items: center;
+     gap: 5px;
+     padding: 2px 8px;
+     background: var(--surface2);
+     border: 1px solid var(--border);
+     border-radius: 8px;
+     max-width: 120px;
+}
+
+.hwc-location svg {
+     color: #6366f1;
+     flex-shrink: 0;
+}
+
+.hwc-location-name {
+     font-size: 12px;
+     color: var(--muted);
+     font-family: var(--plus-jakarta-font);
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+}
+
+/* ── Main: icon + temp side by side ── */
+
+.hwc-main {
+     display: flex;
+     align-items: center;
+     margin:15px 0px;
+     justify-content: space-between;
+}
+
+.hwc-icon-wrap {
+     position: relative;
+     width: 52px;
+     height: 52px;
+     flex-shrink: 0;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+
+.hwc-icon-wrap img {
+     margin-left: 27px;
+     height: 4.5rem;
+     width: 4.5rem;
+     object-fit: contain;
+     position: relative;
+     z-index: 1;
+     margin-left: 48px;
+     filter: drop-shadow(0 3px 8px var(--prim-shadow));
+     animation: hwc-float 3.5s ease-in-out infinite;
+}
+
+@keyframes hwc-float {
+
+     0%,
+     100% {
+          transform: translateY(0);
+     }
+
+     50% {
+          transform: translateY(-4px);
+     }
+}
+
+.hwc-icon-glow {
+     position: absolute;
+     width: 40px;
+     height: 40px;
+     background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+     border-radius: 50%;
+     filter: blur(10px);
+}
+
+.hwc-temp-block {
+     display: flex;
+     flex-direction: column;
+     min-width: 0;
+}
+
+.hwc-temp-row {
+     display: flex;
+     align-items: flex-start;
+     gap: 2px;
+     line-height: 1;
+}
+
+.hwc-temp-number {
+     font-family: var(--plus-jakarta-font);
+     font-size: 36px;
+     font-weight: 700;
+     letter-spacing: -1.5px;
+     color: var(--text);
+     line-height: 1;
+}
+
+.hwc-temp-unit {
+     font-size: 13px;
+     font-weight: 500;
+     color: var(--muted);
+     margin-top: 4px;
+}
+
+
+/* ── Stats: single row of tiny inline chips ── */
+.hwc-stats {
+     display: flex;
+     gap: 6px;
+}
+
+.hwc-stat {
+     display: flex;
+     align-items: center;
+     gap: 4px;
+     padding: 4px 8px;
+     background: var(--surface2);
+     border: 1px solid var(--border);
+     border-radius: 16px;
+     flex: 1;
+     min-width: 0;
+}
+
+.hwc-stat:hover {
+     border-color: var(--border2);
+}
+
+.hwc-stat-icon {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     flex-shrink: 0;
+}
+
+.hwc-stat.humidity .hwc-stat-icon {
+     color: var(--svg-color-1);
+}
+
+.hwc-stat.rain .hwc-stat-icon {
+     color: var(--svg-color-2);
+}
+
+.hwc-stat-label {
+     font-size: 9px;
+     color: var(--dim);
+     font-family: var(--gm-font);
+     text-transform: uppercase;
+     letter-spacing: 0.3px;
+     font-weight: 600;
+}
+
+.hwc-stat-value {
+     font-size: 11px;
+     font-weight: 600;
+     color: var(--text);
+     font-family: var(--plus-jakarta-font);
+     white-space: nowrap;
+     margin-left: auto;
+}
+
+.hwc-stat-value small {
+     font-size: 9px;
+     font-weight: 400;
+     color: var(--dim);
+}
+
+/* ── Empty state ── */
+.hwc-empty {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     padding: 16px 8px;
+     text-align: center;
+     gap: 6px;
+}
+
+.hwc-empty svg {
+     color: var(--dim);
+     opacity: 0.5;
+}
+
+.hwc-empty-title {
+     font-size: 12px;
+     font-weight: 600;
+     color: var(--muted);
+     font-family: var(--plus-jakarta-font);
+}
+
+.hwc-empty-desc {
+     font-size: 10px;
+     color: var(--dim);
+     font-family: var(--gm-font);
+     line-height: 1.4;
+}
