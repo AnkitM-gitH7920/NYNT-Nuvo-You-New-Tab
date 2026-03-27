@@ -6,15 +6,19 @@ import returnMappedWeatherIcon from "./mappedWeatherIcons"
 import TodoList from "./TodoList";
 import AddShortcutPane from "./AddShortcutPane";
 import ToggleButton from "./ToggleButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useClock } from "./lib/hooks";
 import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X, CloudOff, MapPin, Droplets, Wind, CloudRain, Shield } from "lucide-react";
 
-const SEARCH_ENGINES = [
+const SEARCH_OPTIONS = [
      { label: "Google", url: "https://google.com/search?q=" },
      { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
      { label: "Brave", url: "https://search.brave.com/search?q=" },
      { label: "Bing", url: "https://bing.com/search?q=" },
-     { label: "Tor Project", url: "https://torproject.org/search?q=" }
+     { label: "Startpage", url: "https://startpage.com/search?q=" },
+     { label: "Yandex", url: "https://yandex.com/search/?text=" },
+     { label: "YouTube", url: "https://youtube.com/results?search_query=" },
+     { label: "Reddit", url: "https://www.reddit.com/search/?q=" }
 ];
 const AI_TOOLS = [
      { name: "Gemini", favicon: "https://www.google.com/s2/favicons?domain=gemini.google.com&sz=32", targetURL: "https://gemini.google.com" },
@@ -24,20 +28,16 @@ const AI_TOOLS = [
      { name: "Perplexity", favicon: "https://www.google.com/s2/favicons?domain=perplexity.ai&sz=32", targetURL: "https://www.perplexity.ai" },
      { name: "Grok", favicon: "https://www.google.com/s2/favicons?domain=grok.com&sz=32", targetURL: "https://grok.com" },
      { name: "Copilot", favicon: "https://www.google.com/s2/favicons?domain=copilot.microsoft.com&sz=32", targetURL: "https://copilot.microsoft.com" },
-];
 
-function useClock() {
-     const [time, setTime] = useState(new Date());
-     useEffect(() => {
-          const t = setInterval(() => setTime(new Date()), 1000);
-          return () => clearInterval(t);
-     }, []);
-     return time;
-}
+];
 
 export default function App() {
      const time = useClock();
 
+     // useRef
+     const todoRef = useRef(null);
+
+     //useState
      const [query, setQuery] = useState("");
      const [engine, setEngine] = useState(0);
      const [todoOpen, setTodoOpen] = useState(false);
@@ -68,7 +68,7 @@ export default function App() {
           e.preventDefault();
           if (query.trim()) {
                let target = isSongPlaying ? "_blank" : "_self";
-               window.open(SEARCH_ENGINES[engine].url + encodeURIComponent(query), target);
+               window.open(SEARCH_OPTIONS[engine].url + encodeURIComponent(query), target);
           }
      }
 
@@ -78,13 +78,14 @@ export default function App() {
           saveShortcuts([...shortcuts, { faviconURL: `https://www.google.com/s2/favicons?domain=${domainName}&sz=32`, name, url }]);
      }
      async function fetchAndStoreWeather(userCoordinatesObj) {
-          const { latitude, longitude } = userCoordinatesObj;
+          let { latitude, longitude } = userCoordinatesObj;
 
           try {
                const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
                const { data: fetchedGeoCoding } = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+               console.log(fetchedWeather)
                const reqWeatherInfo = {
-                    locationName: fetchedGeoCoding.address.state_district || fetchedGeoCoding.address.town,
+                    locationName: fetchedGeoCoding.address.state_district || fetchedGeoCoding.address.town || fetchedGeoCoding.address.county || fetchedGeoCoding.address.region,
                     address: fetchedGeoCoding.display_name,
                     temperature: {
                          tempInC: Math.round(fetchedWeather?.current.temperature_2m),
@@ -105,11 +106,12 @@ export default function App() {
                          rainUnit: fetchedWeather?.current_units.precipitation,
                     },
                     weatherCode: fetchedWeather?.current.weather_code,
-                    fetchTimestamp: Date.now()
+                    fetchTimestamp: Date.now(),
+                    fetchedLocationTimeString: (fetchedWeather.current.time).split("T")[1]
                }
                setWeatherInfo(reqWeatherInfo);
                localStorage.setItem("weatherInfo", JSON.stringify(reqWeatherInfo));
-               
+
           } catch (weatherFetchError) {
                alert("Seems like something went wrong, please reload the page. If the issue persists, please report the bug to the developer")
                throw weatherFetchError;
@@ -117,7 +119,8 @@ export default function App() {
           }
      }
 
-     // useEffects
+     // useEffect
+     // PURPOSE :- Check if LS have stored quotes, if not read from /src/quotes.json
      useEffect(() => {
           const controller = new AbortController();
           if (quotes.length) { return } else {
@@ -134,6 +137,7 @@ export default function App() {
           return () => controller.abort();
      }, [quotes]);
 
+     // PURPOSE :- Manages logic for fetching and storing coordinates and weather
      useEffect(() => {
           if (!isLocationAllowed) {
                setUserCoordinates({});
@@ -190,6 +194,18 @@ export default function App() {
 
      }, [isLocationAllowed]);
 
+     // PURPOSE :- to close the div whenever user click outside the todo list(UX improve)
+     useEffect(() => {
+          if (!todoOpen) return;
+
+          const clickHandler = (event) => {
+               if (todoRef.current && !todoRef.current.contains(event.target)) { setTodoOpen(false); }
+          }
+          document.addEventListener("mousedown", clickHandler);
+          return () => removeEventListener("mousedown", clickHandler);
+
+     }, [todoOpen])
+
      return (
           <>
                <main className="root">
@@ -231,7 +247,7 @@ export default function App() {
                                         </div>
                                    </form>
                                    <div className="engine-tabs">
-                                        {SEARCH_ENGINES.map((eng, i) => (
+                                        {SEARCH_OPTIONS.map((eng, i) => (
                                              <button key={eng.label} className={`engine-tab ${engine === i ? "active" : ""}`} onClick={() => setEngine(i)}>{eng.label}</button>
                                         ))}
                                    </div>
@@ -250,7 +266,7 @@ export default function App() {
                                         {Object.keys(weatherInfo).length > 0 && (
                                              <div className="hwc-location">
                                                   <MapPin size={10} />
-                                                  <span className="hwc-location-name">{weatherInfo.locationName}</span>
+                                                  <span className="hwc-location-name">{weatherInfo.locationName ? weatherInfo.locationName : weatherInfo.address}</span>
                                              </div>
                                         )}
                                    </div>
@@ -352,7 +368,7 @@ export default function App() {
                     )}
 
                     {todoOpen && (
-                         <div className="todo-panel">
+                         <div ref={todoRef} className="todo-panel">
                               <div className="panel-label">Tasks</div>
                               <TodoList />
                          </div>
@@ -421,7 +437,9 @@ export default function App() {
                                         <div className="weather-content">
                                              <div className="weather-location center">
                                                   <MapPin className="location-pin" size={14} />
-                                                  <span>{weatherInfo.locationName}</span>
+                                                  <span>
+                                                       {weatherInfo.locationName ? weatherInfo.locationName : weatherInfo.address}
+                                                  </span>
                                              </div>
                                              <div className="weather-main-display center">
                                                   <div className="weather-icon-wrapper center">

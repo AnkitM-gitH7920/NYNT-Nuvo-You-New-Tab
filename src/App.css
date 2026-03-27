@@ -274,11 +274,11 @@ body,
 .right-pane {
      display: flex;
      flex-direction: column;
+     justify-content: space-around;
      gap: 0;
-     padding: 20px 20px;
+     padding: 10px;
      overflow-y: auto;
      scrollbar-width: none;
-     gap: 12px;
 }
 
 .right-pane::-webkit-scrollbar {

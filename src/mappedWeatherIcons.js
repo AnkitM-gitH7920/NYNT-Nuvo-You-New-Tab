@@ -1,20 +1,34 @@
 export default function returnMappedWeatherIcon(weatherCode) {
+     const time = new Date();
+     const hour = time.getHours();
+     const day = hour > 6 && hour < 18;
+
      if (weatherCode === 0) {
-          return {
+          return day ? {
                main: "Clear Sky",
                wmoIconUrl: "/weather_icons/clear-day.png"
+          } : {
+               main: "Clear night sky",
+               wmoIconUrl: "/weather_icons/clear-night.png"
           }
      }
      if (weatherCode === 1) {
-          return {
+          return day ? {
                main: "Mainly clear",
                wmoIconUrl: "/weather_icons/day-clouds.png"
+          } : {
+               main: "Mainly clear",
+               wmoIconUrl: "/weather_icons/night-clouds.png"
           }
      }
      if (weatherCode === 2) {
-          return {
+          return day ? {
                main: "Partly cloudy",
                wmoIconUrl: "/weather_icons/day-clouds.png"
+          } : {
+               main: "Partly cloudy",
+               wmoIconUrl: "/weather_icons/night-clouds.png"
+
           }
      }
      if (weatherCode === 3) {
