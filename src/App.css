@@ -138,7 +138,7 @@ body,
 
 .greeting-text {
      font-family: var(--plus-jakarta-font);
-     font-size: 13px;
+     font-size: 19px;
      color: var(--dim);
      font-weight: 600;
      letter-spacing: 2px;
@@ -176,7 +176,7 @@ body,
 
 .date-text {
      font-family: var(--gm-font);
-     font-size: 13px;
+     font-size: 19px;
      color: var(--muted);
      letter-spacing: 1px;
      margin-top: 4px;

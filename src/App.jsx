@@ -36,6 +36,7 @@ export default function App() {
 
      // useRef
      const todoRef = useRef(null);
+     const shortcutsRef = useRef(null);
 
      //useState
      const [query, setQuery] = useState("");
@@ -46,18 +47,15 @@ export default function App() {
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
      const [quotes, setQuotes] = useState(() => JSON.parse(localStorage.getItem("quotes") || "[]"));
-     const [todayQuote, setTodayQuote] = useState(() => JSON.parse(localStorage.getItem("todayQuote")) || {});
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
+     const [todayQuote, setTodayQuote] = useState(() => JSON.parse(localStorage.getItem("todayQuote")) || {});
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
      const [userCoordinates, setUserCoordinates] = useState(() => JSON.parse(localStorage.getItem("user-coords")) || {});
      const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("isLocationAllowed") === "true");
 
-     // UI useState
-     // const [weatherLoading, setWeatherLoading] = useState(false);
-
      const hours = String(time.getHours()).padStart(2, "0");
      const minutes = String(time.getMinutes()).padStart(2, "0");
-     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Savfww]turday"];
      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
      const dateString = `${days[time.getDay()]}, ${months[time.getMonth()]} ${time.getDate()}`;
      const greeting = time.getHours() < 12 ? "Good morning" : time.getHours() < 17 ? "Good afternoon" : "Good evening";
@@ -83,7 +81,7 @@ export default function App() {
           try {
                const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
                const { data: fetchedGeoCoding } = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-               console.log(fetchedWeather)
+
                const reqWeatherInfo = {
                     locationName: fetchedGeoCoding.address.state_district || fetchedGeoCoding.address.town || fetchedGeoCoding.address.county || fetchedGeoCoding.address.region,
                     address: fetchedGeoCoding.display_name,
@@ -149,7 +147,6 @@ export default function App() {
                }
                return;
           }
-
           if (Object.keys(weatherInfo).length === 0 || !weatherInfo) {
                if (Object.keys(userCoordinates).length === 0 || !userCoordinates) {
                     navigator.geolocation.getCurrentPosition(
@@ -190,8 +187,6 @@ export default function App() {
                     )
                }
           }
-
-
      }, [isLocationAllowed]);
 
      // PURPOSE :- to close the div whenever user click outside the todo list(UX improve)
@@ -205,6 +200,17 @@ export default function App() {
           return () => removeEventListener("mousedown", clickHandler);
 
      }, [todoOpen])
+
+     // PURPOSE :- to close the div whenever user click outside the shortcuts(UX improve)
+     useEffect(() => {
+          if (!showShortcuts) return;
+
+          const clickHandler = (event) => {
+               if (shortcutsRef.current && !shortcutsRef.current.contains(event.target)) { setShowShortcuts(false); }
+          }
+          document.addEventListener("mousedown", clickHandler);
+          return () => removeEventListener("mousedown", clickHandler);
+     }, [showShortcuts])
 
      return (
           <>
@@ -253,7 +259,6 @@ export default function App() {
                                    </div>
                               </div>
                          </section>
-
                          <div className="right-pane">
                               <div className="right-card right-quote-card">
                                    <div className="card-label">Quote</div>
@@ -270,7 +275,6 @@ export default function App() {
                                              </div>
                                         )}
                                    </div>
-
                                    {Object.keys(weatherInfo).length === 0 ? (
                                         <div className="hwc-empty">
                                              <CloudOff size={28} />
@@ -328,7 +332,6 @@ export default function App() {
                               </div>
                          </div>
                     </div>
-
                     <footer className="main-footer">
                          <button className="icon-btn footer-btn" title="Settings"><Settings size={19} color="var(--text)" /><span className="footer-label">Settings</span></button>
                          {/* Mounts the ai tools in the footer */}
@@ -344,7 +347,7 @@ export default function App() {
                     </footer>
 
                     {showShortcuts && (
-                         <div className="shortcuts-panel">
+                         <div ref={shortcutsRef} className="shortcuts-panel">
                               <div className="center" style={{ justifyContent: "space-between", marginBottom: "12px" }}>
                                    <div className="panel-label" style={{ margin: "0px" }}>Quick Shortcuts</div>
                                    <button onClick={() => setShowAddShortcut(true)} className="add-shortcut-btn">+</button>
@@ -354,7 +357,7 @@ export default function App() {
                                         shortcuts.map((s, i) => (
                                              <div key={i} className="shortcut-item" style={{ justifyContent: "space-between" }}>
                                                   <a style={{ gap: "8px" }} className="alignC" href={s.url} target={isSongPlaying ? "_blank" : "_self"} title={s.name}>
-                                                       <img height={19} width={19} src={s.faviconURL} alt={() => (<SearchAlert />)} style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
+                                                       <img height={19} width={19} src={s.faviconURL} alt="?" style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
                                                        <span className="shortcut-name">{s.name}</span>
                                                   </a>
                                                   <button onClick={() => removeShortcut(i)} className="remove-shortcut-btn">✕</button>
