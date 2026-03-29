@@ -55,7 +55,7 @@ export default function App() {
 
      const hours = String(time.getHours()).padStart(2, "0");
      const minutes = String(time.getMinutes()).padStart(2, "0");
-     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Savfww]turday"];
+     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
      const dateString = `${days[time.getDay()]}, ${months[time.getMonth()]} ${time.getDate()}`;
      const greeting = time.getHours() < 12 ? "Good morning" : time.getHours() < 17 ? "Good afternoon" : "Good evening";
@@ -82,8 +82,15 @@ export default function App() {
                const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
                const { data: fetchedGeoCoding } = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
 
+
+               console.log(fetchedWeather);
+               console.log(fetchedGeoCoding)
                const reqWeatherInfo = {
-                    locationName: fetchedGeoCoding.address.state_district || fetchedGeoCoding.address.town || fetchedGeoCoding.address.county || fetchedGeoCoding.address.region,
+                    locationName:
+                         fetchedGeoCoding.address.state_district ||
+                         fetchedGeoCoding.address.town ||
+                         fetchedGeoCoding.address.county ||
+                         fetchedGeoCoding.address.region,
                     address: fetchedGeoCoding.display_name,
                     temperature: {
                          tempInC: Math.round(fetchedWeather?.current.temperature_2m),
@@ -174,7 +181,7 @@ export default function App() {
           } else {
                const isLastFetchWeatherExpired = weatherInfo.fetchTimestamp + 1000 * 60 * 10 < Date.now();
                if (!isLastFetchWeatherExpired) {
-                    return;
+                    return
                } else {
                     navigator.geolocation.getCurrentPosition(
                          async (position) => {
@@ -198,7 +205,6 @@ export default function App() {
           }
           document.addEventListener("mousedown", clickHandler);
           return () => removeEventListener("mousedown", clickHandler);
-
      }, [todoOpen])
 
      // PURPOSE :- to close the div whenever user click outside the shortcuts(UX improve)

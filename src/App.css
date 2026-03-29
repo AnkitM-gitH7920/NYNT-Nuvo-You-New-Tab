@@ -95,7 +95,7 @@ body,
 }
 
 .search-icon {
-     color: var(--dim);
+     color: var(--muted);
      flex-shrink: 0;
 }
 
@@ -110,7 +110,7 @@ body,
 }
 
 .nav-search::placeholder {
-     color: var(--dim);
+     color: var(--muted);
 }
 
 /* ── BODY GRID ── */
@@ -139,7 +139,7 @@ body,
 .greeting-text {
      font-family: var(--plus-jakarta-font);
      font-size: 19px;
-     color: var(--dim);
+     color: var(--muted);
      font-weight: 600;
      letter-spacing: 2px;
      text-transform: uppercase;
@@ -216,7 +216,7 @@ body,
 }
 
 .big-search-input::placeholder {
-     color: var(--dim);
+     color: var(--muted);
 }
 
 .big-search-btn {
@@ -301,7 +301,7 @@ body,
      font-size: 10px;
      letter-spacing: 2px;
      text-transform: uppercase;
-     color: var(--dim);
+     color: var(--muted);
      font-weight: 500;
      margin-bottom: 12px;
      font-family: var(--plus-jakarta-font);
@@ -325,7 +325,7 @@ body,
 
 .spotify-artist {
      font-size: 11px;
-     color: var(--dim);
+     color: var(--muted);
      text-align: center;
      margin-top: 3px;
 }
@@ -358,7 +358,7 @@ body,
 
 .weather-desc {
      font-size: 12px;
-     color: var(--dim);
+     color: var(--muted);
      margin-top: 4px;
 }
 
@@ -375,7 +375,7 @@ body,
 .quote-author {
      display: block;
      font-size: 11px;
-     color: var(--dim);
+     color: var(--muted);
      margin-top: 8px;
      font-family: var(--gm-font);
 }
@@ -444,7 +444,7 @@ body,
 
 .footer-label {
      font-size: 11px;
-     color: var(--dim);
+     color: var(--muted);
      font-family: var(--main-font);
 }
 
@@ -525,7 +525,7 @@ body,
 
 .remove-shortcut-btn {
      background: transparent;
-     color: var(--dim);
+     color: var(--muted);
      border: none;
      outline: none;
      opacity: 0;
@@ -542,7 +542,7 @@ body,
      font-size: 10px;
      letter-spacing: 2px;
      text-transform: uppercase;
-     color: var(--dim);
+     color: var(--muted);
      font-weight: 500;
      font-family: var(--plus-jakarta-font);
 }
@@ -596,7 +596,7 @@ body,
 }
 
 .todo-input::placeholder {
-     color: var(--dim);
+     color: var(--muted);
 }
 
 .todo-input:focus {
@@ -663,7 +663,7 @@ body,
 }
 
 .todo-del {
-     color: var(--dim);
+     color: var(--muted);
      cursor: pointer;
      font-size: 11px;
      opacity: 0;
@@ -676,7 +676,7 @@ body,
 
 .todo-empty {
      font-size: 12px;
-     color: var(--dim);
+     color: var(--muted);
      text-align: center;
      padding: 12px 0;
      font-style: italic;
