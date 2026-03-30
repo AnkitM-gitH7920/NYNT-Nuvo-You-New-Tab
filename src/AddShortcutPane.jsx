@@ -7,7 +7,7 @@ export default function AddShortcutPane({ onClose, onAdd }) {
      const [url, setUrl] = useState("");
 
      return (
-          <div className="add-shortcutpane-wrapper">
+          <div className="add-shortcutpane-wrapper" onClick={onClose}>
                <div className="add-shortcutpane-container" onClick={e => e.stopPropagation()}>
                     <div className="add-shortcutpane-head">
                          <span className="add-shortcutpane-title">Add Shortcut</span>

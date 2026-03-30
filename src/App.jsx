@@ -1,4 +1,5 @@
 import "./App.css";
+import "./todolist.css";
 import "./weather-panel.css";
 import "./weather-card.css";
 import axios from "axios";
@@ -112,7 +113,7 @@ export default function App() {
                     },
                     weatherCode: fetchedWeather?.current.weather_code,
                     fetchTimestamp: Date.now(),
-                    fetchedLocationTimeString: (fetchedWeather.current.time).split("T")[1]
+                    fetchedLocationTimeString: (fetchedWeather.current.time).split("T")[1] //Maybe containing bugs, check out
                }
                setWeatherInfo(reqWeatherInfo);
                localStorage.setItem("weatherInfo", JSON.stringify(reqWeatherInfo));
@@ -221,29 +222,29 @@ export default function App() {
      return (
           <>
                <main className="root">
-                    <nav className="main-nav">
-                         <div className="nav-left">
-                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo size={19} color="var(--text)" /></button>
+                    <nav className="main-nav alignC">
+                         <div className="nav-left alignC">
+                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo size={25} color="var(--text)" /></button>
                          </div>
-                         <div className="nav-right">
+                         <div className="nav-right alignC">
                               <form className="search-wrapper" onSubmit={doSearch}>
                                    <Search size={19} className="search-icon" />
                                    <input placeholder="Search with Google" type="text" className="nav-search" value={query} onChange={e => setQuery(e.target.value)} />
                                    <img src="google.png" alt="Google" loading="lazy" height={18} width={18} />
                               </form>
-                              <button className="icon-btn" title="Spotify"><img src="spotify.svg" alt="Spotify" width={22} height={22} style={{ filter: "contrast(0.8)" }} /></button>
+                              <button className="icon-btn" title="Spotify"><img src="spotify.svg" alt="Spotify" width={25} height={25} style={{ filter: "contrast(0.8)" }} /></button>
                               <button
                                    onClick={() => setShowWeatherPanel(true)}
                                    className="icon-btn"
                                    title="Weather">
-                                   {isLocationAllowed ? <Cloud size={19} color="var(--text)" /> : <CloudOff size={19} color="var(--dim)" />}
+                                   {isLocationAllowed ? <Cloud size={25} color="var(--text)" /> : <CloudOff size={25} color="var(--muted)" />}
 
                               </button>
                          </div>
                     </nav>
 
                     <div className="body-grid">
-                         <section className="left-pane">
+                         <section className="left-pane justifyC">
                               <div className="clock-block">
                                    <span className="greeting-text">{greeting}</span>
                                    <div className="time-display">
@@ -267,9 +268,9 @@ export default function App() {
                          </section>
                          <div className="right-pane">
                               <div className="right-card right-quote-card">
-                                   <div className="card-label">Quote</div>
-                                   <p className="quote-text">"The only way to do great work is to love what you do."</p>
-                                   <span className="quote-author">— Steve Jobs</span>
+                                   <div className="card-label">Daily Quote</div>
+                                   <p className="quote-text">"{todayQuote?.quote || "The only way to do great work is to love what you do."}"</p>
+                                   <span className="quote-author">— {todayQuote?.author?.split(',')[0] || "Steve Jobs"}</span>
                               </div>
                               <div className="home-weather-card">
                                    <div className="hwc-header">

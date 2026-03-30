@@ -2,77 +2,79 @@
 
 :root {
      /* fonts styles */
-     --main-font: "Poppins";
-     --gm-font: "Geist Mono";
-     --plus-jakarta-font: "Plus Jakarta Sans";
-     --playfair-font: "Playfair Display";
+     --main-font: "Poppins", sans-serif;
+     --gm-font: "Geist Mono", monospace;
+     --plus-jakarta-font: "Plus Jakarta Sans", sans-serif;
+     --playfair-font: "Playfair Display", serif;
 
-     /* Is use root colors */
-     --bg: #13131f;
-     --surface: #1c1c2e;
-     --surface2: #24243a;
-     --border: rgba(248, 245, 238, 0.151);
-     --border2: rgba(240, 233, 223, 0.16);
+     /* Premium Glassmorphic Theme Variables */
+     --bg: #09090b;
 
-     --text: #eee7e0;
-     --muted: #b8a99a;
-     --dim: #888197;
-     --accent: #c9a0a0;
+     /* Main theme variables */
+     --surface: rgba(255, 255, 255, 0.03);
+     --surface2: rgba(255, 255, 255, 0.08);
+     --surface-solid: #18181b;
+     --border: rgba(255, 255, 255, 0.1);
+     --border2: rgba(255, 255, 255, 0.3);
+     --text: #fafafa;
+     --muted: #cbcbd6;
+     --dim: var(--muted);
+     /*change every --dim into --muted*/
+     --accent: #8b5cf6;
 
-     --radius-sm: 8px;
-     --radius-md: 12px;
-     --radius-lg: 18px;
-     --transition: 0.2s ease;
-     --prim-shadow: rgba(0, 0, 0, 0.35);
+     /* Vibrant Purple */
+     --accent-glow: rgba(139, 92, 246, 0.2);
+     /*alpha :- 0.4*/
 
+     /* Border radius */
+     --radius-sm: 12px;
+     --radius-md: 20px;
+     --radius-lg: 32px;
+     --radius-full: 9999px;
+
+     /* other variables */
+     --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+     --low-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+     --high-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+     --glow-shadow: 0 0 20px var(--accent-glow);
+
+     /* Paddings */
+     --navbar-padding: 9px 35px;
+     --footer-padding: 0px 35px;
+
+
+     /*Used in navbar and footer*/
+     --glass-blur: 24px;
+
+     /*PENDING:- Create a categories for three svgs used in weather */
      --svg-color-1: #60a5fa;
      --svg-color-2: #f59e0b;
 
-     /* font sizes */
-     /* text color (using pallete second :- earthtones )*/
-     --primary-text: #1a1a1b;
-
-     /* bg theme colors (mixed for textbg, bgs) */
-     /* (First pallete) */
-     --pallete-purp-1: #231942;
-     --pallete-purp-2: #5e548e;
-     --pallete-purp-3: #9f86c0;
-     --pallete-purp-4: #be95c4;
-     --pallete-purp-5: #e0b1cb;
-
-     /* (second pallete) */
-     --pallete-earthtones-1: #0a0908;
-     --pallete-earthtones-2: #22333b;
-     --pallete-earthtones-3: #eae0d5;
-     --pallete-earthtones-4: #c6ac8f;
-     --pallete-earthtones-5: #5e503f;
-
-     /* (third pallete) */
-     --pallete-softlavender-1: #9381ff;
-     --pallete-softlavender-2: #b8b8ff;
-     --pallete-softlavender-3: #f8f7ff;
-     --pallete-softlavender-4: #ffeedd;
-     --pallete-softlavender-5: #ffd8be;
-
-     /* (fourth pallete) */
-     --pallete-serenelavender-1: #f5e6e8;
-     --pallete-serenelavender-2: #d5c6e0;
-     --pallete-serenelavender-3: #aaa1c8;
-     --pallete-serenelavender-4: #967aa1;
-     --pallete-serenelavender-5: #192a51;
-
-     /* Shadows, transition, border-radius and others */
-     --div-br: 7px;
-     --input-br: 4px;
-     --prim-transition-speed: 0.3s
-}
-
-* {
-     padding: 0;
-     margin: 0;
-     box-sizing: border-box;
 }
 
 *::-webkit-scrollbar {
      display: none;
+}
+
+/* ── css reset ── */
+*,
+*::before,
+*::after {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+}
+
+a {
+     text-decoration: none;
+     color: inherit;
+}
+
+button {
+     cursor: pointer;
+     font-family: inherit;
+}
+
+input {
+     font-family: inherit;
 }

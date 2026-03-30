@@ -28,6 +28,7 @@
      border-radius: var(--radius-lg);
      padding: 24px;
      width: 340px;
+     backdrop-filter: blur(20px);
      animation: scaleIn 0.2s ease;
 }
 
