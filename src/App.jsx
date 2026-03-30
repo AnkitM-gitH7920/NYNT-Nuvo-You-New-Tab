@@ -260,9 +260,7 @@ export default function App() {
                                         </div>
                                    </form>
                                    <div className="engine-tabs">
-                                        {SEARCH_OPTIONS.map((eng, i) => (
-                                             <button key={eng.label} className={`engine-tab ${engine === i ? "active" : ""}`} onClick={() => setEngine(i)}>{eng.label}</button>
-                                        ))}
+                                        {SEARCH_OPTIONS.map((eng, i) => (<button key={eng.label} className={`engine-tab ${engine === i ? "active" : ""}`} onClick={() => setEngine(i)}>{eng.label}</button>))}
                                    </div>
                               </div>
                          </section>

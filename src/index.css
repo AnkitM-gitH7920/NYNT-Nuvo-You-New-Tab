@@ -7,24 +7,25 @@
      --plus-jakarta-font: "Plus Jakarta Sans", sans-serif;
      --playfair-font: "Playfair Display", serif;
 
+     /* --------VARIABLES CHANGEAGLE--------*/
+
      /* Premium Glassmorphic Theme Variables */
-     --bg: #09090b;
+     --bg: #09090b; /*Main bg color*/
 
      /* Main theme variables */
-     --surface: rgba(255, 255, 255, 0.03);
-     --surface2: rgba(255, 255, 255, 0.08);
-     --surface-solid: #18181b;
-     --border: rgba(255, 255, 255, 0.1);
-     --border2: rgba(255, 255, 255, 0.3);
-     --text: #fafafa;
-     --muted: #cbcbd6;
-     --dim: var(--muted);
-     /*change every --dim into --muted*/
-     --accent: #8b5cf6;
+     --surface: rgba(255, 255, 255, 0.03); /*for background*/
+     --surface2: rgba(255, 255, 255, 0.08); /*for background:hover*/
+     --border: rgba(255, 255, 255, 0.1); /*Main theme border*/
+     --border2: rgba(255, 255, 255, 0.3); /*On hover border*/
+     --text: #fafafa; /*Light text*/
+     --muted: #cbcbd6; /*Slight grayish text*/
+     --dim: var(--muted); /*change every --dim into --muted*/
+     --accent: #f65c5c; /*accent color for borders,buttons,checkboxex*/
 
      /* Vibrant Purple */
-     --accent-glow: rgba(139, 92, 246, 0.2);
-     /*alpha :- 0.4*/
+     --accent-glow: rgba(139, 92, 246, 0.2); /*two centeral glowing effects*/
+
+     /* --------VARIABLES CHANGEAGLE--------*/
 
      /* Border radius */
      --radius-sm: 12px;

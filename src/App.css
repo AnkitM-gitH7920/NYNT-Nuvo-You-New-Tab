@@ -457,7 +457,7 @@
      padding: 0.8em 2.0em;
      font-family: var(--main-font);
      font-size: 0.7rem;
-     border: 1px solid var(--border2);
+     border: 1px solid var(--border);
      background-color: transparent;
      border-radius: 100px;
      color: var(--text);
@@ -552,7 +552,7 @@
 .add-shortcut-btn {
      width: 25px;
      height: 25px;
-     background: var(--surface2);
+     background: var(--surface);
      border: 1px solid var(--border);
      border-radius: var(--radius-sm);
      color: var(--muted);
