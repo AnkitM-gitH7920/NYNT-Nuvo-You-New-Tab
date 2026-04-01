@@ -51,7 +51,6 @@ export default function App() {
      const [isSongPlaying, setIsSongPlaying] = useState(false);
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
-     const [quotes, setQuotes] = useState(() => JSON.parse(localStorage.getItem("quotes") || "[]"));
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [todayQuote, setTodayQuote] = useState(() => JSON.parse(localStorage.getItem("todayQuote")) || {});
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
@@ -133,19 +132,56 @@ export default function App() {
      // PURPOSE :- Check if LS have stored quotes, if not read from /src/quotes.json
      useEffect(() => {
           const controller = new AbortController();
-          if (quotes.length) { return } else {
-               axios.get("/src/quotes.json").then((quotes) => {
-                    localStorage.setItem("quotes", JSON.stringify(quotes.data));
-                    setQuotes(quotes.data);
-               }).catch((err) => {
-                    if (err.name !== 'AbortError') { throw err }
-                    localStorage.setItem("quotes", JSON.stringify([]));
-                    setQuotes([]);
+          async function fetchQuote() {
+               if (Object.keys(todayQuote).length === 0) { //empty quote object(no data)
+                    console.log("Same day")
+                    console.log("Didnt got quote data from LS")
+                    try {
+                         const { data: quoteResponse } = await axios.get(`https://api.api-ninjas.com/v2/quotes`, {
+                              "headers": { "X-Api-Key": "V59WcV5fK3qAo60rvAlnsLW9KsVCNnzC0w2MFM9f" }
+                         });
+
+                         const reqQuoteInfo = {
+                              author: quoteResponse[0].author,
+                              quote: quoteResponse[0].quote,
+                              quoteFetchedTimestamp: Date.now()
+                         }
+
+                         localStorage.setItem("todayQuote", JSON.stringify(reqQuoteInfo))
+                         setTodayQuote(reqQuoteInfo)
+
+                    } catch (error) {
+                         console.log(error)
+                         throw error;
+                    }
+               } else {
+                    console.log("Got quote data from LS")
+                    let dayQuoteFetched = String(new Date(todayQuote.quoteFetchedTimestamp)).split(" ").splice(0, 4).join(" ");
+                    let todayDateString = String(new Date(Date.now())).split(" ").splice(0, 4).join(" ");
+
+                    // Without this date check, Infinite UI rendoring will start
+                    if (dayQuoteFetched !== todayDateString) {
+                         console.log("Day passed, fetching new quote")
+                         const { data: quoteResponse } = await axios.get(`https://api.api-ninjas.com/v2/quotes`, {
+                              "headers": { "X-Api-Key": "V59WcV5fK3qAo60rvAlnsLW9KsVCNnzC0w2MFM9f" }
+                         });
+
+                         const reqQuoteInfo = {
+                              author: quoteResponse[0].author,
+                              quote: quoteResponse[0].quote,
+                              quoteFetchedTimestamp: Date.now()
+                         }
+
+                         localStorage.setItem("todayQuote", JSON.stringify(reqQuoteInfo))
+                         setTodayQuote(reqQuoteInfo)
+                    }
                     return;
-               });
+               }
           }
+          fetchQuote();
+
           return () => controller.abort();
-     }, [quotes]);
+     }, [todayQuote])
 
      // PURPOSE :- Manages logic for fetching and storing coordinates and weather
      useEffect(() => {
@@ -273,7 +309,7 @@ export default function App() {
                               <div className="right-card right-quote-card">
                                    <div className="card-label">Daily Quote</div>
                                    <p className="quote-text">"{todayQuote?.quote || "The only way to do great work is to love what you do."}"</p>
-                                   <span className="quote-author">— {todayQuote?.author?.split(',')[0] || "Steve Jobs"}</span>
+                                   <span className="quote-author">— {todayQuote?.author || "Steve Jobs"}</span>
                               </div>
                               <div className="right-card home-weather-card">
                                    <div className="hwc-header">
@@ -374,7 +410,7 @@ export default function App() {
                                              </div>
                                         ))
                                    ) : (
-                                        <div style={{ textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", fontStyle: "italic" }}>No added shortcuts</div>
+                                        <span style={{ display: "block", textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", fontStyle: "italic" }}>No added shortcuts</span>
                                    )}
                               </div>
                          </div>
