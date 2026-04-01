@@ -23,10 +23,8 @@
 
 /*-------- Start of weather panel design --------*/
 .weather-panel {
-     background: linear-gradient(165deg,
-               rgba(30, 30, 35, 0.95) 0%,
-               rgba(20, 20, 25, 0.98) 100%);
-     border: 1px solid var(--border);
+     background-color: var(--surface2);
+     border: 1px solid var(--border2);
      border-radius: var(--radius-lg);
      padding: 24px;
      width: 380px;
@@ -35,7 +33,7 @@
           0 25px 50px -12px rgba(0, 0, 0, 0.5),
           0 0 0 1px rgba(255, 255, 255, 0.05) inset,
           0 1px 0 rgba(255, 255, 255, 0.1) inset;
-     animation: panelSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+     animation: panelSlideIn var(--transition);
      position: relative;
      overflow: hidden;
 }
@@ -100,7 +98,7 @@
      border-radius: var(--radius-sm);
      color: var(--muted);
      cursor: pointer;
-     transition: all 0.2s ease;
+     transition: all var(--transition);
 }
 
 .weather-panel-close:hover {

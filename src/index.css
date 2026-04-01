@@ -7,7 +7,7 @@
      --plus-jakarta-font: "Plus Jakarta Sans", sans-serif;
      --playfair-font: "Playfair Display", serif;
 
-     /* --------VARIABLES CHANGEAGLE--------*/
+     /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
      /* Premium Glassmorphic Theme Variables */
      --bg: #09090b; /*Main bg color*/
@@ -20,13 +20,16 @@
      --text: #fafafa; /*Light text*/
      --muted: #cbcbd6; /*Slight grayish text*/
      --dim: var(--muted); /*change every --dim into --muted*/
-     --accent: #f65c5c; /*accent color for borders,buttons,checkboxex*/
+     --accent: #9f5cf6; /*accent color for borders,buttons,checkboxex*/
+     --accent-hover: #ac71f8; /*Should be a bit lighter then --accent always*/
 
-     /* Vibrant Purple */
-     --accent-glow: rgba(139, 92, 246, 0.2); /*two centeral glowing effects*/
+     /* Vibrant Purple (two centeral glowing effects) */
+     --accent-glow: rgba(139, 92, 246, 0.2);
 
-     /* --------VARIABLES CHANGEAGLE--------*/
+     /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
+
+     /* Constant/more frequently used variables to keep the theme design consistent */
      /* Border radius */
      --radius-sm: 12px;
      --radius-md: 20px;
@@ -38,11 +41,6 @@
      --low-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
      --high-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
      --glow-shadow: 0 0 20px var(--accent-glow);
-
-     /* Paddings */
-     --navbar-padding: 9px 35px;
-     --footer-padding: 0px 35px;
-
 
      /*Used in navbar and footer*/
      --glass-blur: 24px;

@@ -1,15 +1,19 @@
+// css imports
 import "./App.css";
-import "./todolist.css";
 import "./weather-panel.css";
 import "./weather-card.css";
+
+//Libraries imports
 import axios from "axios";
-import returnMappedWeatherIcon from "./mappedWeatherIcons"
-import TodoList from "./TodoList";
-import AddShortcutPane from "./AddShortcutPane";
-import ToggleButton from "./ToggleButton";
 import { useState, useEffect, useRef } from "react";
 import { useClock } from "./lib/hooks";
-import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X, CloudOff, MapPin, Droplets, Wind, CloudRain, Shield } from "lucide-react";
+import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, X, CloudOff, MapPin, Droplets, Wind, CloudRain, Shield } from "lucide-react";
+
+// File imports
+import returnMappedWeatherIcon from "./mappedWeatherIcons"
+import TodoList from "./TodoList";
+import AddShortcutPanel from "./AddShortcutPanel";
+import ToggleButton from "./ToggleButton";
 
 const SEARCH_OPTIONS = [
      { label: "Google", url: "https://google.com/search?q=" },
@@ -245,7 +249,7 @@ export default function App() {
 
                     <div className="body-grid">
                          <section className="left-pane justifyC">
-                              <div className="clock-block">
+                              <div className="clock-block flex">
                                    <span className="greeting-text">{greeting}</span>
                                    <div className="time-display">
                                         <span className="time-hm">{hours}<span className="colon">:</span>{minutes}</span>
@@ -254,23 +258,24 @@ export default function App() {
                               </div>
                               <div className="search-block">
                                    <form className="big-search-form" onSubmit={doSearch}>
-                                        <div className="big-search-bar">
+                                        <div className="big-search-bar alignC">
                                              <input type="text" className="big-search-input" placeholder="What are you looking for..." value={query} onChange={e => setQuery(e.target.value)} />
                                              <button type="submit" className="big-search-btn"><ChevronRight size={20} /></button>
                                         </div>
                                    </form>
+                                   {/* Start from here */}
                                    <div className="engine-tabs">
-                                        {SEARCH_OPTIONS.map((eng, i) => (<button key={eng.label} className={`engine-tab ${engine === i ? "active" : ""}`} onClick={() => setEngine(i)}>{eng.label}</button>))}
+                                        {SEARCH_OPTIONS.map((eng, i) => (<button key={eng.label} className={`engine-tab ${engine === i ? "search-opt-btn-active" : ""}`} onClick={() => setEngine(i)}>{eng.label}</button>))}
                                    </div>
                               </div>
                          </section>
-                         <div className="right-pane">
+                         <div className="right-pane flex">
                               <div className="right-card right-quote-card">
                                    <div className="card-label">Daily Quote</div>
                                    <p className="quote-text">"{todayQuote?.quote || "The only way to do great work is to love what you do."}"</p>
                                    <span className="quote-author">— {todayQuote?.author?.split(',')[0] || "Steve Jobs"}</span>
                               </div>
-                              <div className="home-weather-card">
+                              <div className="right-card home-weather-card">
                                    <div className="hwc-header">
                                         <span className="hwc-label">Weather</span>
                                         {Object.keys(weatherInfo).length > 0 && (
@@ -383,7 +388,7 @@ export default function App() {
                     )}
 
                     {showAddShortcut && (
-                         <AddShortcutPane
+                         <AddShortcutPanel
                               onClose={() => {
                                    setShowAddShortcut(false);
                                    setShowShortcuts(false);

@@ -1,3 +1,6 @@
+import "./todolist.css";
+import "./utilities.css";
+
 import { useState } from "react";
 
 export default function TodoList() {
@@ -26,7 +29,7 @@ export default function TodoList() {
 
      return (
           <div className="todo-inner">
-               <form className="todo-form" onSubmit={add}>
+               <form className="todo-form alignC" onSubmit={add}>
                     <input className="todo-input" placeholder="Add task..." value={val} onChange={e => setVal(e.target.value)} />
                     <button type="submit" className="todo-add-btn">+</button>
                </form>

@@ -59,7 +59,7 @@
 /* ── Main body navbar ── */
 .main-nav {
      justify-content: space-between;
-     padding: var(--navbar-padding);
+     padding: 9px 35px;
      border-bottom: 1px solid var(--border);
      background: var(--surface);
      backdrop-filter: blur(var(--glass-blur));
@@ -147,8 +147,8 @@
      border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Start from here */
 .clock-block {
-     display: flex;
      flex-direction: column;
      gap: 8px;
 }
@@ -158,7 +158,7 @@
      font-size: 22px;
      color: var(--accent);
      font-weight: 600;
-     letter-spacing: 3px;
+     letter-spacing: 4px;
      text-transform: uppercase;
      text-shadow: 0 0 10px var(--accent-glow);
 }
@@ -201,7 +201,6 @@
      margin-top: 4px;
 }
 
-/* Search block */
 .search-block {
      display: flex;
      flex-direction: column;
@@ -209,8 +208,6 @@
 }
 
 .big-search-bar {
-     display: flex;
-     align-items: center;
      background: rgba(255, 255, 255, 0.05);
      backdrop-filter: blur(var(--glass-blur));
      -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -225,7 +222,6 @@
 .big-search-bar:focus-within {
      border-color: var(--accent);
      box-shadow: 0 10px 40px var(--accent-glow);
-     background: rgba(255, 255, 255, 0.08);
 }
 
 .big-search-input {
@@ -234,8 +230,8 @@
      border: none;
      outline: none;
      color: var(--text);
-     font-size: 16px;
-     font-family: var(--main-font);
+     font-size: 18px;
+     font-family: var(--gm-font);
      font-weight: 400;
 }
 
@@ -249,7 +245,7 @@
      border-radius: 50%;
      background: var(--accent);
      border: none;
-     color: #fff;
+     color: var(--text);
      display: flex;
      align-items: center;
      justify-content: center;
@@ -258,8 +254,8 @@
      box-shadow: 0 4px 12px var(--accent-glow);
 }
 
-.big-search-btn:active {
-     transform: scale(0.9);
+.big-search-btn:hover svg {
+     transition: transform var(--transition);
 }
 
 .big-search-btn:hover {
@@ -267,6 +263,11 @@
      transform: translateX(2px);
 }
 
+.big-search-btn:hover svg {
+     transform: translateX(3px);
+}
+
+/* Search block */
 .engine-tabs {
      width: 30em;
      display: flex;
@@ -295,7 +296,7 @@
      transform: translateY(-1px);
 }
 
-.engine-tab.active {
+.engine-tab.search-opt-btn-active {
      border-color: var(--accent);
      color: var(--text);
      background: var(--accent-glow);
@@ -304,7 +305,6 @@
 
 /* ── RIGHT PANE ── */
 .right-pane {
-     display: flex;
      flex-direction: column;
      justify-content: space-around;
      gap: 0;
@@ -345,6 +345,44 @@
      font-family: var(--plus-jakarta-font);
 }
 
+/* Quote */
+.quote-text {
+     font-family: var(--plus-jakarta-font);
+     font-size: 12px;
+     color: var(--muted);
+     font-style: italic;
+     line-height: 1.7;
+     font-weight: 300;
+}
+
+.quote-author {
+     display: block;
+     font-size: 11px;
+     color: var(--muted);
+     margin-top: 8px;
+     font-family: var(--gm-font);
+}
+
+/* Quote */
+.quote-text {
+     font-family: var(--plus-jakarta-font);
+     font-size: 12px;
+     color: var(--muted);
+     font-style: italic;
+     line-height: 1.7;
+     font-weight: 300;
+}
+
+.quote-author {
+     display: block;
+     font-size: 11px;
+     color: var(--muted);
+     margin-top: 8px;
+     font-family: var(--gm-font);
+}
+
+/* INFO:- weather card designs are in src/weather-card.css */
+
 /* Spotify */
 .spotify-art {
      font-size: 32px;
@@ -373,8 +411,8 @@
      margin-top: 16px;
      padding: 10px;
      border-radius: var(--radius-sm);
-     border: 1px solid rgba(139, 92, 246, 0.2);
-     background: rgba(139, 92, 246, 0.1);
+     border: 1px solid var(--border);
+     background: var(--surface2);
      color: var(--text);
      font-size: 13px;
      font-weight: 500;
@@ -389,45 +427,13 @@
      box-shadow: 0 4px 12px var(--accent-glow);
 }
 
-/* Weather */
-.weather-temp {
-     font-family: var(--gm-font);
-     font-size: 36px;
-     color: var(--text);
-     font-weight: 300;
-}
-
-.weather-desc {
-     font-size: 12px;
-     color: var(--muted);
-     margin-top: 4px;
-}
-
-/* Quote */
-.quote-text {
-     font-family: var(--plus-jakarta-font);
-     font-size: 12px;
-     color: var(--muted);
-     font-style: italic;
-     line-height: 1.7;
-     font-weight: 300;
-}
-
-.quote-author {
-     display: block;
-     font-size: 11px;
-     color: var(--muted);
-     margin-top: 8px;
-     font-family: var(--gm-font);
-}
-
 /* ── FOOTER ── */
 .main-footer {
      display: grid;
      grid-template-columns: auto 1fr auto;
      align-items: center;
      gap: 16px;
-     padding: var(--footer-padding);
+     padding: 0px 35px;
      border-top: 1px solid var(--border);
      background: var(--surface);
      backdrop-filter: blur(var(--glass-blur));
@@ -520,7 +526,7 @@
      position: absolute;
      box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
      backdrop-filter: blur(30px);
-     border: 1px solid var(--border);
+     border: 1px solid var(--border2);
      border-radius: var(--radius-lg);
      padding: 16px;
      z-index: 100;
