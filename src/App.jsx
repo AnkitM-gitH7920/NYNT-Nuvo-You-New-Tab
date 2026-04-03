@@ -15,6 +15,87 @@ import TodoList from "./TodoList";
 import AddShortcutPanel from "./AddShortcutPanel";
 import ToggleButton from "./ToggleButton";
 
+
+const PALLET_THEMES = {
+     // Currently preparing
+     "black-gold": {
+          "--black-gold-1": "#000000",
+          "--black-gold-2": "#14213d",
+          "--black-gold-3": "#fca311",
+          "--black-gold-4": "#e5e5e5",
+          "--black-gold-5": "#ffffff",
+     },
+     "summer-dream": {
+          "--summer-dream-1": "#0081a7",
+          "--summer-dream-2": "#00afb9",
+          "--summer-dream-3": "#fdfcdc",
+          "--summer-dream-4": "#fed9b7",
+          "--summer-dream-5": "#f07167",
+     },
+     "rustic-charm": {
+          "--rustic-charm-1": "#fffcf2",
+          "--rustic-charm-2": "#ccc5b9",
+          "--rustic-charm-3": "#403d39",
+          "--rustic-charm-4": "#252422",
+          "--rustic-charm-5": "#eb5e28",
+     },
+     "sweet-summer": {
+          "--sweet-summer-1": "#f6bd60",
+          "--sweet-summer-2": "#f7ede2",
+          "--sweet-summer-3": "#f5cac3",
+          "--sweet-summer-4": "#84a59d",
+          "--sweet-summer-5": "#f28482",
+     },
+     "vintage-charm": {
+          "--vintage-charm-1": "#04151f",
+          "--vintage-charm-2": "#183a37",
+          "--vintage-charm-3": "#efd6ac",
+          "--vintage-charm-4": "#c44900",
+          "--vintage-charm-5": "#432534",
+     },
+     "limy-green": {
+          "--limy-green-1": "#bad7e9",
+          "--limy-green-2": "#fef302",
+          "--limy-green-3": "#f7fbf3",
+          "--limy-green-4": "#a7c658",
+          "--limy-green-5": "#16502e",
+     },
+     "harmony-bliss": {
+          "--harmony-bliss-1": "#f4f1de",
+          "--harmony-bliss-2": "#e07a5f",
+          "--harmony-bliss-3": "#3d405b",
+          "--harmony-bliss-4": "#81b29a",
+          "--harmony-bliss-5": "#f2cc8f",
+     },
+     "earthy-tones": {
+          "--earthy-tones-1": "#2c6e49",
+          "--earthy-tones-2": "#4c956c",
+          "--earthy-tones-3": "#fefee3",
+          "--earthy-tones-4": "#ffc9b9",
+          "--earthy-tones-5": "#d68c45",
+     },
+     "coastal-vibes": {
+          "--coastal-vibes-1": "#2b2d42",
+          "--coastal-vibes-2": "#8d99ae",
+          "--coastal-vibes-3": "#edf2f4",
+          "--coastal-vibes-4": "#ef233c",
+          "--coastal-vibes-5": "#d90429",
+     },
+     "automn-harmony": {
+          "--automn-harmony-1": "#3a2e39",
+          "--automn-harmony-2": "#1e555c",
+          "--automn-harmony-3": "#f4d8cd",
+          "--automn-harmony-4": "#edb183",
+          "--automn-harmony-5": "#f15152",
+     },
+     "cozy-cabin": {
+          "--cozy-cabin-1": "#550c18",
+          "--cozy-cabin-2": "#443730",
+          "--cozy-cabin-3": "#786452",
+          "--cozy-cabin-4": "#a5907e",
+          "--cozy-cabin-5": "#f7dad9",
+     },
+};
 const SEARCH_OPTIONS = [
      { label: "Google", url: "https://google.com/search?q=" },
      { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
@@ -86,9 +167,6 @@ export default function App() {
                const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
                const { data: fetchedGeoCoding } = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
 
-
-               console.log(fetchedWeather);
-               console.log(fetchedGeoCoding)
                const reqWeatherInfo = {
                     locationName:
                          fetchedGeoCoding.address.state_district ||
@@ -131,11 +209,10 @@ export default function App() {
      // useEffect
      // PURPOSE :- Check if LS have stored quotes, if not read from /src/quotes.json
      useEffect(() => {
+          // PENDING:- remove this Quote Api and add quotes in quotes.json file(API providing same quote on two diffrent days)
           const controller = new AbortController();
           async function fetchQuote() {
                if (Object.keys(todayQuote).length === 0) { //empty quote object(no data)
-                    console.log("Same day")
-                    console.log("Didnt got quote data from LS")
                     try {
                          const { data: quoteResponse } = await axios.get(`https://api.api-ninjas.com/v2/quotes`, {
                               "headers": { "X-Api-Key": "V59WcV5fK3qAo60rvAlnsLW9KsVCNnzC0w2MFM9f" }
@@ -155,13 +232,11 @@ export default function App() {
                          throw error;
                     }
                } else {
-                    console.log("Got quote data from LS")
                     let dayQuoteFetched = String(new Date(todayQuote.quoteFetchedTimestamp)).split(" ").splice(0, 4).join(" ");
                     let todayDateString = String(new Date(Date.now())).split(" ").splice(0, 4).join(" ");
 
                     // Without this date check, Infinite UI rendoring will start
                     if (dayQuoteFetched !== todayDateString) {
-                         console.log("Day passed, fetching new quote")
                          const { data: quoteResponse } = await axios.get(`https://api.api-ninjas.com/v2/quotes`, {
                               "headers": { "X-Api-Key": "V59WcV5fK3qAo60rvAlnsLW9KsVCNnzC0w2MFM9f" }
                          });
@@ -277,7 +352,7 @@ export default function App() {
                                    onClick={() => setShowWeatherPanel(true)}
                                    className="icon-btn"
                                    title="Weather">
-                                   {isLocationAllowed ? <Cloud size={25} color="var(--text)" /> : <CloudOff size={25} color="var(--muted)" />}
+                                   {isLocationAllowed ? <Cloud size={25} color="var(--text)" /> : <CloudOff size={25} color="var(--text)" />}
 
                               </button>
                          </div>
