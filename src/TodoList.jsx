@@ -1,9 +1,11 @@
 import "./todolist.css";
 import "./utilities.css";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function TodoList() {
+     const todoRef = useRef(null);
+
      const [todos, setTodos] = useState(() => JSON.parse(localStorage.getItem("nynt-todos") || "[]"));
      const [val, setVal] = useState("");
 
@@ -28,20 +30,23 @@ export default function TodoList() {
      }
 
      return (
-          <div className="todo-inner">
-               <form className="todo-form alignC" onSubmit={add}>
-                    <input className="todo-input" placeholder="Add task..." value={val} onChange={e => setVal(e.target.value)} />
-                    <button type="submit" className="todo-add-btn">+</button>
-               </form>
-               <div className="todo-list">
-                    {todos.map((t, i) => (
-                         <div key={i} className={`todo-item ${t.done ? "done" : ""}`}>
-                              <span className="todo-check" onClick={() => toggle(i)}>{t.done ? "✓" : "○"}</span>
-                              <span className="todo-text">{t.text}</span>
-                              <span className="todo-del" onClick={() => del(i)}>✕</span>
-                         </div>
-                    ))}
-                    {todos.length === 0 && <div className="todo-empty">No tasks yet</div>}
+          <div ref={todoRef} className="todo-panel">
+               <div className="todo-inner">
+                    <div className="todo-panel-label">Tasks</div>
+                    <form className="todo-form alignC" onSubmit={add}>
+                         <input className="todo-input" placeholder="Add task..." value={val} onChange={e => setVal(e.target.value)} />
+                         <button type="submit" className="todo-add-btn center">+</button>
+                    </form>
+                    <div className="todo-list">
+                         {todos.map((t, i) => (
+                              <div key={i} className={`todo-item ${t.done ? "done" : ""}`}>
+                                   <span className="todo-check" onClick={() => toggle(i)}>{t.done ? "✓" : "○"}</span>
+                                   <span className="todo-text">{t.text}</span>
+                                   <span className="todo-del" onClick={() => del(i)}>✕</span>
+                              </div>
+                         ))}
+                         {todos.length === 0 && <div className="todo-empty">No tasks yet</div>}
+                    </div>
                </div>
           </div>
      );

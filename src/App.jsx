@@ -342,7 +342,7 @@ export default function App() {
                          <div className="ai-tools center">
                               {AI_TOOLS.map((tool, i) => (
                                    <button key={i} onClick={() => window.open(tool.targetURL, isSongPlaying ? "_blank" : "_self")} className="ai-btn center">
-                                        <img height={15} width={15} style={{ borderRadius: "100px", flexShrink: "0" }} src={tool.favicon} alt={tool.name} />
+                                        <img height={22} width={22} style={{ borderRadius: "100px", flexShrink: "0" }} src={tool.favicon} alt={tool.name} />
                                         {tool.name}
                                    </button>
                               ))}
@@ -375,10 +375,7 @@ export default function App() {
                     )}
 
                     {todoOpen && (
-                         <div ref={todoRef} className="todo-panel">
-                              <div className="panel-label">Tasks</div>
-                              <TodoList />
-                         </div>
+                         <TodoList />
                     )}
 
                     {showAddShortcut && (

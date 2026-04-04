@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { MapPin, Droplets, CloudRain, CloudOff, Quote } from "lucide-react";
 
 // File imports
-import { quotes } from "./quotes";
+import { quotes } from "./assets.exports";
 import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
 export function QuoteCard() {

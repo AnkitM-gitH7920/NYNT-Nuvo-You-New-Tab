@@ -356,3 +356,8 @@ export const quotes = [
           "author": "Peter Marshall"
      }
 ]
+
+
+export const AI_ICONS_SVG = [
+     
+]

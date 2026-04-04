@@ -320,11 +320,15 @@
 
 /* ── FOOTER ── */
 .main-footer {
+     position: absolute;
+     bottom: 0;
+     width: 100%;
+     height: fit-content;
      display: grid;
      grid-template-columns: auto 1fr auto;
      align-items: center;
      gap: 16px;
-     padding: 0px 35px;
+     padding: 10px 40px;
      overflow: hidden;
      z-index: 10;
 }
@@ -334,9 +338,9 @@
      align-items: center;
      justify-content: center;
      gap: 5px;
+     padding: 10px 0px;
      overflow-x: auto;
      scrollbar-width: none;
-     padding: 4px 0;
 }
 
 .ai-tools::-webkit-scrollbar {
@@ -346,14 +350,16 @@
 .ai-btn {
      display: flex;
      align-items: center;
-     gap: 5px;
+     gap: 7px;
      padding: 0.8em 2.0em;
      font-family: var(--main-font);
-     font-size: 0.7rem;
-     border: 1px solid var(--border);
-     background-color: transparent;
+     font-size: 0.8rem;
+     border: 3px solid var(--bg);
+     outline: none;
+     background-color: var(--light-blue);
      border-radius: 100px;
-     color: var(--white-text);
+     color: var(--black-text);
+     font-weight: 500;
      transition: all var(--transition);
      white-space: nowrap;
      flex-shrink: 0;
@@ -361,12 +367,10 @@
 
 .ai-btn:hover {
      background: var(--light-blue);
-     border-color: var(--dark-blue);
+     box-shadow: 0px 0px 0px 3px var(--dark-blue);
 }
 
 .ai-btn img {
-     width: 15px;
-     height: 15px;
      flex-shrink: 0;
      border-radius: 50%;
 }
