@@ -1,5 +1,5 @@
 /* ── Add Shortcut Modal ── */
-.add-shortcutpane-wrapper {
+.add-shortcutpanel-wrapper {
      position: fixed;
      inset: 0;
      background: rgba(0, 0, 0, 0.6);
@@ -9,7 +9,7 @@
      display: flex;
      align-items: center;
      justify-content: center;
-     animation: fadeIn 0.2s ease;
+     animation: fadeIn var(--transition) ease;
 }
 
 @keyframes fadeIn {
@@ -22,13 +22,14 @@
      }
 }
 
-.add-shortcutpane-container {
+.add-shortcutpanel-container {
      background: var(--surface);
      border: 1px solid var(--border2);
      border-radius: var(--radius-lg);
      padding: 24px;
      width: 340px;
-     animation: scaleIn 0.2s ease;
+     backdrop-filter: blur(20px);
+     animation: scaleIn 0.3s ease;
 }
 
 @keyframes scaleIn {
@@ -43,47 +44,47 @@
      }
 }
 
-.add-shortcutpane-head {
+.add-shortcutpanel-head {
      display: flex;
      align-items: center;
      justify-content: space-between;
      margin-bottom: 20px;
 }
 
-.add-shortcutpane-title {
+.add-shortcutpanel-title {
      font-size: 13px;
      font-weight: 500;
      color: var(--text);
      letter-spacing: 0.5px;
 }
 
-.add-shortcutpane-close {
+.add-shortcutpanel-close {
      width: 28px;
      height: 28px;
      background: var(--surface2);
      border: 1px solid var(--border);
      border-radius: var(--radius-sm);
-     color: var(--muted);
+     color: var(--text);
      display: flex;
      align-items: center;
      justify-content: center;
      transition: all var(--transition);
 }
 
-.add-shortcutpane-close:hover {
+.add-shortcutpanel-close:hover {
      background: rgba(239, 68, 68, 0.1);
      border-color: rgba(239, 68, 68, 0.3);
      color: #ef4444;
      transform: rotate(90deg);
 }
 
-.add-shortcutpane-body {
+.add-shortcutpanel-body {
      display: flex;
      flex-direction: column;
      gap: 12px;
 }
 
-.add-shortcutpane-input {
+.add-shortcutpanel-input {
      width: 100%;
      background: var(--surface2);
      border: 1px solid var(--border);
@@ -95,15 +96,15 @@
      transition: border-color var(--transition);
 }
 
-.add-shortcutpane-input::placeholder {
+.add-shortcutpanel-input::placeholder {
      color: var(--dim);
 }
 
-.add-shortcutpane-input:focus {
+.add-shortcutpanel-input:focus {
      border-color: var(--accent);
 }
 
-.add-shortcutpane-submit {
+.add-shortcutpanel-submit {
      width: 100%;
      padding: 10px;
      background: var(--accent);
@@ -116,10 +117,10 @@
      transition: opacity var(--transition);
 }
 
-.add-shortcutpane-submit:hover {
+.add-shortcutpanel-submit:hover {
      opacity: 0.85;
 }
 
-.add-shortcutpane-submit:active {
+.add-shortcutpanel-submit:active {
      transform: scale(0.98);
 }

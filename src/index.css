@@ -1,77 +1,134 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
      /* fonts styles */
-     --main-font: "Poppins";
-     --gm-font: "Geist Mono";
-     --plus-jakarta-font: "Plus Jakarta Sans";
+     --main-font: "Poppins", sans-serif;
+     --gm-font: "Geist Mono", monospace;
+     --plus-jakarta-font: "Plus Jakarta Sans", sans-serif;
 
-     /* Is use root colors */
-     --bg: #13131f;
-     --surface: #1c1c2e;
-     --surface2: #24243a;
-     --border: rgba(248, 245, 238, 0.151);
-     --border2: rgba(240, 233, 223, 0.16);
+     /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
-     --text: #eee7e0;
-     --muted: #b8a99a;
-     --dim: #888197;
-     --accent: #c9a0a0;
+     /* Premium Glassmorphic Theme Variables */
 
-     --radius-sm: 8px;
-     --radius-md: 12px;
-     --radius-lg: 18px;
-     --transition: 0.2s ease;
-     --prim-shadow: rgba(0, 0, 0, 0.35);
+     /* --bg: #09090b; */
+     --bg: #bbd6fd;
+     --dark-blue: #4382ec;
+     --light-blue: #e2eeff;
+     --white-text: #ffffff;
+     --black-text: #575757;
+     /* --accent-glow: rgba(139, 92, 246, 0.2); */
 
+     /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
+
+     /* Constant/more frequently used variables to keep the theme design consistent */
+     /* Border radius */
+     --radius-sm: 12px;
+     --radius-md: 20px;
+     --radius-lg: 32px;
+     --radius-full: 9999px;
+
+     /* other variables */
+     --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+     --low-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+     --high-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+     --glow-shadow: 0 0 20px var(--accent-glow);
+
+     /*Used in navbar and footer*/
+     --glass-blur: 24px;
+
+     /*PENDING:- Create a categories for three svgs used in weather */
      --svg-color-1: #60a5fa;
      --svg-color-2: #f59e0b;
 
-     /* font sizes */
-     /* text color (using pallete second :- earthtones )*/
-     --primary-text: #1a1a1b;
 
-     /* bg theme colors (mixed for textbg, bgs) */
-     /* (First pallete) */
-     --pallete-purp-1: #231942;
-     --pallete-purp-2: #5e548e;
-     --pallete-purp-3: #9f86c0;
-     --pallete-purp-4: #be95c4;
-     --pallete-purp-5: #e0b1cb;
 
-     /* (second pallete) */
-     --pallete-earthtones-1: #0a0908;
-     --pallete-earthtones-2: #22333b;
-     --pallete-earthtones-3: #eae0d5;
-     --pallete-earthtones-4: #c6ac8f;
-     --pallete-earthtones-5: #5e503f;
+     /* Palletes used */
+     --summer-dream-1: #0081a7;
+     --summer-dream-2: #00afb9;
+     --summer-dream-3: #fdfcdc;
+     --summer-dream-4: #fed9b7;
+     --summer-dream-5: #f07167;
 
-     /* (third pallete) */
-     --pallete-softlavender-1: #9381ff;
-     --pallete-softlavender-2: #b8b8ff;
-     --pallete-softlavender-3: #f8f7ff;
-     --pallete-softlavender-4: #ffeedd;
-     --pallete-softlavender-5: #ffd8be;
+     --rustic-charm-1: #fffcf2;
+     --rustic-charm-2: #ccc5b9;
+     --rustic-charm-3: #403d39;
+     --rustic-charm-4: #252422;
+     --rustic-charm-5: #eb5e28;
 
-     /* (fourth pallete) */
-     --pallete-serenelavender-1: #f5e6e8;
-     --pallete-serenelavender-2: #d5c6e0;
-     --pallete-serenelavender-3: #aaa1c8;
-     --pallete-serenelavender-4: #967aa1;
-     --pallete-serenelavender-5: #192a51;
+     --sweet-summer-1: #f6bd60;
+     --sweet-summer-2: #f7ede2;
+     --sweet-summer-3: #f5cac3;
+     --sweet-summer-4: #84a59d;
+     --sweet-summer-5: #f28482;
 
-     /* Shadows, transition, border-radius and others */
-     --div-br: 7px;
-     --input-br: 4px;
-     --prim-transition-speed: 0.3s
+     --vintage-charm-1: #04151f;
+     --vintage-charm-2: #183a37;
+     --vintage-charm-3: #efd6ac;
+     --vintage-charm-4: #c44900;
+     --vintage-charm-5: #432534;
+
+     --limy-green-1: #bad7e9;
+     --limy-green-2: #fef302;
+     --limy-green-3: #f7fbf3;
+     --limy-green-4: #a7c658;
+     --limy-green-5: #16502e;
+
+     --harmony-bliss-1: #f4f1de;
+     --harmony-bliss-2: #e07a5f;
+     --harmony-bliss-3: #3d405b;
+     --harmony-bliss-4: #81b29a;
+     --harmony-bliss-5: #f2cc8f;
+
+     --earthy-tones-1: #2c6e49;
+     --earthy-tones-2: #4c956c;
+     --earthy-tones-3: #fefee3;
+     --earthy-tones-4: #ffc9b9;
+     --earthy-tones-5: #d68c45;
+
+     --coastal-vibes-1: #2b2d42;
+     --coastal-vibes-2: #8d99ae;
+     --coastal-vibes-3: #edf2f4;
+     --coastal-vibes-4: #ef233c;
+     --coastal-vibes-5: #d90429;
+
+     --automn-harmony-1: #3a2e39;
+     --automn-harmony-2: #1e555c;
+     --automn-harmony-3: #f4d8cd;
+     --automn-harmony-4: #edb183;
+     --automn-harmony-5: #f15152;
+
+     --cozy-cabin-1: #550c18;
+     --cozy-cabin-2: #443730;
+     --cozy-cabin-3: #786452;
+     --cozy-cabin-4: #a5907e;
+     --cozy-cabin-5: #f7dad9;
+
 
 }
 
-* {
-     padding: 0;
-     margin: 0;
-     box-sizing: border-box;
-}
-*::-webkit-scrollbar{
+*::-webkit-scrollbar {
      display: none;
+}
+
+/* ── css reset ── */
+*,
+*::before,
+*::after {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+}
+
+a {
+     text-decoration: none;
+     color: inherit;
+}
+
+button {
+     cursor: pointer;
+     font-family: inherit;
+}
+
+input {
+     font-family: inherit;
 }

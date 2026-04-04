@@ -1,14 +1,22 @@
 /* ---- Home Weather Card ---- */
 .home-weather-card {
      position: relative;
-     background: linear-gradient(145deg,
-               rgba(30, 30, 48, 0.9) 0%,
-               rgba(20, 20, 35, 0.95) 100%);
+     background: var(--surface);
+     backdrop-filter: blur(var(--glass-blur));
+     -webkit-backdrop-filter: blur(var(--glass-blur));
      border: 1px solid var(--border);
      border-radius: var(--radius-md);
-     padding: 14px;
-     transition: border-color var(--transition), box-shadow var(--transition);
+     padding: 20px;
+     transition: all var(--transition);
+     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
      cursor: default;
+}
+
+.home-weather-card:hover {
+     border-color: var(--border2);
+     background: var(--surface2);
+     transform: translateY(-2px);
+     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .hwc-header {
@@ -31,21 +39,21 @@
      display: flex;
      align-items: center;
      gap: 5px;
-     padding: 2px 8px;
-     background: var(--surface2);
+     padding: 4px 12px;
+     background: rgba(255, 255, 255, 0.05);
      border: 1px solid var(--border);
-     border-radius: 8px;
+     border-radius: var(--radius-full);
      max-width: 120px;
 }
 
 .hwc-location svg {
-     color: #6366f1;
+     color: var(--accent);
      flex-shrink: 0;
 }
 
 .hwc-location-name {
      font-size: 12px;
-     color: var(--muted);
+     color: var(--text);
      font-family: var(--plus-jakarta-font);
      white-space: nowrap;
      overflow: hidden;
@@ -129,7 +137,7 @@
 .hwc-temp-unit {
      font-size: 13px;
      font-weight: 500;
-     color: var(--muted);
+     color: var(--text);
      margin-top: 4px;
 }
 
@@ -144,16 +152,18 @@
      display: flex;
      align-items: center;
      gap: 4px;
-     padding: 4px 8px;
-     background: var(--surface2);
+     padding: 6px 12px;
+     background: rgba(255, 255, 255, 0.03);
      border: 1px solid var(--border);
-     border-radius: 16px;
+     border-radius: var(--radius-full);
      flex: 1;
      min-width: 0;
+     transition: all var(--transition);
 }
 
 .hwc-stat:hover {
      border-color: var(--border2);
+     background: rgba(255, 255, 255, 0.08);
 }
 
 .hwc-stat-icon {
@@ -214,7 +224,7 @@
 .hwc-empty-title {
      font-size: 12px;
      font-weight: 600;
-     color: var(--muted);
+     color: var(--text);
      font-family: var(--plus-jakarta-font);
 }
 

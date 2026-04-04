@@ -1,15 +1,101 @@
+// css imports
 import "./App.css";
 import "./weather-panel.css";
-import "./weather-card.css";
+
+//Libraries imports
 import axios from "axios";
-import returnMappedWeatherIcon from "./mappedWeatherIcons"
-import TodoList from "./TodoList";
-import AddShortcutPane from "./AddShortcutPane";
-import ToggleButton from "./ToggleButton";
 import { useState, useEffect, useRef } from "react";
 import { useClock } from "./lib/hooks";
-import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, SearchAlert, X, CloudOff, MapPin, Droplets, Wind, CloudRain, Shield } from "lucide-react";
+import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, MapPin, Droplets, CloudRain, X, CloudOff, Wind, Shield } from "lucide-react";
 
+// File imports
+import TodoList from "./TodoList";
+import AddShortcutPanel from "./AddShortcutPanel";
+import ToggleButton from "./ToggleButton";
+import { WeatherCard, QuoteCard } from "./Cards";
+import Tooltip from "./Tooltip"
+import returnMappedWeatherIcon from "./mappedWeatherIcons";
+
+const PALLET_THEMES = {
+     // Currently preparing
+     "black-gold": {
+          "--black-gold-1": "#000000",
+          "--black-gold-2": "#14213d",
+          "--black-gold-3": "#fca311",
+          "--black-gold-4": "#e5e5e5",
+          "--black-gold-5": "#ffffff",
+     },
+     "summer-dream": {
+          "--summer-dream-1": "#0081a7",
+          "--summer-dream-2": "#00afb9",
+          "--summer-dream-3": "#fdfcdc",
+          "--summer-dream-4": "#fed9b7",
+          "--summer-dream-5": "#f07167",
+     },
+     "rustic-charm": {
+          "--rustic-charm-1": "#fffcf2",
+          "--rustic-charm-2": "#ccc5b9",
+          "--rustic-charm-3": "#403d39",
+          "--rustic-charm-4": "#252422",
+          "--rustic-charm-5": "#eb5e28",
+     },
+     "sweet-summer": {
+          "--sweet-summer-1": "#f6bd60",
+          "--sweet-summer-2": "#f7ede2",
+          "--sweet-summer-3": "#f5cac3",
+          "--sweet-summer-4": "#84a59d",
+          "--sweet-summer-5": "#f28482",
+     },
+     "vintage-charm": {
+          "--vintage-charm-1": "#04151f",
+          "--vintage-charm-2": "#183a37",
+          "--vintage-charm-3": "#efd6ac",
+          "--vintage-charm-4": "#c44900",
+          "--vintage-charm-5": "#432534",
+     },
+     "limy-green": {
+          "--limy-green-1": "#bad7e9",
+          "--limy-green-2": "#fef302",
+          "--limy-green-3": "#f7fbf3",
+          "--limy-green-4": "#a7c658",
+          "--limy-green-5": "#16502e",
+     },
+     "harmony-bliss": {
+          "--harmony-bliss-1": "#f4f1de",
+          "--harmony-bliss-2": "#e07a5f",
+          "--harmony-bliss-3": "#3d405b",
+          "--harmony-bliss-4": "#81b29a",
+          "--harmony-bliss-5": "#f2cc8f",
+     },
+     "earthy-tones": {
+          "--earthy-tones-1": "#2c6e49",
+          "--earthy-tones-2": "#4c956c",
+          "--earthy-tones-3": "#fefee3",
+          "--earthy-tones-4": "#ffc9b9",
+          "--earthy-tones-5": "#d68c45",
+     },
+     "coastal-vibes": {
+          "--coastal-vibes-1": "#2b2d42",
+          "--coastal-vibes-2": "#8d99ae",
+          "--coastal-vibes-3": "#edf2f4",
+          "--coastal-vibes-4": "#ef233c",
+          "--coastal-vibes-5": "#d90429",
+     },
+     "automn-harmony": {
+          "--automn-harmony-1": "#3a2e39",
+          "--automn-harmony-2": "#1e555c",
+          "--automn-harmony-3": "#f4d8cd",
+          "--automn-harmony-4": "#edb183",
+          "--automn-harmony-5": "#f15152",
+     },
+     "cozy-cabin": {
+          "--cozy-cabin-1": "#550c18",
+          "--cozy-cabin-2": "#443730",
+          "--cozy-cabin-3": "#786452",
+          "--cozy-cabin-4": "#a5907e",
+          "--cozy-cabin-5": "#f7dad9",
+     },
+};
 const SEARCH_OPTIONS = [
      { label: "Google", url: "https://google.com/search?q=" },
      { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
@@ -36,24 +122,21 @@ export default function App() {
 
      // useRef
      const todoRef = useRef(null);
+     const shortcutsRef = useRef(null);
 
      //useState
      const [query, setQuery] = useState("");
      const [engine, setEngine] = useState(0);
      const [todoOpen, setTodoOpen] = useState(false);
      const [showShortcuts, setShowShortcuts] = useState(false);
-     const [isSongPlaying, setIsSongPlaying] = useState(false);
+     const [isSongPlaying, setIsSongPlaying] = useState(false); //Not in use
      const [showAddShortcut, setShowAddShortcut] = useState(false);
+     const [googleSearchQuery, setGoogleSearchQuery] = useState("");
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
-     const [quotes, setQuotes] = useState(() => JSON.parse(localStorage.getItem("quotes") || "[]"));
-     const [todayQuote, setTodayQuote] = useState(() => JSON.parse(localStorage.getItem("todayQuote")) || {});
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
      const [userCoordinates, setUserCoordinates] = useState(() => JSON.parse(localStorage.getItem("user-coords")) || {});
      const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("isLocationAllowed") === "true");
-
-     // UI useState
-     // const [weatherLoading, setWeatherLoading] = useState(false);
 
      const hours = String(time.getHours()).padStart(2, "0");
      const minutes = String(time.getMinutes()).padStart(2, "0");
@@ -83,9 +166,13 @@ export default function App() {
           try {
                const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
                const { data: fetchedGeoCoding } = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-               console.log(fetchedWeather)
+
                const reqWeatherInfo = {
-                    locationName: fetchedGeoCoding.address.state_district || fetchedGeoCoding.address.town || fetchedGeoCoding.address.county || fetchedGeoCoding.address.region,
+                    locationName:
+                         fetchedGeoCoding.address.state_district ||
+                         fetchedGeoCoding.address.town ||
+                         fetchedGeoCoding.address.county ||
+                         fetchedGeoCoding.address.region,
                     address: fetchedGeoCoding.display_name,
                     temperature: {
                          tempInC: Math.round(fetchedWeather?.current.temperature_2m),
@@ -107,7 +194,7 @@ export default function App() {
                     },
                     weatherCode: fetchedWeather?.current.weather_code,
                     fetchTimestamp: Date.now(),
-                    fetchedLocationTimeString: (fetchedWeather.current.time).split("T")[1]
+                    fetchedLocationTimeString: (fetchedWeather.current.time).split("T")[1] //Maybe containing bugs, check out
                }
                setWeatherInfo(reqWeatherInfo);
                localStorage.setItem("weatherInfo", JSON.stringify(reqWeatherInfo));
@@ -120,27 +207,10 @@ export default function App() {
      }
 
      // useEffect
-     // PURPOSE :- Check if LS have stored quotes, if not read from /src/quotes.json
-     useEffect(() => {
-          const controller = new AbortController();
-          if (quotes.length) { return } else {
-               axios.get("/src/quotes.json").then((quotes) => {
-                    localStorage.setItem("quotes", JSON.stringify(quotes.data));
-                    setQuotes(quotes.data);
-               }).catch((err) => {
-                    if (err.name !== 'AbortError') { throw err }
-                    localStorage.setItem("quotes", JSON.stringify([]));
-                    setQuotes([]);
-                    return;
-               });
-          }
-          return () => controller.abort();
-     }, [quotes]);
-
      // PURPOSE :- Manages logic for fetching and storing coordinates and weather
      useEffect(() => {
           if (!isLocationAllowed) {
-               setUserCoordinates({});
+               setUserCoordinates({});  //CAN CAUSE INFINITE RENDERS
                localStorage.setItem("user-coords", JSON.stringify({}));
                if (!isLocationAllowed && weatherInfo.fetchTimestamp + 1000 * 60 * 10 < Date.now()) {
                     setWeatherInfo({});
@@ -149,7 +219,6 @@ export default function App() {
                }
                return;
           }
-
           if (Object.keys(weatherInfo).length === 0 || !weatherInfo) {
                if (Object.keys(userCoordinates).length === 0 || !userCoordinates) {
                     navigator.geolocation.getCurrentPosition(
@@ -177,7 +246,7 @@ export default function App() {
           } else {
                const isLastFetchWeatherExpired = weatherInfo.fetchTimestamp + 1000 * 60 * 10 < Date.now();
                if (!isLastFetchWeatherExpired) {
-                    return;
+                    return
                } else {
                     navigator.geolocation.getCurrentPosition(
                          async (position) => {
@@ -190,8 +259,6 @@ export default function App() {
                     )
                }
           }
-
-
      }, [isLocationAllowed]);
 
      // PURPOSE :- to close the div whenever user click outside the todo list(UX improve)
@@ -203,36 +270,49 @@ export default function App() {
           }
           document.addEventListener("mousedown", clickHandler);
           return () => removeEventListener("mousedown", clickHandler);
-
      }, [todoOpen])
+
+     // PURPOSE :- to close the div whenever user click outside the shortcuts(UX improve)
+     useEffect(() => {
+          if (!showShortcuts) return;
+
+          const clickHandler = (event) => {
+               if (shortcutsRef.current && !shortcutsRef.current.contains(event.target)) { setShowShortcuts(false); }
+          }
+          document.addEventListener("mousedown", clickHandler);
+          return () => removeEventListener("mousedown", clickHandler);
+     }, [showShortcuts])
 
      return (
           <>
                <main className="root">
-                    <nav className="main-nav">
-                         <div className="nav-left">
-                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo size={19} color="var(--text)" /></button>
+                    <nav className="main-nav alignC">
+                         <div className="nav-left alignC">
+                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo strokeWidth="2.5" size={25} color="var(--dark-blue)" /></button>
                          </div>
-                         <div className="nav-right">
-                              <form className="search-wrapper" onSubmit={doSearch}>
+                         <div className="nav-right alignC">
+                              {/* <form className="search-wrapper" onSubmit={doSearch}>
                                    <Search size={19} className="search-icon" />
-                                   <input placeholder="Search with Google" type="text" className="nav-search" value={query} onChange={e => setQuery(e.target.value)} />
+                                   <input onKeyDown={(e) => {
+                                        if(e.key === "Enter"){
+                                             window.location.href = "https://google.com/search?q="+googleSearchQuery
+                                        }
+                                   }} placeholder="Search with Google" type="text" className="nav-search" value={googleSearchQuery} onChange={e => setGoogleSearchQuery(e.target.value)} />
                                    <img src="google.png" alt="Google" loading="lazy" height={18} width={18} />
-                              </form>
-                              <button className="icon-btn" title="Spotify"><img src="spotify.svg" alt="Spotify" width={22} height={22} style={{ filter: "contrast(0.8)" }} /></button>
+                              </form> */}
                               <button
                                    onClick={() => setShowWeatherPanel(true)}
                                    className="icon-btn"
                                    title="Weather">
-                                   {isLocationAllowed ? <Cloud size={19} color="var(--text)" /> : <CloudOff size={19} color="var(--dim)" />}
+                                   {isLocationAllowed ? <Cloud strokeWidth="2.5" size={25} color="var(--dark-blue)" /> : <CloudOff strokeWidth="2.5" size={25} color="var(--dark-blue)" />}
 
                               </button>
                          </div>
                     </nav>
 
                     <div className="body-grid">
-                         <section className="left-pane">
-                              <div className="clock-block">
+                         <section className="center-block justifyC">
+                              <div className="clock-block flex">
                                    <span className="greeting-text">{greeting}</span>
                                    <div className="time-display">
                                         <span className="time-hm">{hours}<span className="colon">:</span>{minutes}</span>
@@ -241,96 +321,23 @@ export default function App() {
                               </div>
                               <div className="search-block">
                                    <form className="big-search-form" onSubmit={doSearch}>
-                                        <div className="big-search-bar">
+                                        <div className="big-search-bar alignC">
                                              <input type="text" className="big-search-input" placeholder="What are you looking for..." value={query} onChange={e => setQuery(e.target.value)} />
                                              <button type="submit" className="big-search-btn"><ChevronRight size={20} /></button>
                                         </div>
                                    </form>
                                    <div className="engine-tabs">
-                                        {SEARCH_OPTIONS.map((eng, i) => (
-                                             <button key={eng.label} className={`engine-tab ${engine === i ? "active" : ""}`} onClick={() => setEngine(i)}>{eng.label}</button>
-                                        ))}
+                                        {SEARCH_OPTIONS.map((eng, i) => (<button key={eng.label} className={`engine-tab ${engine === i ? "search-opt-btn-active" : ""}`} onClick={() => setEngine(i)}>{eng.label}</button>))}
                                    </div>
                               </div>
                          </section>
 
-                         <div className="right-pane">
-                              <div className="right-card right-quote-card">
-                                   <div className="card-label">Quote</div>
-                                   <p className="quote-text">"The only way to do great work is to love what you do."</p>
-                                   <span className="quote-author">— Steve Jobs</span>
-                              </div>
-                              <div className="home-weather-card">
-                                   <div className="hwc-header">
-                                        <span className="hwc-label">Weather</span>
-                                        {Object.keys(weatherInfo).length > 0 && (
-                                             <div className="hwc-location">
-                                                  <MapPin size={10} />
-                                                  <span className="hwc-location-name">{weatherInfo.locationName ? weatherInfo.locationName : weatherInfo.address}</span>
-                                             </div>
-                                        )}
-                                   </div>
-
-                                   {Object.keys(weatherInfo).length === 0 ? (
-                                        <div className="hwc-empty">
-                                             <CloudOff size={28} />
-                                             <span className="hwc-empty-title">No Weather Data</span>
-                                             <span className="hwc-empty-desc">Enable location access from the weather panel</span>
-                                        </div>
-                                   ) : (
-                                        <>
-                                             <div className="hwc-main">
-                                                  <div className="hwc-icon-wrap">
-                                                       <img
-                                                            src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl}
-                                                            alt="Weather"
-                                                            loading="lazy"
-                                                       />
-                                                       <div className="hwc-icon-glow"></div>
-                                                  </div>
-                                                  <div className="hwc-temp-block">
-                                                       <div className="hwc-temp-row">
-                                                            <span className="hwc-temp-number">{weatherInfo.temperature.tempInC}</span>
-                                                            <span className="hwc-temp-unit">{weatherInfo.temperature.tempUnit}</span>
-                                                       </div>
-                                                       <span style={{
-                                                            width: "fit-content",
-                                                            fontFamily: "var(--gm-font)",
-                                                            fontSize: "0.75rem",
-                                                            color: "var(--dim)",
-                                                            margin: "5px 0px",
-                                                            fontWeight: "500"
-                                                       }} className="hwc-condition">{returnMappedWeatherIcon(weatherInfo.weatherCode).main}</span>
-                                                  </div>
-                                             </div>
-
-                                             <div className="hwc-stats">
-                                                  <div className="hwc-stat humidity">
-                                                       <div className="hwc-stat-icon"><Droplets size={13} /></div>
-                                                       <span className="hwc-stat-label">Humidity</span>
-                                                       <span className="hwc-stat-value">{weatherInfo.humidity.humidity}<small>{weatherInfo.humidity.humidityUnit}</small></span>
-                                                  </div>
-                                                  <div className="hwc-stat rain">
-                                                       <div className="hwc-stat-icon"><CloudRain size={13} /></div>
-                                                       <span className="hwc-stat-label">Rain</span>
-                                                       <span className="hwc-stat-value">{weatherInfo.rain.rain}<small>{weatherInfo.rain.rainUnit}</small></span>
-                                                  </div>
-                                             </div>
-                                        </>
-                                   )}
-                              </div>
-                              <div className="right-card right-spotify-card">
-                                   <div className="card-label">Now Playing</div>
-                                   <div className="spotify-art">♫</div>
-                                   <div className="spotify-track">Not connected</div>
-                                   <div className="spotify-artist">Connect Spotify to play music</div>
-                                   <button className="connect-btn">Connect Spotify</button>
-                              </div>
-                         </div>
+                         {/* Cards */}
+                         {/* <QuoteCard />
+                         <WeatherCard weatherInfo={weatherInfo}/> */}
                     </div>
-
                     <footer className="main-footer">
-                         <button className="icon-btn footer-btn" title="Settings"><Settings size={19} color="var(--text)" /><span className="footer-label">Settings</span></button>
+                         <button className="icon-btn footer-btn" title="Settings"><Settings strokeWidth="2.5" size={25} color="var(--dark-blue)" /></button>
                          {/* Mounts the ai tools in the footer */}
                          <div className="ai-tools center">
                               {AI_TOOLS.map((tool, i) => (
@@ -340,11 +347,11 @@ export default function App() {
                                    </button>
                               ))}
                          </div>
-                         <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 size={19} color="var(--text)" /><span className="footer-label">Shortcuts</span></button>
+                         <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 strokeWidth="2.5" size={25} color="var(--dark-blue)" /></button>
                     </footer>
 
                     {showShortcuts && (
-                         <div className="shortcuts-panel">
+                         <div ref={shortcutsRef} className="shortcuts-panel">
                               <div className="center" style={{ justifyContent: "space-between", marginBottom: "12px" }}>
                                    <div className="panel-label" style={{ margin: "0px" }}>Quick Shortcuts</div>
                                    <button onClick={() => setShowAddShortcut(true)} className="add-shortcut-btn">+</button>
@@ -354,14 +361,14 @@ export default function App() {
                                         shortcuts.map((s, i) => (
                                              <div key={i} className="shortcut-item" style={{ justifyContent: "space-between" }}>
                                                   <a style={{ gap: "8px" }} className="alignC" href={s.url} target={isSongPlaying ? "_blank" : "_self"} title={s.name}>
-                                                       <img height={19} width={19} src={s.faviconURL} alt={() => (<SearchAlert />)} style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
+                                                       <img height={19} width={19} src={s.faviconURL} alt="?" style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
                                                        <span className="shortcut-name">{s.name}</span>
                                                   </a>
                                                   <button onClick={() => removeShortcut(i)} className="remove-shortcut-btn">✕</button>
                                              </div>
                                         ))
                                    ) : (
-                                        <div style={{ textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", fontStyle: "italic" }}>No added shortcuts</div>
+                                        <span style={{ display: "block", textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", fontStyle: "italic" }}>No added shortcuts</span>
                                    )}
                               </div>
                          </div>
@@ -375,7 +382,7 @@ export default function App() {
                     )}
 
                     {showAddShortcut && (
-                         <AddShortcutPane
+                         <AddShortcutPanel
                               onClose={() => {
                                    setShowAddShortcut(false);
                                    setShowShortcuts(false);
