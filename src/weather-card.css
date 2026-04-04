@@ -53,7 +53,7 @@
 
 .hwc-location-name {
      font-size: 12px;
-     color: var(--muted);
+     color: var(--text);
      font-family: var(--plus-jakarta-font);
      white-space: nowrap;
      overflow: hidden;
@@ -137,7 +137,7 @@
 .hwc-temp-unit {
      font-size: 13px;
      font-weight: 500;
-     color: var(--muted);
+     color: var(--text);
      margin-top: 4px;
 }
 
@@ -224,7 +224,7 @@
 .hwc-empty-title {
      font-size: 12px;
      font-weight: 600;
-     color: var(--muted);
+     color: var(--text);
      font-family: var(--plus-jakarta-font);
 }
 

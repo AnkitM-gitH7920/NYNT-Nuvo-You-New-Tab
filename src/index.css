@@ -5,54 +5,17 @@
      --main-font: "Poppins", sans-serif;
      --gm-font: "Geist Mono", monospace;
      --plus-jakarta-font: "Plus Jakarta Sans", sans-serif;
-     --playfair-font: "Playfair Display", serif;
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
      /* Premium Glassmorphic Theme Variables */
 
-
-     --summer-dream-1: #0081a7;
-     --summer-dream-2: #00afb9;
-     --summer-dream-3: #fdfcdc;
-     --summer-dream-4: #fed9b7;
-     --summer-dream-5: #f07167;
-
-     --bg: #0081a7;
-     --surface: rgba(0, 0, 0, 0.15);
-     --surface2: rgba(0, 0, 0, 0.25);
-     --border: rgba(253, 252, 220, 0.12);
-     --border2: rgba(253, 252, 220, 0.35);
-     --text: #fdfcdc;
-     --muted: #fed9b7;
-     --dim: var(--muted);
-     --accent: #f07167;
-     --accent-hover: #f28a83;
-     --accent-glow: rgba(240, 113, 103, 0.2);
-
      /* --bg: #09090b; */
-     /*Main bg color*/
-
-     /*for background*/
-     /* --surface: rgba(255, 255, 255, 0.03); */
-     /*for background:hover*/
-     /* --surface2: rgba(255, 255, 255, 0.08); */
-     /*Main theme border*/
-     /* --border: rgba(255, 255, 255, 0.1); */
-     /*On hover border*/
-     /* --border2: rgba(255, 255, 255, 0.3); */
-     /*Light text*/
-     /* --text: #fafafa; */
-     /*Slight grayish text*/
-     /* --muted: #cbcbd6; */
-     /*change every --dim into --muted*/
-     /* --dim: var(--muted); */
-     /* accent color for borders,buttons,checkboxes */
-     /* --accent: #9f5cf6; */
-     /*Should be a bit lighter then --accent always*/
-     /* --accent-hover: #ac71f8; */
-
-     /* Vibrant Purple (two centeral glowing effects) */
+     --bg: #bbd6fd;
+     --dark-blue: #4382ec;
+     --light-blue: #e2eeff;
+     --white-text: #ffffff;
+     --black-text: #575757;
      /* --accent-glow: rgba(139, 92, 246, 0.2); */
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/

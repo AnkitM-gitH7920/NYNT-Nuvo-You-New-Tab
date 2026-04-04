@@ -1,20 +1,20 @@
 // css imports
 import "./App.css";
 import "./weather-panel.css";
-import "./weather-card.css";
 
 //Libraries imports
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useClock } from "./lib/hooks";
-import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, X, CloudOff, MapPin, Droplets, Wind, CloudRain, Shield } from "lucide-react";
+import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, MapPin, Droplets, CloudRain, X, CloudOff, Wind, Shield } from "lucide-react";
 
 // File imports
-import returnMappedWeatherIcon from "./mappedWeatherIcons"
 import TodoList from "./TodoList";
 import AddShortcutPanel from "./AddShortcutPanel";
 import ToggleButton from "./ToggleButton";
-
+import { WeatherCard, QuoteCard } from "./Cards";
+import Tooltip from "./Tooltip"
+import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
 const PALLET_THEMES = {
      // Currently preparing
@@ -129,11 +129,11 @@ export default function App() {
      const [engine, setEngine] = useState(0);
      const [todoOpen, setTodoOpen] = useState(false);
      const [showShortcuts, setShowShortcuts] = useState(false);
-     const [isSongPlaying, setIsSongPlaying] = useState(false);
+     const [isSongPlaying, setIsSongPlaying] = useState(false); //Not in use
      const [showAddShortcut, setShowAddShortcut] = useState(false);
+     const [googleSearchQuery, setGoogleSearchQuery] = useState("");
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
-     const [todayQuote, setTodayQuote] = useState(() => JSON.parse(localStorage.getItem("todayQuote")) || {});
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
      const [userCoordinates, setUserCoordinates] = useState(() => JSON.parse(localStorage.getItem("user-coords")) || {});
      const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("isLocationAllowed") === "true");
@@ -207,61 +207,10 @@ export default function App() {
      }
 
      // useEffect
-     // PURPOSE :- Check if LS have stored quotes, if not read from /src/quotes.json
-     useEffect(() => {
-          // PENDING:- remove this Quote Api and add quotes in quotes.json file(API providing same quote on two diffrent days)
-          const controller = new AbortController();
-          async function fetchQuote() {
-               if (Object.keys(todayQuote).length === 0) { //empty quote object(no data)
-                    try {
-                         const { data: quoteResponse } = await axios.get(`https://api.api-ninjas.com/v2/quotes`, {
-                              "headers": { "X-Api-Key": "V59WcV5fK3qAo60rvAlnsLW9KsVCNnzC0w2MFM9f" }
-                         });
-
-                         const reqQuoteInfo = {
-                              author: quoteResponse[0].author,
-                              quote: quoteResponse[0].quote,
-                              quoteFetchedTimestamp: Date.now()
-                         }
-
-                         localStorage.setItem("todayQuote", JSON.stringify(reqQuoteInfo))
-                         setTodayQuote(reqQuoteInfo)
-
-                    } catch (error) {
-                         console.log(error)
-                         throw error;
-                    }
-               } else {
-                    let dayQuoteFetched = String(new Date(todayQuote.quoteFetchedTimestamp)).split(" ").splice(0, 4).join(" ");
-                    let todayDateString = String(new Date(Date.now())).split(" ").splice(0, 4).join(" ");
-
-                    // Without this date check, Infinite UI rendoring will start
-                    if (dayQuoteFetched !== todayDateString) {
-                         const { data: quoteResponse } = await axios.get(`https://api.api-ninjas.com/v2/quotes`, {
-                              "headers": { "X-Api-Key": "V59WcV5fK3qAo60rvAlnsLW9KsVCNnzC0w2MFM9f" }
-                         });
-
-                         const reqQuoteInfo = {
-                              author: quoteResponse[0].author,
-                              quote: quoteResponse[0].quote,
-                              quoteFetchedTimestamp: Date.now()
-                         }
-
-                         localStorage.setItem("todayQuote", JSON.stringify(reqQuoteInfo))
-                         setTodayQuote(reqQuoteInfo)
-                    }
-                    return;
-               }
-          }
-          fetchQuote();
-
-          return () => controller.abort();
-     }, [todayQuote])
-
      // PURPOSE :- Manages logic for fetching and storing coordinates and weather
      useEffect(() => {
           if (!isLocationAllowed) {
-               setUserCoordinates({});
+               setUserCoordinates({});  //CAN CAUSE INFINITE RENDERS
                localStorage.setItem("user-coords", JSON.stringify({}));
                if (!isLocationAllowed && weatherInfo.fetchTimestamp + 1000 * 60 * 10 < Date.now()) {
                     setWeatherInfo({});
@@ -339,27 +288,30 @@ export default function App() {
                <main className="root">
                     <nav className="main-nav alignC">
                          <div className="nav-left alignC">
-                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo size={25} color="var(--text)" /></button>
+                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo strokeWidth="2.5" size={25} color="var(--dark-blue)" /></button>
                          </div>
                          <div className="nav-right alignC">
-                              <form className="search-wrapper" onSubmit={doSearch}>
+                              {/* <form className="search-wrapper" onSubmit={doSearch}>
                                    <Search size={19} className="search-icon" />
-                                   <input placeholder="Search with Google" type="text" className="nav-search" value={query} onChange={e => setQuery(e.target.value)} />
+                                   <input onKeyDown={(e) => {
+                                        if(e.key === "Enter"){
+                                             window.location.href = "https://google.com/search?q="+googleSearchQuery
+                                        }
+                                   }} placeholder="Search with Google" type="text" className="nav-search" value={googleSearchQuery} onChange={e => setGoogleSearchQuery(e.target.value)} />
                                    <img src="google.png" alt="Google" loading="lazy" height={18} width={18} />
-                              </form>
-                              <button className="icon-btn" title="Spotify"><img src="spotify.svg" alt="Spotify" width={25} height={25} style={{ filter: "contrast(0.8)" }} /></button>
+                              </form> */}
                               <button
                                    onClick={() => setShowWeatherPanel(true)}
                                    className="icon-btn"
                                    title="Weather">
-                                   {isLocationAllowed ? <Cloud size={25} color="var(--text)" /> : <CloudOff size={25} color="var(--text)" />}
+                                   {isLocationAllowed ? <Cloud strokeWidth="2.5" size={25} color="var(--dark-blue)" /> : <CloudOff strokeWidth="2.5" size={25} color="var(--dark-blue)" />}
 
                               </button>
                          </div>
                     </nav>
 
                     <div className="body-grid">
-                         <section className="left-pane justifyC">
+                         <section className="center-block justifyC">
                               <div className="clock-block flex">
                                    <span className="greeting-text">{greeting}</span>
                                    <div className="time-display">
@@ -374,87 +326,18 @@ export default function App() {
                                              <button type="submit" className="big-search-btn"><ChevronRight size={20} /></button>
                                         </div>
                                    </form>
-                                   {/* Start from here */}
                                    <div className="engine-tabs">
                                         {SEARCH_OPTIONS.map((eng, i) => (<button key={eng.label} className={`engine-tab ${engine === i ? "search-opt-btn-active" : ""}`} onClick={() => setEngine(i)}>{eng.label}</button>))}
                                    </div>
                               </div>
                          </section>
-                         <div className="right-pane flex">
-                              <div className="right-card right-quote-card">
-                                   <div className="card-label">Daily Quote</div>
-                                   <p className="quote-text">"{todayQuote?.quote || "The only way to do great work is to love what you do."}"</p>
-                                   <span className="quote-author">— {todayQuote?.author || "Steve Jobs"}</span>
-                              </div>
-                              <div className="right-card home-weather-card">
-                                   <div className="hwc-header">
-                                        <span className="hwc-label">Weather</span>
-                                        {Object.keys(weatherInfo).length > 0 && (
-                                             <div className="hwc-location">
-                                                  <MapPin size={10} />
-                                                  <span className="hwc-location-name">{weatherInfo.locationName ? weatherInfo.locationName : weatherInfo.address}</span>
-                                             </div>
-                                        )}
-                                   </div>
-                                   {Object.keys(weatherInfo).length === 0 ? (
-                                        <div className="hwc-empty">
-                                             <CloudOff size={28} />
-                                             <span className="hwc-empty-title">No Weather Data</span>
-                                             <span className="hwc-empty-desc">Enable location access from the weather panel</span>
-                                        </div>
-                                   ) : (
-                                        <>
-                                             <div className="hwc-main">
-                                                  <div className="hwc-icon-wrap">
-                                                       <img
-                                                            src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl}
-                                                            alt="Weather"
-                                                            loading="lazy"
-                                                       />
-                                                       <div className="hwc-icon-glow"></div>
-                                                  </div>
-                                                  <div className="hwc-temp-block">
-                                                       <div className="hwc-temp-row">
-                                                            <span className="hwc-temp-number">{weatherInfo.temperature.tempInC}</span>
-                                                            <span className="hwc-temp-unit">{weatherInfo.temperature.tempUnit}</span>
-                                                       </div>
-                                                       <span style={{
-                                                            width: "fit-content",
-                                                            fontFamily: "var(--gm-font)",
-                                                            fontSize: "0.75rem",
-                                                            color: "var(--dim)",
-                                                            margin: "5px 0px",
-                                                            fontWeight: "500"
-                                                       }} className="hwc-condition">{returnMappedWeatherIcon(weatherInfo.weatherCode).main}</span>
-                                                  </div>
-                                             </div>
 
-                                             <div className="hwc-stats">
-                                                  <div className="hwc-stat humidity">
-                                                       <div className="hwc-stat-icon"><Droplets size={13} /></div>
-                                                       <span className="hwc-stat-label">Humidity</span>
-                                                       <span className="hwc-stat-value">{weatherInfo.humidity.humidity}<small>{weatherInfo.humidity.humidityUnit}</small></span>
-                                                  </div>
-                                                  <div className="hwc-stat rain">
-                                                       <div className="hwc-stat-icon"><CloudRain size={13} /></div>
-                                                       <span className="hwc-stat-label">Rain</span>
-                                                       <span className="hwc-stat-value">{weatherInfo.rain.rain}<small>{weatherInfo.rain.rainUnit}</small></span>
-                                                  </div>
-                                             </div>
-                                        </>
-                                   )}
-                              </div>
-                              <div className="right-card right-spotify-card">
-                                   <div className="card-label">Now Playing</div>
-                                   <div className="spotify-art">♫</div>
-                                   <div className="spotify-track">Not connected</div>
-                                   <div className="spotify-artist">Connect Spotify to play music</div>
-                                   <button className="connect-btn">Connect Spotify</button>
-                              </div>
-                         </div>
+                         {/* Cards */}
+                         {/* <QuoteCard />
+                         <WeatherCard weatherInfo={weatherInfo}/> */}
                     </div>
                     <footer className="main-footer">
-                         <button className="icon-btn footer-btn" title="Settings"><Settings size={19} color="var(--text)" /><span className="footer-label">Settings</span></button>
+                         <button className="icon-btn footer-btn" title="Settings"><Settings strokeWidth="2.5" size={25} color="var(--dark-blue)" /></button>
                          {/* Mounts the ai tools in the footer */}
                          <div className="ai-tools center">
                               {AI_TOOLS.map((tool, i) => (
@@ -464,7 +347,7 @@ export default function App() {
                                    </button>
                               ))}
                          </div>
-                         <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 size={19} color="var(--text)" /><span className="footer-label">Shortcuts</span></button>
+                         <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 strokeWidth="2.5" size={25} color="var(--dark-blue)" /></button>
                     </footer>
 
                     {showShortcuts && (
