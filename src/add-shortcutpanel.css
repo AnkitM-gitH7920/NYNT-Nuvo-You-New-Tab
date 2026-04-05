@@ -23,7 +23,7 @@
 }
 
 .add-shortcutpanel-container {
-     background: var(--surface);
+     background: var(--bg);
      border: 1px solid var(--border2);
      border-radius: var(--radius-lg);
      padding: 24px;
@@ -52,19 +52,19 @@
 }
 
 .add-shortcutpanel-title {
-     font-size: 13px;
-     font-weight: 500;
-     color: var(--text);
+     font-size: 0.85rem;
+     font-weight: 700;
+     color: var(--black-text);
      letter-spacing: 0.5px;
 }
 
 .add-shortcutpanel-close {
-     width: 28px;
-     height: 28px;
+     width: 30px;
+     height: 30px;
      background: var(--surface2);
-     border: 1px solid var(--border);
+     border: none;
      border-radius: var(--radius-sm);
-     color: var(--text);
+     color: var(--black-text);
      display: flex;
      align-items: center;
      justify-content: center;

@@ -8,15 +8,23 @@
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
-     /* Premium Glassmorphic Theme Variables */
-
-     /* --bg: #09090b; */
      --bg: #bbd6fd;
-     --dark-blue: #4382ec;
-     --light-blue: #e2eeff;
+     --dark-bg: #4382ec;
+     --light-bg: #e2eeff;
      --white-text: #ffffff;
      --black-text: #444444;
-     /* --accent-glow: rgba(139, 92, 246, 0.2); */
+
+     /* --bg: #f8bd8d;
+     --dark-bg: #e47d38;
+     --light-bg: #eee6de;
+     --white-text: #ffffff;
+     --black-text: #444444; */
+
+     /* --bg: #ffa39c;
+     --dark-bg: #dd4f45;
+     --light-bg: #fdfcdc;
+     --white-text: #ffffff;
+     --black-text: #444444; */
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 

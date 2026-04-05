@@ -72,18 +72,18 @@
      align-items: center;
      justify-content: center;
      width: 2.5rem;
-     border:none;
+     border: none;
      height: 2.5rem;
-     background: var(--light-blue);
+     background: var(--light-bg);
      border-radius: var(--radius-sm);
-     color: var(--dark-blue);
+     color: var(--dark-bg);
      transition: all var(--transition);
 }
 
 .icon-btn:hover {
      border-color: var(--border2);
      color: var(--white-text);
-     background: var(--light-blue);
+     background: var(--light-bg);
      transform: translateY(-1px);
 }
 
@@ -102,7 +102,7 @@
 }
 
 .search-wrapper:focus-within {
-     border-color: var(--dark-blue);
+     border-color: var(--dark-bg);
 }
 
 .search-icon {
@@ -138,6 +138,7 @@
      gap: 56px;
      border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
+
 .clock-block {
      flex-direction: column;
      gap: 8px;
@@ -146,7 +147,7 @@
 .greeting-text {
      font-family: var(--plus-jakarta-font);
      font-size: 22px;
-     color: var(--dark-blue);
+     color: var(--dark-bg);
      font-weight: 600;
      letter-spacing: 4px;
      text-transform: uppercase;
@@ -196,7 +197,7 @@
 }
 
 .big-search-bar {
-     background-color: var(--light-blue);
+     background-color: var(--light-bg);
      backdrop-filter: blur(var(--glass-blur));
      -webkit-backdrop-filter: blur(var(--glass-blur));
      border-radius: var(--radius-full);
@@ -204,15 +205,16 @@
      height: 56px;
      transition: all var(--transition);
 }
-.big-search-bar:focus-within{
-     box-shadow: 0px 0px 0px 2px var(--dark-blue);
+
+.big-search-bar:focus-within {
+     box-shadow: 0px 0px 0px 3px var(--dark-bg);
 }
 
 
 .big-search-input {
-     caret-color: var(--dark-blue);
+     caret-color: var(--dark-bg);
      caret-shape: line;
-     accent-color: var(--dark-blue);
+     accent-color: var(--dark-bg);
      flex: 1;
      background: transparent;
      border: none;
@@ -231,7 +233,7 @@
      width: 40px;
      height: 40px;
      border-radius: 50%;
-     background: var(--dark-blue);
+     background: var(--dark-bg);
      border: none;
      color: var(--white-text);
      display: flex;
@@ -265,8 +267,8 @@
 .engine-tab {
      padding: 6px 16px;
      border-radius: var(--radius-full);
-     border: 2px solid var(--light-blue);
-     background: var(--light-blue);
+     border: 2px solid var(--light-bg);
+     background: var(--light-bg);
      backdrop-filter: blur(4px);
      color: var();
      font-size: 12px;
@@ -276,46 +278,17 @@
 }
 
 .engine-tab:hover {
-     border-color: var(--dark-blue);
-     color: var(--dark-blue);
-     background: var(--light-blue);
+     border-color: var(--dark-bg);
+     color: var(--dark-bg);
+     background: var(--light-bg);
      transform: translateY(-2px);
      box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.5);
 }
 
 .engine-tab.search-opt-btn-active {
-     border-color: var(--dark-blue);
+     border-color: var(--dark-bg);
      color: var(--white-text);
-     background-color: var(--dark-blue);
-}
-
-
-.right-card {
-     background: var(--dark-blue);
-     backdrop-filter: blur(var(--glass-blur));
-     -webkit-backdrop-filter: blur(var(--glass-blur));
-     border: 1px solid var(--border);
-     border-radius: var(--radius-md);
-     padding: 20px;
-     transition: all var(--transition);
-     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-}
-
-.right-card:hover {
-     border-color: var(--border2);
-     background: var(--light-blue);
-     transform: translateY(-2px);
-     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-.card-label {
-     font-size: 10px;
-     letter-spacing: 2px;
-     text-transform: uppercase;
-     color: var(--white-text);
-     font-weight: 500;
-     margin-bottom: 12px;
-     font-family: var(--plus-jakarta-font);
+     background-color: var(--dark-bg);
 }
 
 /* ── FOOTER ── */
@@ -356,7 +329,7 @@
      font-size: 0.8rem;
      border: 3px solid var(--bg);
      outline: none;
-     background-color: var(--light-blue);
+     background-color: var(--light-bg);
      border-radius: 100px;
      color: var(--black-text);
      font-weight: 500;
@@ -366,8 +339,8 @@
 }
 
 .ai-btn:hover {
-     background: var(--light-blue);
-     box-shadow: 0px 0px 0px 3px var(--dark-blue);
+     background: var(--light-bg);
+     box-shadow: 0px 0px 0px 3px var(--dark-bg);
 }
 
 .ai-btn img {
@@ -392,25 +365,23 @@
 .footer-btn:hover svg {
      transform: rotate(180deg);
 }
+
 /* ── Shortcuts panels ── */
 .shortcuts-panel {
-     bottom: 56px;
-     animation: popUp 0.15s ease;
-}
-
-.todo-panel {
-     top: 56px;
-     animation: popDown 0.15s ease;
-}
-
-.shortcuts-panel {
      position: absolute;
-     box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
+     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
      backdrop-filter: blur(30px);
-     border: 1px solid var(--border2);
-     border-radius: var(--radius-lg);
+     border-radius: var(--radius-md);
+     border: 8px solid var(--bg);
+     background-color: var(--light-bg);
      padding: 16px;
      z-index: 100;
+     bottom: 80px;
+     right: 30px;
+     width: 280px;
+     max-height: 350px;
+     min-height: 120px;
+     animation: popUp 0.15s ease;
 }
 
 @keyframes popUp {
@@ -425,47 +396,45 @@
      }
 }
 
-.shortcuts-panel {
-     right: 20px;
-     width: 220px;
-     max-height: 350px;
-}
-
 .shortcut-list {
      overflow-y: auto;
      max-height: 260px;
+     background-color: var(--dark-bg);
+     padding: 10px;
+     border-radius: var(--radius-sm);
 }
 
 .add-shortcut-btn {
-     width: 25px;
-     height: 25px;
-     background: var(--dark-blue);
-     border: 1px solid var(--border);
+     width: 30px;
+     height: 30px;
+     background: var(--dark-bg);
+     border: none;
      border-radius: var(--radius-sm);
      color: var(--white-text);
      font-size: 18px;
      display: flex;
      align-items: center;
      justify-content: center;
-     transition: all var(--transition);
+     transition: all 0.2s;
 }
 
 .remove-shortcut-btn {
      background: transparent;
-     color: var(--white-text);
+     color: var(--black-text);
+     font-weight: 700;
      border: none;
      outline: none;
      opacity: 0;
      transition: opacity var(--transition);
 }
 
-.panel-label {
+.shortcut-panel-label {
      margin-bottom: 12px;
-     font-size: 10px;
-     letter-spacing: 2px;
+     font-size: 0.8rem;
+     letter-spacing: 1px;
      text-transform: uppercase;
-     color: var(--white-text);
-     font-weight: 500;
+     font-weight: 800;
+     color: var(--black-text);
      font-family: var(--plus-jakarta-font);
 }
 
@@ -475,6 +444,7 @@
      align-items: center;
      gap: 10px;
      padding: 8px 10px;
+     background-color: var(--light-bg);
      border-radius: var(--radius-sm);
      transition: background var(--transition);
      cursor: pointer;
@@ -489,11 +459,12 @@
 }
 
 .shortcut-item:hover {
-     background: var(--light-blue);
+     background: var(--light-bg);
 }
 
 .shortcut-name {
-     font-size: 13px;
+     font-size: 0.85rem;
      color: var(--white-text);
-     font-weight: 400;
+     font-weight: 600;
+     color: var(--black-text);
 }

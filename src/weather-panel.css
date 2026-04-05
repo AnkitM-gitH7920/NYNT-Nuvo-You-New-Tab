@@ -23,32 +23,15 @@
 
 /*-------- Start of weather panel design --------*/
 .weather-panel {
-     background-color: var(--surface2);
-     border: 1px solid var(--border2);
+     background-color: var(--bg);
      border-radius: var(--radius-lg);
      padding: 24px;
      width: 380px;
      max-width: 90vw;
-     box-shadow:
-          0 25px 50px -12px rgba(0, 0, 0, 0.5),
-          0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-          0 1px 0 rgba(255, 255, 255, 0.1) inset;
+     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3);
      animation: panelSlideIn var(--transition);
      position: relative;
      overflow: hidden;
-}
-
-.weather-panel::before {
-     content: '';
-     position: absolute;
-     top: 0;
-     left: 0;
-     right: 0;
-     height: 150px;
-     background: linear-gradient(180deg,
-               rgba(99, 102, 241, 0.08) 0%,
-               transparent 100%);
-     pointer-events: none;
 }
 
 @keyframes panelSlideIn {
@@ -71,39 +54,41 @@
      z-index: 1;
 }
 
-.weather-panel-title-wrapper {gap: 10px}
+.weather-panel-title-wrapper {
+     gap: 10px
+}
 
 .weather-title-icon {
-     width: 32px;
-     height: 32px;
-     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+     width: 40px;
+     height: 40px;
+     background-color: var(--dark-bg);
      border-radius: var(--radius-sm);
      color: white;
      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .weather-panel-title {
-     font-size: 15px;
-     font-weight: 600;
-     color: var(--text);
+     font-size: 1.2rem;
+     font-weight: 700;
+     color: var(--black-text);
      font-family: var(--plus-jakarta-font);
      letter-spacing: 0.5px;
 }
 
 .weather-panel-close {
-     width: 32px;
-     height: 32px;
-     background: var(--surface2);
-     border: 1px solid var(--border);
+     width: 38px;
+     height: 38px;
+     background: var(--bg);
+     border: none;
      border-radius: var(--radius-sm);
-     color: var(--text);
+     color: var(--black-text);
      cursor: pointer;
      transition: all var(--transition);
 }
 
 .weather-panel-close:hover {
      background: rgba(239, 68, 68, 0.1);
-     border-color: rgba(239, 68, 68, 0.3);
+     border:1px solid rgba(250, 18, 18, 0.644);
      color: #ef4444;
      transform: rotate(90deg);
 }
@@ -112,8 +97,8 @@
 .weather-permission-card {
      justify-content: space-between;
      padding: 14px 16px;
-     background: var(--surface2);
-     border: 1px solid var(--border);
+     background: var(--dark-bg);
+     box-shadow: 0px 0px 0px 1px var(--dark-bg);
      border-radius: var(--radius-sm);
      margin-bottom: 20px;
      position: relative;
@@ -127,23 +112,24 @@
 
 .permission-status {
      gap: 8px;
-     font-size: 13px;
-     font-weight: 500;
-     color: var(--text);
+     letter-spacing: 1px;
+     font-size: 0.9rem;
+     font-weight: 700;
+     color: var(--white-text);
      font-family: var(--plus-jakarta-font);
 }
 
 .status-dot {
-     width: 8px;
-     height: 8px;
-     background: var(--dim);
+     width: 0.85rem;
+     height: 0.85rem;
+     background-color: rgba(255, 255, 255, 0.3);
      border-radius: var(--radius-lg);
      transition: all 0.3s ease;
 }
 
 .permission-status.active .status-dot {
-     background: #22c55e;
-     box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+     background: #2bff78;
+     box-shadow: 0 0 10px 2px rgb(35, 196, 94);
      animation: pulse 2s infinite;
 }
 
@@ -159,15 +145,12 @@
      }
 }
 
-.permission-status.active {
-     color: var(--text);
-}
-
 .permission-desc {
-     font-size: 11px;
-     color: var(--dim);
+     font-size: 0.75rem;
+     color: var(--white-text);
      font-family: var(--gm-font);
      margin: 0;
+     font-weight: 500;
 }
 
 /* ---- Empty State ---- */
@@ -215,23 +198,22 @@
 .weather-location {
      gap: 6px;
      padding: 8px 16px;
-     background: var(--surface2);
-     border: 1px solid var(--border);
+     border: 2px solid var(--dark-bg);
      border-radius: var(--radius-lg);
      width: fit-content;
      margin: 0 auto 5px;
 }
 
 .weather-location span {
-     font-size: 12px;
-     font-weight: 500;
-     color: var(--text);
+     font-size: 0.9rem;
+     font-weight: 600;
+     color: var(--black-text);
      font-family: var(--plus-jakarta-font);
      letter-spacing: 0.5px;
 }
 
 .location-pin {
-     color: #6366f1;
+     color: var(--dark-bg);
      animation: bounce 1s ease infinite;
 }
 
@@ -272,7 +254,6 @@
 }
 
 @keyframes float {
-
      0%,
      100% {
           transform: translateY(0);
@@ -280,32 +261,6 @@
 
      50% {
           transform: translateY(-8px);
-     }
-}
-
-.icon-glow {
-     position: absolute;
-     width: 80px;
-     height: 80px;
-     background: radial-gradient(circle,
-               rgba(99, 102, 241, 0.3) 0%,
-               transparent 70%);
-     border-radius: var(--radius-lg);
-     filter: blur(20px);
-     animation: glowPulse 3s ease-in-out infinite;
-}
-
-@keyframes glowPulse {
-
-     0%,
-     100% {
-          opacity: 0.5;
-          transform: scale(1);
-     }
-
-     50% {
-          opacity: 0.8;
-          transform: scale(1.1);
      }
 }
 
@@ -319,33 +274,29 @@
 }
 
 .temp-number {
-     font-size: 56px;
+     font-size: 4rem;
      font-weight: 700;
-     font-family: var(--plus-jakarta-font);
-     background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
-     -webkit-background-clip: text;
-     -webkit-text-fill-color: transparent;
-     background-clip: text;
+     font-family: var(--main-font);
      line-height: 1;
+     color: var(--white-text);
      letter-spacing: -2px;
 }
 
 .temp-unit {
      font-size: 20px;
      font-weight: 500;
-     color: var(--text);
+     color: var(--white-text);
      margin-top: 8px;
 }
 
 .weather-condition {
      font-size: 14px;
-     color: var(--dim);
+     color: var(--white-text);
      font-family: var(--gm-font);
      margin-top: 8px;
      padding: 4px 12px;
-     background: var(--surface2);
+     background: var(--dark-bg);
      border-radius: var(--radius-md);
-     border: 1px solid var(--border);
 }
 
 /* Stats Grid */
@@ -362,8 +313,7 @@
      align-items: center;
      gap: 12px;
      padding: 16px 12px;
-     background: var(--surface2);
-     border: 1px solid var(--border);
+     background: var(--light-bg);
      border-radius: var(--radius-md);
      transition: all 0.3s ease;
      position: relative;
@@ -415,17 +365,17 @@
 
 .humidity .stat-icon-wrapper {
      background: rgba(59, 130, 246, 0.15);
-     color: #60a5fa;
+     color: #0066e4;
 }
 
 .wind .stat-icon-wrapper {
      background: rgba(34, 197, 94, 0.15);
-     color: #4ade80;
+     color: #087e33;
 }
 
 .rain .stat-icon-wrapper {
      background: rgba(139, 92, 246, 0.15);
-     color: #a78bfa;
+     color: #7d62ce;
 }
 
 .weather-stat-card:hover .stat-icon-wrapper {
@@ -442,7 +392,7 @@
 .stat-value {
      font-size: 16px;
      font-weight: 700;
-     color: var(--text);
+     color: var(--black-text);
      font-family: var(--plus-jakarta-font);
      display: flex;
      align-items: baseline;
@@ -450,14 +400,15 @@
 }
 
 .stat-value small {
-     font-size: 11px;
-     font-weight: 500;
-     color: var(--dim);
+     font-size: 0.75rem;
+     font-weight: 700;
+     color: var(--black-text);
 }
 
 .stat-label {
-     font-size: 11px;
-     color: var(--dim);
+     font-size: 0.70rem;
+     font-weight: 600;
+     color: var(--black-text);
      font-family: var(--gm-font);
      text-transform: uppercase;
      letter-spacing: 0.5px;
@@ -471,18 +422,18 @@
      gap: 8px;
      padding: 12px 16px;
      background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.03));
-     border: 1px solid rgba(34, 197, 94, 0.2);
+     border: 1px solid rgba(8, 161, 64, 0.644);
      border-radius: var(--radius-md);
 }
 
 .weather-privacy-notice svg {
-     color: #22c55e;
+     color: #09a843;
      flex-shrink: 0;
 }
 
 .weather-privacy-notice span {
      font-size: 11px;
-     color: var(--dim);
+     color: #0a8b3a;
      font-family: var(--gm-font);
      line-height: 1.4;
 }

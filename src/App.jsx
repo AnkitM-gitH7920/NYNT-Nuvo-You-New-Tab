@@ -13,7 +13,6 @@ import TodoList from "./TodoList";
 import AddShortcutPanel from "./AddShortcutPanel";
 import ToggleButton from "./ToggleButton";
 import { WeatherCard, QuoteCard } from "./Cards";
-import Tooltip from "./Tooltip"
 import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
 const PALLET_THEMES = {
@@ -121,8 +120,8 @@ export default function App() {
      const time = useClock();
 
      // useRef
-     const todoRef = useRef(null);
      const shortcutsRef = useRef(null);
+     const todoRef = useRef(null);
 
      //useState
      const [query, setQuery] = useState("");
@@ -131,7 +130,6 @@ export default function App() {
      const [showShortcuts, setShowShortcuts] = useState(false);
      const [isSongPlaying, setIsSongPlaying] = useState(false); //Not in use
      const [showAddShortcut, setShowAddShortcut] = useState(false);
-     const [googleSearchQuery, setGoogleSearchQuery] = useState("");
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
@@ -266,10 +264,11 @@ export default function App() {
           if (!todoOpen) return;
 
           const clickHandler = (event) => {
+               // Add a check if user is clicking on todo button , this function should not mark todoOpen as false only then
                if (todoRef.current && !todoRef.current.contains(event.target)) { setTodoOpen(false); }
           }
           document.addEventListener("mousedown", clickHandler);
-          return () => removeEventListener("mousedown", clickHandler);
+          return () => document.removeEventListener("mousedown", clickHandler);
      }, [todoOpen])
 
      // PURPOSE :- to close the div whenever user click outside the shortcuts(UX improve)
@@ -288,7 +287,7 @@ export default function App() {
                <main className="root">
                     <nav className="main-nav alignC">
                          <div className="nav-left alignC">
-                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo strokeWidth="2.5" size={25} color="var(--dark-blue)" /></button>
+                              <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo strokeWidth="2.5" size={25} color="var(--dark-bg)" /></button>
                          </div>
                          <div className="nav-right alignC">
                               {/* <form className="search-wrapper" onSubmit={doSearch}>
@@ -304,7 +303,7 @@ export default function App() {
                                    onClick={() => setShowWeatherPanel(true)}
                                    className="icon-btn"
                                    title="Weather">
-                                   {isLocationAllowed ? <Cloud strokeWidth="2.5" size={25} color="var(--dark-blue)" /> : <CloudOff strokeWidth="2.5" size={25} color="var(--dark-blue)" />}
+                                   {isLocationAllowed ? <Cloud strokeWidth="2.5" size={25} color="var(--dark-bg)" /> : <CloudOff strokeWidth="2.5" size={25} color="var(--dark-bg)" />}
 
                               </button>
                          </div>
@@ -337,8 +336,7 @@ export default function App() {
                          <WeatherCard weatherInfo={weatherInfo}/> */}
                     </div>
                     <footer className="main-footer">
-                         <button className="icon-btn footer-btn" title="Settings"><Settings strokeWidth="2.5" size={25} color="var(--dark-blue)" /></button>
-                         {/* Mounts the ai tools in the footer */}
+                         <button className="icon-btn footer-btn" title="Settings"><Settings strokeWidth="2.5" size={25} color="var(--dark-bg)" /></button>
                          <div className="ai-tools center">
                               {AI_TOOLS.map((tool, i) => (
                                    <button key={i} onClick={() => window.open(tool.targetURL, isSongPlaying ? "_blank" : "_self")} className="ai-btn center">
@@ -347,35 +345,38 @@ export default function App() {
                                    </button>
                               ))}
                          </div>
-                         <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 strokeWidth="2.5" size={25} color="var(--dark-blue)" /></button>
+                         <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 strokeWidth="2.5" size={25} color="var(--dark-bg)" /></button>
                     </footer>
 
                     {showShortcuts && (
                          <div ref={shortcutsRef} className="shortcuts-panel">
                               <div className="center" style={{ justifyContent: "space-between", marginBottom: "12px" }}>
-                                   <div className="panel-label" style={{ margin: "0px" }}>Quick Shortcuts</div>
+                                   <div className="shortcut-panel-label" style={{ margin: "0px" }}>Quick Shortcuts</div>
                                    <button onClick={() => setShowAddShortcut(true)} className="add-shortcut-btn">+</button>
                               </div>
+                              {/* Start by fixing add shortcuts panel UI */}
                               <div className="shortcut-list">
                                    {shortcuts.length ? (
                                         shortcuts.map((s, i) => (
                                              <div key={i} className="shortcut-item" style={{ justifyContent: "space-between" }}>
                                                   <a style={{ gap: "8px" }} className="alignC" href={s.url} target={isSongPlaying ? "_blank" : "_self"} title={s.name}>
-                                                       <img height={19} width={19} src={s.faviconURL} alt="?" style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
+                                                       <img height={23} width={23} src={s.faviconURL} alt="?" style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
                                                        <span className="shortcut-name">{s.name}</span>
                                                   </a>
                                                   <button onClick={() => removeShortcut(i)} className="remove-shortcut-btn">✕</button>
                                              </div>
                                         ))
                                    ) : (
-                                        <span style={{ display: "block", textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", fontStyle: "italic" }}>No added shortcuts</span>
+                                        <span style={{ display: "block", textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.7)", fontStyle: "italic" }}>No added shortcuts</span>
                                    )}
                               </div>
                          </div>
                     )}
 
                     {todoOpen && (
-                         <TodoList />
+                         <div ref={todoRef} className="todo-panel">
+                              <TodoList />
+                         </div>
                     )}
 
                     {showAddShortcut && (
@@ -398,7 +399,7 @@ export default function App() {
                                    <div className="weather-panel-head alignC">
                                         <div className="weather-panel-title-wrapper alignC">
                                              <div className="weather-title-icon center">
-                                                  <Cloud size={16} />
+                                                  <Cloud strokeWidth="2.5" size={22} />
                                              </div>
                                              <span className="weather-panel-title">Weather</span>
                                         </div>
@@ -406,7 +407,7 @@ export default function App() {
                                              onClick={() => setShowWeatherPanel(false)}
                                              className="weather-panel-close center"
                                         >
-                                             <X size={14} />
+                                             <X size={22} />
                                         </button>
                                    </div>
                                    <div className="weather-permission-card alignC">

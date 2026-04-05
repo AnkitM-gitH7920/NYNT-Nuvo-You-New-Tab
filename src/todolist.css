@@ -4,7 +4,7 @@
      border-radius: var(--radius-lg);
      padding: 16px;
      z-index: 100;
-     background-color: var(--light-blue);
+     background-color: var(--light-bg);
      top: 80px;
      left: 30px;
      width: 300px;
@@ -45,13 +45,13 @@
 .todo-input {
      background: #ffffff;
      flex: 1;
-     border: 1px solid var(--border);
+     border: none;
      border-radius: var(--radius-sm);
      padding: 10px 12px;
      color: var(--black-text);
      font-size: 14px;
      outline: none;
-     caret-color: var(--dark-blue);
+     caret-color: var(--dark-bg);
      transition: border-color var(--transition);
 }
 
@@ -60,31 +60,27 @@
      font-size: 14px;
 }
 
-.todo-input:focus {
-     border-color: var(--border2);
-}
-
 .todo-add-btn {
      height: 100%;
      width: 35px;
      border: none;
      border-radius: var(--radius-sm);
-     color: var(--text);
+     color: var(--white-text);
      font-size: 22px;
      font-weight: 600;
-     background-color: var(--dark-blue);
+     background-color: var(--dark-bg);
      transition: all 0.2s;
 }
 
 .todo-add-btn:active {
-     transform: scale(0.95);
+     transform: scale(0.90);
 }
 
 .todo-list {
      display: flex;
      flex-direction: column;
      gap: 6px;
-     background-color: var(--dark-blue);
+     background-color: var(--dark-bg);
      border-radius: var(--radius-sm);
      max-height: 300px;
      overflow-y: auto;
@@ -98,7 +94,7 @@
      gap: 8px;
      padding: 7px 8px;
      border-radius: var(--radius-sm);
-     background: var(--light-blue);
+     background: var(--light-bg);
      font-size: 12px;
      transition: opacity var(--transition);
 }
@@ -112,7 +108,7 @@
 }
 
 .todo-check {
-     color: var(--dark-blue);
+     color: var(--dark-bg);
      cursor: pointer;
      font-size: 16px;
      flex-shrink: 0;
@@ -120,6 +116,7 @@
 
 .todo-text {
      flex: 1;
+     font-size: 1.0rem;
      color: var(--black-text);
      font-weight: 500;
      word-break: break-all;
