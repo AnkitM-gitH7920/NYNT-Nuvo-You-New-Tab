@@ -14,7 +14,10 @@ import AddShortcutPanel from "./AddShortcutPanel";
 import ToggleButton from "./ToggleButton";
 import { WeatherCard, QuoteCard } from "./Cards";
 import returnMappedWeatherIcon from "./mappedWeatherIcons";
+import { DEFAULT_CLUSTER_OPTIONS } from "ioredis/built/cluster/ClusterOptions";
 
+
+//PENDING :- create a function that would return weather unit types(metric, kelvin) , selected as per user and loads the units on its basis
 const SEARCH_OPTIONS = [
      { label: "Google", url: "https://google.com/search?q=" },
      { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
@@ -35,6 +38,19 @@ const AI_TOOLS = [
      { name: "Copilot", favicon: "https://www.google.com/s2/favicons?domain=copiot.microsoft.com&sz=32", targetURL: "https://copilot.microsoft.com" },
 
 ];
+const WEATHER_API_KEYS = [
+     "12a250e43dd5527ae82439945006e9aa",
+     "ffadeca6e05a14fe995754792ddfca8c",
+     "331b02b0aa2db48f067c9d5a49e4e448",
+     "fd8df77967e31958674fbe57495db942",
+     "32b1c9092ae662b4993b9540bbe1d15f",
+     "b40985c9eb1246010a4546aaf127b75a",
+     "54fb57ed32f45ae9d99786850e4cdf66",
+     "2cc0d78e472fb32792638666faa9caf8",
+     "4197131a2e4acabb8b025c9a2b137e99",
+     "0599e8d38274b78ffb2420f553a7580a"
+];
+const DEFAULT_API_KEY = WEATHER_API_KEYS[Math.floor(Math.random() * WEATHER_API_KEYS.length)];
 
 export default function App() {
      const time = useClock();
@@ -45,12 +61,12 @@ export default function App() {
 
      //useState
      const [query, setQuery] = useState("");
-     const [engine, setEngine] = useState(0);
      const [todoOpen, setTodoOpen] = useState(false);
      const [showShortcuts, setShowShortcuts] = useState(false);
      const [isSongPlaying, setIsSongPlaying] = useState(false); //Not in use
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
+     const [engine, setEngine] = useState(() => Number.parseInt(localStorage.getItem("selectedEngine") || 0));
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
      const [userCoordinates, setUserCoordinates] = useState(() => JSON.parse(localStorage.getItem("user-coords")) || {});
@@ -65,6 +81,11 @@ export default function App() {
 
      function saveShortcuts(arr) { setShortcuts(arr); localStorage.setItem("shortcuts", JSON.stringify(arr)); }
      function removeShortcut(i) { saveShortcuts(shortcuts.filter((_, j) => j !== i)); }
+     function addShortcut(requestedShortcutObj) {
+          const { name, url } = requestedShortcutObj;
+          const domainName = new URL(url).host; //returns the domain name
+          saveShortcuts([...shortcuts, { faviconURL: `https://www.google.com/s2/favicons?domain=${domainName}&sz=32`, name, url }]);
+     }
      function doSearch(e) {
           e.preventDefault();
           if (query.trim()) {
@@ -73,46 +94,52 @@ export default function App() {
           }
      }
 
-     async function addShortcut(requestedShortcutObj) {
-          const { name, url } = requestedShortcutObj;
-          const domainName = new URL(url).host; //returns the domain name
-          saveShortcuts([...shortcuts, { faviconURL: `https://www.google.com/s2/favicons?domain=${domainName}&sz=32`, name, url }]);
+     async function fetchSearchSuggestions() {
+          try {
+               // https://www.google.com/complete/search?client=chrome&q=${query} <-- works on deployed apps
+               // https://duckduckgo.com/ac/?q=${query}&type=list
+               const {data: suggestions} = await axios.get(`/google-suggestions?client=chrome&q=${query}`);
+               console.log(suggestions[1])
+               // start by creating a ui showing search suggestions
+
+          } catch (searchSuggestionError) {
+               console.log(searchSuggestionError);
+               throw searchSuggestionError;
+          }
+
      }
      async function fetchAndStoreWeather(userCoordinatesObj) {
           let { latitude, longitude } = userCoordinatesObj;
-
           try {
-               const { data: fetchedWeather } = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code`);
-               const { data: fetchedGeoCoding } = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+               const { data: fetchedWeather } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${DEFAULT_API_KEY}&units=metric`);
+               const { data: fetchedWeatherForecast } = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${DEFAULT_API_KEY}&units=metric`);
 
+               const reqWeatherForecast = fetchedWeatherForecast.list.filter(
+                    elem => elem.dt_txt.includes("12:00:00")
+               );
+
+               // Add coverted values in this object
                const reqWeatherInfo = {
-                    locationName:
-                         fetchedGeoCoding.address.state_district ||
-                         fetchedGeoCoding.address.town ||
-                         fetchedGeoCoding.address.county ||
-                         fetchedGeoCoding.address.region,
-                    address: fetchedGeoCoding.display_name,
+                    locationName: fetchedWeather?.name,
+                    country: fetchedWeather?.sys?.country,
                     temperature: {
-                         tempInC: Math.round(fetchedWeather?.current.temperature_2m),
-                         tempUnit: fetchedWeather.current_units.temperature_2m
+                         tempInC: Math.round(fetchedWeather?.main.temp),
                     },
+                    weatherCode: fetchedWeather?.weather[0].id,
                     wind: {
-                         windSpeed: fetchedWeather?.current.wind_speed_10m,
-                         windAngle: fetchedWeather?.current.wind_direction_10m,
-                         windSpeedUnit: fetchedWeather?.current_units.wind_speed_10m,
-                         windAngleUnit: fetchedWeather?.current_units.wind_direction_10m
+                         windSpeed: fetchedWeather?.wind.speed,
+                         windAngle: fetchedWeather?.wind.deg, // not in use
                     },
                     humidity: {
-                         humidity: fetchedWeather?.current.relative_humidity_2m,
-                         humidityUnit: fetchedWeather?.current_units.relative_humidity_2m
+                         humidity: fetchedWeather?.main.humidity,
                     },
                     rain: {
-                         rain: fetchedWeather?.current.precipitation,
-                         rainUnit: fetchedWeather?.current_units.precipitation,
+                         rain: fetchedWeather.rain?.["1h"] || fetchedWeather.snow?.["1h"] || 0, // Can break
                     },
-                    weatherCode: fetchedWeather?.current.weather_code,
                     fetchTimestamp: Date.now(),
-                    fetchedLocationTimeString: (fetchedWeather.current.time).split("T")[1] //Maybe containing bugs, check out
+                    sunrise: fetchedWeather?.sys.sunrise,
+                    sunset: fetchedWeather?.sys.sunset,
+                    fiveDayForecast: reqWeatherForecast
                }
                setWeatherInfo(reqWeatherInfo);
                localStorage.setItem("weatherInfo", JSON.stringify(reqWeatherInfo));
@@ -200,7 +227,16 @@ export default function App() {
           }
           document.addEventListener("mousedown", clickHandler);
           return () => removeEventListener("mousedown", clickHandler);
-     }, [showShortcuts])
+     }, [showShortcuts]);
+
+     // PURPOSE :- Provide search suggestions
+     useEffect(() => {
+          if (!query.length) return;
+
+          const timer = setTimeout(() => { fetchSearchSuggestions() }, 600);
+          return () => clearTimeout(timer);
+
+     }, [query])
 
      return (
           <>
@@ -246,7 +282,15 @@ export default function App() {
                                         </div>
                                    </form>
                                    <div className="engine-tabs">
-                                        {SEARCH_OPTIONS.map((eng, i) => (<button key={eng.label} className={`engine-tab ${engine === i ? "search-opt-btn-active" : ""}`} onClick={() => setEngine(i)}>{eng.label}</button>))}
+                                        {SEARCH_OPTIONS.map((eng, i) => (
+                                             <button
+                                                  key={eng.label}
+                                                  className={`engine-tab ${engine === i ? "search-opt-btn-active" : ""}`}
+                                                  onClick={() => {
+                                                       setEngine(i)
+                                                       localStorage.setItem("selectedEngine", i);
+                                                  }}>{eng.label}</button>
+                                        ))}
                                    </div>
                               </div>
                          </section>
@@ -278,7 +322,7 @@ export default function App() {
                                    {shortcuts.length ? (
                                         shortcuts.map((s, i) => (
                                              <div onClick={(e) => {
-                                                  if(e.target.classList.contains("remove-shortcut-btn")) return;
+                                                  if (e.target.classList.contains("remove-shortcut-btn")) return;
                                                   window.open(s.url, isSongPlaying ? "_blank" : "_self")
                                              }} key={i} className="shortcut-item" style={{ justifyContent: "space-between" }}>
                                                   {/* Can remove this anchor but kept it */}
@@ -369,7 +413,7 @@ export default function App() {
                                              <div className="weather-location center">
                                                   <MapPin className="location-pin" size={14} />
                                                   <span>
-                                                       {weatherInfo.locationName ? weatherInfo.locationName : weatherInfo.address}
+                                                       {weatherInfo?.locationName}, {weatherInfo?.country}
                                                   </span>
                                              </div>
                                              <div className="weather-main-display center">
@@ -384,7 +428,7 @@ export default function App() {
                                                   <div className="weather-temp-info flex">
                                                        <div className="temp-value flex">
                                                             <span className="temp-number">{weatherInfo.temperature.tempInC}</span>
-                                                            <span className="temp-unit">{weatherInfo.temperature.tempUnit}</span>
+                                                            <span className="temp-unit">&deg;C</span>
                                                        </div>
                                                        <span className="weather-condition">
                                                             {returnMappedWeatherIcon(weatherInfo.weatherCode).main}
@@ -399,7 +443,7 @@ export default function App() {
                                                        <div className="stat-details">
                                                             <span className="stat-value">
                                                                  {weatherInfo.humidity.humidity}
-                                                                 <small>{weatherInfo.humidity.humidityUnit}</small>
+                                                                 <small>%</small>
                                                             </span>
                                                             <span className="stat-label">Humidity</span>
                                                        </div>
@@ -412,7 +456,7 @@ export default function App() {
                                                        <div className="stat-details">
                                                             <span className="stat-value">
                                                                  {weatherInfo.wind.windSpeed}
-                                                                 <small>{weatherInfo.wind.windSpeedUnit}</small>
+                                                                 <small>km/h</small>
                                                             </span>
                                                             <span className="stat-label">Wind Speed</span>
                                                        </div>
@@ -425,7 +469,7 @@ export default function App() {
                                                        <div className="stat-details">
                                                             <span className="stat-value">
                                                                  {weatherInfo.rain.rain}
-                                                                 <small>{weatherInfo.rain.rainUnit}</small>
+                                                                 <small>mm</small>
                                                             </span>
                                                             <span className="stat-label">Rain</span>
                                                        </div>

@@ -167,14 +167,14 @@
 
 .colon {
      opacity: 0.3;
-     animation: blink 2s ease-in-out infinite;
+     animation: blink 1s ease-in-out infinite;
 }
 
 @keyframes blink {
 
      0%,
      100% {
-          opacity: 0.4
+          opacity: 0.7
      }
 
      50% {
@@ -257,7 +257,8 @@
 
 /* Search block */
 .engine-tabs {
-     width: 30em;
+     width: 35em;
+     max-width: 35em;
      display: flex;
      gap: 10px;
      flex-wrap: wrap;
@@ -270,7 +271,7 @@
      border: 2px solid var(--light-bg);
      background: var(--light-bg);
      backdrop-filter: blur(4px);
-     color: var();
+     color: var(--black-text);
      font-size: 12px;
      font-family: var(--main-font);
      font-weight: 500;
