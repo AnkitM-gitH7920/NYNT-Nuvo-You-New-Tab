@@ -7,24 +7,21 @@
      --plus-jakarta-font: "Plus Jakarta Sans", sans-serif;
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
-
-     --bg: #bbd6fd;
-     --dark-bg: #4382ec;
-     --light-bg: #e2eeff;
      --white-text: #ffffff;
      --black-text: #444444;
 
+     /* --bg: #bbd6fd;
+     --dark-bg: #4382ec;
+     --light-bg: #e2eeff; */
+
      /* --bg: #f8bd8d;
      --dark-bg: #e47d38;
-     --light-bg: #eee6de;
-     --white-text: #ffffff;
-     --black-text: #444444; */
+     --light-bg: #eee6de; */
 
-     /* --bg: #ffa39c;
+     --bg: #ffa39c;
      --dark-bg: #dd4f45;
      --light-bg: #fdfcdc;
-     --white-text: #ffffff;
-     --black-text: #444444; */
+
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 

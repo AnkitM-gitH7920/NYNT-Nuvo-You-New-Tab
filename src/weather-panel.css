@@ -64,7 +64,6 @@
      background-color: var(--dark-bg);
      border-radius: var(--radius-sm);
      color: white;
-     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .weather-panel-title {

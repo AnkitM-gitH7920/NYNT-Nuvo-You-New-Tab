@@ -52,7 +52,10 @@
      font-size: 14px;
      outline: none;
      caret-color: var(--dark-bg);
-     transition: border-color var(--transition);
+     transition: all var(--transition);
+}
+.todo-input:focus{
+     box-shadow: 0px 0px 0px 2px var(--dark-bg);
 }
 
 .todo-input::placeholder {
@@ -85,7 +88,7 @@
      max-height: 300px;
      overflow-y: auto;
      scrollbar-width: none;
-     padding: 10px;
+     padding: 7px;
 }
 
 .todo-item {

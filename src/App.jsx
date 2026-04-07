@@ -15,86 +15,6 @@ import ToggleButton from "./ToggleButton";
 import { WeatherCard, QuoteCard } from "./Cards";
 import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
-const PALLET_THEMES = {
-     // Currently preparing
-     "black-gold": {
-          "--black-gold-1": "#000000",
-          "--black-gold-2": "#14213d",
-          "--black-gold-3": "#fca311",
-          "--black-gold-4": "#e5e5e5",
-          "--black-gold-5": "#ffffff",
-     },
-     "summer-dream": {
-          "--summer-dream-1": "#0081a7",
-          "--summer-dream-2": "#00afb9",
-          "--summer-dream-3": "#fdfcdc",
-          "--summer-dream-4": "#fed9b7",
-          "--summer-dream-5": "#f07167",
-     },
-     "rustic-charm": {
-          "--rustic-charm-1": "#fffcf2",
-          "--rustic-charm-2": "#ccc5b9",
-          "--rustic-charm-3": "#403d39",
-          "--rustic-charm-4": "#252422",
-          "--rustic-charm-5": "#eb5e28",
-     },
-     "sweet-summer": {
-          "--sweet-summer-1": "#f6bd60",
-          "--sweet-summer-2": "#f7ede2",
-          "--sweet-summer-3": "#f5cac3",
-          "--sweet-summer-4": "#84a59d",
-          "--sweet-summer-5": "#f28482",
-     },
-     "vintage-charm": {
-          "--vintage-charm-1": "#04151f",
-          "--vintage-charm-2": "#183a37",
-          "--vintage-charm-3": "#efd6ac",
-          "--vintage-charm-4": "#c44900",
-          "--vintage-charm-5": "#432534",
-     },
-     "limy-green": {
-          "--limy-green-1": "#bad7e9",
-          "--limy-green-2": "#fef302",
-          "--limy-green-3": "#f7fbf3",
-          "--limy-green-4": "#a7c658",
-          "--limy-green-5": "#16502e",
-     },
-     "harmony-bliss": {
-          "--harmony-bliss-1": "#f4f1de",
-          "--harmony-bliss-2": "#e07a5f",
-          "--harmony-bliss-3": "#3d405b",
-          "--harmony-bliss-4": "#81b29a",
-          "--harmony-bliss-5": "#f2cc8f",
-     },
-     "earthy-tones": {
-          "--earthy-tones-1": "#2c6e49",
-          "--earthy-tones-2": "#4c956c",
-          "--earthy-tones-3": "#fefee3",
-          "--earthy-tones-4": "#ffc9b9",
-          "--earthy-tones-5": "#d68c45",
-     },
-     "coastal-vibes": {
-          "--coastal-vibes-1": "#2b2d42",
-          "--coastal-vibes-2": "#8d99ae",
-          "--coastal-vibes-3": "#edf2f4",
-          "--coastal-vibes-4": "#ef233c",
-          "--coastal-vibes-5": "#d90429",
-     },
-     "automn-harmony": {
-          "--automn-harmony-1": "#3a2e39",
-          "--automn-harmony-2": "#1e555c",
-          "--automn-harmony-3": "#f4d8cd",
-          "--automn-harmony-4": "#edb183",
-          "--automn-harmony-5": "#f15152",
-     },
-     "cozy-cabin": {
-          "--cozy-cabin-1": "#550c18",
-          "--cozy-cabin-2": "#443730",
-          "--cozy-cabin-3": "#786452",
-          "--cozy-cabin-4": "#a5907e",
-          "--cozy-cabin-5": "#f7dad9",
-     },
-};
 const SEARCH_OPTIONS = [
      { label: "Google", url: "https://google.com/search?q=" },
      { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
@@ -112,7 +32,7 @@ const AI_TOOLS = [
      { name: "ChatGPT", favicon: "https://www.google.com/s2/favicons?domain=chatgpt.com&sz=32", targetURL: "https://chatgpt.com" },
      { name: "Perplexity", favicon: "https://www.google.com/s2/favicons?domain=perplexity.ai&sz=32", targetURL: "https://www.perplexity.ai" },
      { name: "Grok", favicon: "https://www.google.com/s2/favicons?domain=grok.com&sz=32", targetURL: "https://grok.com" },
-     { name: "Copilot", favicon: "https://www.google.com/s2/favicons?domain=copilot.microsoft.com&sz=32", targetURL: "https://copilot.microsoft.com" },
+     { name: "Copilot", favicon: "https://www.google.com/s2/favicons?domain=copiot.microsoft.com&sz=32", targetURL: "https://copilot.microsoft.com" },
 
 ];
 
@@ -354,11 +274,17 @@ export default function App() {
                                    <div className="shortcut-panel-label" style={{ margin: "0px" }}>Quick Shortcuts</div>
                                    <button onClick={() => setShowAddShortcut(true)} className="add-shortcut-btn">+</button>
                               </div>
-                              {/* Start by fixing add shortcuts panel UI */}
                               <div className="shortcut-list">
                                    {shortcuts.length ? (
                                         shortcuts.map((s, i) => (
-                                             <div key={i} className="shortcut-item" style={{ justifyContent: "space-between" }}>
+                                             <div onClick={(e) => {
+                                                  if(e.target.classList.contains("remove-shortcut-btn")) return;
+                                                  window.open(s.url, isSongPlaying ? "_blank" : "_self")
+                                             }} key={i} className="shortcut-item" style={{ justifyContent: "space-between" }}>
+                                                  {/* Can remove this anchor but kept it */}
+
+                                                  {/* Start by loading my own extension into the chrome and generate multiple openweatherapi keys */}
+
                                                   <a style={{ gap: "8px" }} className="alignC" href={s.url} target={isSongPlaying ? "_blank" : "_self"} title={s.name}>
                                                        <img height={23} width={23} src={s.faviconURL} alt="?" style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
                                                        <span className="shortcut-name">{s.name}</span>
@@ -367,7 +293,7 @@ export default function App() {
                                              </div>
                                         ))
                                    ) : (
-                                        <span style={{ display: "block", textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.7)", fontStyle: "italic" }}>No added shortcuts</span>
+                                        <span style={{ display: "block", textAlign: "center", fontSize: "0.7rem", color: "rgba(255,255,255,0.8)", fontStyle: "italic" }}>No added shortcuts</span>
                                    )}
                               </div>
                          </div>

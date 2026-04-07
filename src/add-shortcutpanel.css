@@ -6,9 +6,6 @@
      backdrop-filter: blur(8px);
      -webkit-backdrop-filter: blur(8px);
      z-index: 200;
-     display: flex;
-     align-items: center;
-     justify-content: center;
      animation: fadeIn var(--transition) ease;
 }
 
@@ -52,16 +49,16 @@
 }
 
 .add-shortcutpanel-title {
-     font-size: 0.85rem;
+     font-size: 0.90rem;
      font-weight: 700;
      color: var(--black-text);
      letter-spacing: 0.5px;
 }
 
 .add-shortcutpanel-close {
-     width: 30px;
-     height: 30px;
-     background: var(--surface2);
+     width: 35px;
+     height: 35px;
+     background-color: var(--bg);
      border: none;
      border-radius: var(--radius-sm);
      color: var(--black-text);
@@ -73,7 +70,7 @@
 
 .add-shortcutpanel-close:hover {
      background: rgba(239, 68, 68, 0.1);
-     border-color: rgba(239, 68, 68, 0.3);
+     border: 1px solid rgba(250, 18, 18, 0.644);
      color: #ef4444;
      transform: rotate(90deg);
 }
@@ -81,46 +78,46 @@
 .add-shortcutpanel-body {
      display: flex;
      flex-direction: column;
-     gap: 12px;
+     gap: 10px;
 }
 
 .add-shortcutpanel-input {
      width: 100%;
-     background: var(--surface2);
+     background: var(--light-bg);
      border: 1px solid var(--border);
-     border-radius: var(--radius-sm);
-     padding: 10px 14px;
-     color: var(--text);
-     font-size: 13px;
+     border-radius: 16px;
+     padding: 14px;
+     color: var(--black-text);
+     font-size: 0.85rem;
+     font-weight: 600;
+     font-family: var(--gm-font);
      outline: none;
-     transition: border-color var(--transition);
+     transition: all var(--transition);
 }
-
-.add-shortcutpanel-input::placeholder {
-     color: var(--dim);
-}
-
-.add-shortcutpanel-input:focus {
-     border-color: var(--accent);
+.add-shortcutpanel-input:focus{
+     box-shadow: 0px 0px 0px 2px var(--dark-bg);
 }
 
 .add-shortcutpanel-submit {
      width: 100%;
-     padding: 10px;
-     background: var(--accent);
+     padding: 11px;
+     background: var(--dark-bg);
      border: none;
      border-radius: var(--radius-sm);
-     color: var(--bg);
-     font-size: 13px;
+     color: var(--light-bg);
+     font-size: 0.90rem;
      font-family: var(--main-font);
      font-weight: 500;
-     transition: opacity var(--transition);
+     margin-top: 10px;
+     transition: all 0.2s;
 }
 
 .add-shortcutpanel-submit:hover {
-     opacity: 0.85;
+     background-color: var(--light-bg);
+     color: var(--dark-bg);
+     box-shadow: 0px 0px 0px 2px var(--dark-bg);
 }
 
 .add-shortcutpanel-submit:active {
-     transform: scale(0.98);
+     transform: scale(0.90);
 }
