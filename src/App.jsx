@@ -56,8 +56,9 @@ export default function App() {
      const time = useClock();
 
      // useRef
-     const shortcutsRef = useRef(null);
      const todoRef = useRef(null);
+     const shortcutsRef = useRef(null);
+     const searchSuggestionWrapperRef = useRef(null);
 
      //useState
      const [query, setQuery] = useState("");
@@ -65,6 +66,7 @@ export default function App() {
      const [showShortcuts, setShowShortcuts] = useState(false);
      const [isSongPlaying, setIsSongPlaying] = useState(false); //Not in use
      const [showAddShortcut, setShowAddShortcut] = useState(false);
+     const [searchSuggestions, setSearchSuggestions] = useState([]);
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
      const [engine, setEngine] = useState(() => Number.parseInt(localStorage.getItem("selectedEngine") || 0));
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
@@ -98,15 +100,37 @@ export default function App() {
           try {
                // https://www.google.com/complete/search?client=chrome&q=${query} <-- works on deployed apps
                // https://duckduckgo.com/ac/?q=${query}&type=list
-               const {data: suggestions} = await axios.get(`/google-suggestions?client=chrome&q=${query}`);
-               console.log(suggestions[1])
-               // start by creating a ui showing search suggestions
+               if (SEARCH_OPTIONS[engine].label === "YouTube") {
+                    const { data: YTSuggestions } = await axios.get(`/suggest?client=youtube&ds=yt&q=${encodeURIComponent(query)}&callback=func`);
+                    const json = YTSuggestions.match(/\((.+)\)/s)[1];
+                    const suggestions = JSON.parse(json)[1].map(item => item[0]);
+                    setSearchSuggestions(suggestions);
+
+               } else if (SEARCH_OPTIONS[engine].label === "DuckDuckGo") {
+                    const { data: suggestions } = await axios.get(`/ddg-suggestions?q=${encodeURIComponent(query)}&type=list`);
+                    setSearchSuggestions(suggestions[1]);
+
+               } else if (SEARCH_OPTIONS[engine].label === "Yandex") {
+                    const { data: suggestions } = await axios.get(`/yandex-suggestions?part=${encodeURIComponent(query)}`);
+                    setSearchSuggestions(suggestions[1]);
+
+               } else {
+                    const { data: suggestions } = await axios.get(`/google-suggestions?client=chrome&q=${(query)}`);
+                    setSearchSuggestions(suggestions[1]);
+               }
+
 
           } catch (searchSuggestionError) {
                console.log(searchSuggestionError);
+               setSearchSuggestions([]);
+               if (searchSuggestionError.status === 502) {
+                    // Add a warning information container here , that warns the user about diffrent error
+                    // alert("Your internet connection seems to be offline, cannot fetch search suggestions")
+                    return;
+               }
                throw searchSuggestionError;
           }
-
+          return;
      }
      async function fetchAndStoreWeather(userCoordinatesObj) {
           let { latitude, longitude } = userCoordinatesObj;
@@ -152,6 +176,7 @@ export default function App() {
      }
 
      // useEffect
+
      // PURPOSE :- Manages logic for fetching and storing coordinates and weather
      useEffect(() => {
           if (!isLocationAllowed) {
@@ -206,7 +231,7 @@ export default function App() {
           }
      }, [isLocationAllowed]);
 
-     // PURPOSE :- to close the div whenever user click outside the todo list(UX improve)
+     // PURPOSE :- to close the TODO LIST whenever user click outside the todo list(UX improve)
      useEffect(() => {
           if (!todoOpen) return;
 
@@ -218,10 +243,9 @@ export default function App() {
           return () => document.removeEventListener("mousedown", clickHandler);
      }, [todoOpen])
 
-     // PURPOSE :- to close the div whenever user click outside the shortcuts(UX improve)
+     // PURPOSE :- to close the SHORTCUTS TAB div whenever user click outside the shortcuts(UX improve)
      useEffect(() => {
           if (!showShortcuts) return;
-
           const clickHandler = (event) => {
                if (shortcutsRef.current && !shortcutsRef.current.contains(event.target)) { setShowShortcuts(false); }
           }
@@ -229,13 +253,26 @@ export default function App() {
           return () => removeEventListener("mousedown", clickHandler);
      }, [showShortcuts]);
 
+     // PURPOSE :- to close the SEARCH SUGGESTIONS wrapper whenever user click outside the shortcuts(UX improve)
+     useEffect(() => {
+          // Start by fixing this
+          if (!searchSuggestions.length) return;
+          const clickHandler = (event) => {
+               if (searchSuggestionWrapperRef.current && !searchSuggestionWrapperRef.current.contains(event.target)) { setSearchSuggestions([]); }
+          }
+          document.addEventListener("mousedown", clickHandler);
+          return () => removeEventListener("mousedown", clickHandler);
+     }, [searchSuggestions]);
+
      // PURPOSE :- Provide search suggestions
      useEffect(() => {
-          if (!query.length) return;
+          if (!query.length) {
+               setSearchSuggestions([]);
+               return
+          };
+          const timer = setTimeout(() => { fetchSearchSuggestions() }, 100);
 
-          const timer = setTimeout(() => { fetchSearchSuggestions() }, 600);
           return () => clearTimeout(timer);
-
      }, [query])
 
      return (
@@ -279,6 +316,20 @@ export default function App() {
                                         <div className="big-search-bar alignC">
                                              <input type="text" className="big-search-input" placeholder="What are you looking for..." value={query} onChange={e => setQuery(e.target.value)} />
                                              <button type="submit" className="big-search-btn"><ChevronRight size={20} /></button>
+                                        </div>
+                                        <div ref={searchSuggestionWrapperRef} className={`search-suggestions-wrapper ${searchSuggestions.length ? "ssw-active" : ""}`}>
+                                             {searchSuggestions.map((suggestion, index) => (
+                                                  <button
+                                                       type="button"
+                                                       onClick={() => {
+                                                            let target = isSongPlaying ? "_blank" : "_self";
+                                                            window.open(SEARCH_OPTIONS[engine].url + encodeURIComponent(suggestion), target)
+                                                       }}
+                                                       key={index}
+                                                       className="search-suggestion-list-item">
+                                                       {suggestion}
+                                                  </button>
+                                             ))}
                                         </div>
                                    </form>
                                    <div className="engine-tabs">

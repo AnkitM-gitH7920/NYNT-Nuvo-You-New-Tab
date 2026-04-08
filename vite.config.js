@@ -12,15 +12,25 @@ export default defineConfig({
      },
      server: {
           proxy: {
-               '/suggestions': {
+               '/ddg-suggestions': {
                     target: 'https://duckduckgo.com',
                     changeOrigin: true,
-                    rewrite: (path) => path.replace(/^\/suggestions/, '/ac'),
+                    rewrite: (path) => path.replace(/^\/ddg-suggestions/, '/ac/'),
                },
                '/google-suggestions': {
                     target: 'https://www.google.com',
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/google-suggestions/, '/complete/search'),
+               },
+               "/suggest": {
+                    target: 'http://suggestqueries.google.com',
+                    changeOrigin: true,
+                    rewrite: (path) => path.replace(/^\/suggest/, '/complete/search'),
+               },
+               '/yandex-suggestions': {
+                    target: 'https://suggest.yandex.com',
+                    changeOrigin: true,
+                    rewrite: (path) => path.replace(/^\/yandex-suggestions/, '/suggest-ff.cgi'),
                }
           }
 
