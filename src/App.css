@@ -337,7 +337,6 @@
      font-weight: 500;
      transition: all var(--transition);
 }
-
 .engine-tab:hover {
      border-color: var(--dark-bg);
      color: var(--dark-bg);

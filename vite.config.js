@@ -12,21 +12,25 @@ export default defineConfig({
      },
      server: {
           proxy: {
+               // DuckDuckGO
                '/ddg-suggestions': {
                     target: 'https://duckduckgo.com',
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/ddg-suggestions/, '/ac/'),
                },
+               // Google search
                '/google-suggestions': {
                     target: 'https://www.google.com',
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/google-suggestions/, '/complete/search'),
                },
+               // Youtube
                "/suggest": {
                     target: 'http://suggestqueries.google.com',
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/suggest/, '/complete/search'),
                },
+               // Yandex
                '/yandex-suggestions': {
                     target: 'https://suggest.yandex.com',
                     changeOrigin: true,

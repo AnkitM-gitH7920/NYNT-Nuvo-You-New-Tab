@@ -10,18 +10,60 @@
      --white-text: #ffffff;
      --black-text: #444444;
 
-     /* --bg: #bbd6fd;
+     /* Midnight slate */
+     --bg: #bbd6fd;
      --dark-bg: #4382ec;
-     --light-bg: #e2eeff; */
-/*
-     --bg: #f8bd8d;
-     --dark-bg: #e47d38;
-     --light-bg: #fcf8f4; */
+     --light-bg: #e2eeff;
 
+     /* Pink legacy */
      --bg: #ffa39c;
-     --dark-bg: #dd4f45;
+     --dark-bg: #d84136;
      --light-bg: #fdfcdc;
 
+     /* Rustic charm 1 */
+     --bg: #ccc5b9;
+     --dark-bg: #403d39;
+     --light-bg: #fffcf2;
+
+     /* Sand dunes */
+     --bg: #c9a87c;
+     --dark-bg: #8b4513;
+     --light-bg: #fdf8f0;
+
+     /* Yellow */
+     --bg: #e7d77c;
+     --dark-bg: #a87d08;
+     --light-bg: #fff6c3;
+
+     /* Lavender dusk */
+     --bg: #b8a9c9;
+     --dark-bg: #4a2c6e;
+     --light-bg: #f7f3fd;
+
+     /* Charcoal Rose 2 */
+     --bg: #e05c7a;
+     --dark-bg: #2e2e2e;
+     --light-bg: #fdf0f3;
+
+     /* Blueberry cream */
+     --bg: #6e67c9;
+     --dark-bg: #1e1f52;
+     --light-bg: #d7d8db;
+
+     /* Forest frog 1*/
+     --bg: #8a9a5b;
+     --dark-bg: #3b4a2f;
+     --light-bg: #f4f5ec;
+
+     /* Arctic frost */
+     --bg: #a8c5da;
+     --dark-bg: #1b4f72;
+     --light-bg: #f0f8ff;
+
+     /* Rustic charm 2 */
+     --bg: #f19269;
+     --dark-bg: #252422;
+     --light-bg: #ebeae9;
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
@@ -34,9 +76,6 @@
 
      /* other variables */
      --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-     --low-shadow: 0px 0px 7px rgba(0, 0, 0, 0.7);
-     --high-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-     --glow-shadow: 0 0 20px var(--accent-glow);
 
      /*Used in navbar and footer*/
      --glass-blur: 24px;
@@ -48,30 +87,6 @@
 
 
      /* Palletes used */
-     --summer-dream-1: #0081a7;
-     --summer-dream-2: #00afb9;
-     --summer-dream-3: #fdfcdc;
-     --summer-dream-4: #fed9b7;
-     --summer-dream-5: #f07167;
-
-     --rustic-charm-1: #fffcf2;
-     --rustic-charm-2: #ccc5b9;
-     --rustic-charm-3: #403d39;
-     --rustic-charm-4: #252422;
-     --rustic-charm-5: #eb5e28;
-
-     --sweet-summer-1: #f6bd60;
-     --sweet-summer-2: #f7ede2;
-     --sweet-summer-3: #f5cac3;
-     --sweet-summer-4: #84a59d;
-     --sweet-summer-5: #f28482;
-
-     --vintage-charm-1: #04151f;
-     --vintage-charm-2: #183a37;
-     --vintage-charm-3: #efd6ac;
-     --vintage-charm-4: #c44900;
-     --vintage-charm-5: #432534;
-
      --limy-green-1: #bad7e9;
      --limy-green-2: #fef302;
      --limy-green-3: #f7fbf3;

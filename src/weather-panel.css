@@ -6,7 +6,7 @@
      backdrop-filter: blur(12px);
      -webkit-backdrop-filter: blur(12px);
      z-index: 200;
-     animation: overlayFadeIn 0.3s ease;
+     animation: overlayFadeIn var(--transition);
 }
 
 @keyframes overlayFadeIn {

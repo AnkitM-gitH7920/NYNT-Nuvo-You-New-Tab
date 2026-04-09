@@ -6,15 +6,15 @@ import "./weather-panel.css";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useClock } from "./lib/hooks";
-import { ListTodo, Search, Cloud, Settings, Grid2X2, ChevronRight, MapPin, Droplets, CloudRain, X, CloudOff, Wind, Shield } from "lucide-react";
+import { ListTodo, Cloud, Settings, Grid2X2, ChevronRight, MapPin, Droplets, CloudRain, X, CloudOff, Wind, Shield } from "lucide-react";
 
 // File imports
 import TodoList from "./TodoList";
 import AddShortcutPanel from "./AddShortcutPanel";
 import ToggleButton from "./ToggleButton";
 import { WeatherCard, QuoteCard } from "./Cards";
+import Error from "./error";
 import returnMappedWeatherIcon from "./mappedWeatherIcons";
-import { DEFAULT_CLUSTER_OPTIONS } from "ioredis/built/cluster/ClusterOptions";
 
 
 //PENDING :- create a function that would return weather unit types(metric, kelvin) , selected as per user and loads the units on its basis
@@ -63,6 +63,7 @@ export default function App() {
      //useState
      const [query, setQuery] = useState("");
      const [todoOpen, setTodoOpen] = useState(false);
+     const [showError, setShowError] = useState(false);
      const [showShortcuts, setShowShortcuts] = useState(false);
      const [isSongPlaying, setIsSongPlaying] = useState(false); //Not in use
      const [showAddShortcut, setShowAddShortcut] = useState(false);
@@ -98,8 +99,6 @@ export default function App() {
 
      async function fetchSearchSuggestions() {
           try {
-               // https://www.google.com/complete/search?client=chrome&q=${query} <-- works on deployed apps
-               // https://duckduckgo.com/ac/?q=${query}&type=list
                if (SEARCH_OPTIONS[engine].label === "YouTube") {
                     const { data: YTSuggestions } = await axios.get(`/suggest?client=youtube&ds=yt&q=${encodeURIComponent(query)}&callback=func`);
                     const json = YTSuggestions.match(/\((.+)\)/s)[1];
@@ -270,7 +269,7 @@ export default function App() {
                setSearchSuggestions([]);
                return
           };
-          const timer = setTimeout(() => { fetchSearchSuggestions() }, 100);
+          const timer = setTimeout(() => { fetchSearchSuggestions() }, 400);
 
           return () => clearTimeout(timer);
      }, [query])
@@ -534,6 +533,10 @@ export default function App() {
                                    )}
                               </div>
                          </div>
+                    )}
+
+                    {showError && (
+                         <Error onClose={() => setShowError(false)} err=""/>
                     )}
                </main>
           </>

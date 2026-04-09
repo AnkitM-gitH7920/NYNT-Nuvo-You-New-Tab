@@ -1,0 +1,32 @@
+.error-wrapper{
+     position: absolute;
+     right: 0;
+     left: 0;
+     inset: 0;
+     z-index: 200;
+     background: rgba(0, 0, 0, 0.6);
+     backdrop-filter: blur(8px);
+     animation: fadeIn var(--transition);
+}
+@keyframes fadeIn{
+     from{
+          opacity: 0;
+     }
+     to{
+          opacity: 1;
+     }
+}
+.error-container{
+     animation: slideIn var(--transition);
+
+}
+@keyframes slideIn{
+     from{
+          opacity: 0;
+          transform: scale(0.95) translateY(8px);
+     }
+     to{
+          opacity: 1;
+          transform: scale(1) translateY(0);
+     }
+}
