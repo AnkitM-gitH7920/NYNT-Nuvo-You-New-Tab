@@ -63,8 +63,12 @@ export default function App() {
      //useState
      const [query, setQuery] = useState("");
      const [todoOpen, setTodoOpen] = useState(false);
-     const [showError, setShowError] = useState(false);
+     const [showError, setShowError] = useState(true);
      const [showShortcuts, setShowShortcuts] = useState(false);
+     const [errorInfo, setShowErrorInfo] = useState({
+          errTitle: "Network Error",
+          errMessage: "Seems like your internet connection is offline, unable to fetch location information and cannot use UI fonts, hnece the extension have to default system fonts"
+     })
      const [isSongPlaying, setIsSongPlaying] = useState(false); //Not in use
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [searchSuggestions, setSearchSuggestions] = useState([]);
@@ -536,7 +540,12 @@ export default function App() {
                     )}
 
                     {showError && (
-                         <Error onClose={() => setShowError(false)} err=""/>
+                         <Error
+                         onClose={() =>
+                              setShowError(false)
+                         }
+                         errTitle={Object.keys(errorInfo).length ? errorInfo.errTitle : "Network error"}
+                         errMessage={Object.keys(errorInfo).length ? errorInfo.errMessage : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero explicabo sunt ab accusamus? Ad veritatis, quod nesciunt porro et vitae. Quisquam dolor, quo error incidunt ratione natus velit inventore sunt!"}/>
                     )}
                </main>
           </>
