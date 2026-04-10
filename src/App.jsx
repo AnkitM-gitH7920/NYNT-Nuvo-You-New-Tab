@@ -13,7 +13,8 @@ import TodoList from "./TodoList";
 import AddShortcutPanel from "./AddShortcutPanel";
 import ToggleButton from "./ToggleButton";
 import { WeatherCard, QuoteCard } from "./Cards";
-import Error from "./error";
+import Error from "./Error";
+import Informer from "./Informer";
 import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
 
@@ -62,19 +63,18 @@ export default function App() {
 
      //useState
      const [query, setQuery] = useState("");
+     const [showInfo, setShowInfo] = useState(true);
      const [todoOpen, setTodoOpen] = useState(false);
-     const [showError, setShowError] = useState(true);
+     const [showError, setShowError] = useState(false);
+     const [infoContent, setInfoContent] = useState({});
+     const [errorInfo, setShowErrorInfo] = useState({}); // errTitle AND errMessage"
      const [showShortcuts, setShowShortcuts] = useState(false);
-     const [errorInfo, setShowErrorInfo] = useState({
-          errTitle: "Network Error",
-          errMessage: "Seems like your internet connection is offline, unable to fetch location information and cannot use UI fonts, hnece the extension have to default system fonts"
-     })
      const [isSongPlaying, setIsSongPlaying] = useState(false); //Not in use
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [searchSuggestions, setSearchSuggestions] = useState([]);
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
-     const [engine, setEngine] = useState(() => Number.parseInt(localStorage.getItem("selectedEngine") || 0));
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
+     const [engine, setEngine] = useState(() => Number.parseInt(localStorage.getItem("selectedEngine") || 0));
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
      const [userCoordinates, setUserCoordinates] = useState(() => JSON.parse(localStorage.getItem("user-coords")) || {});
      const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("isLocationAllowed") === "true");
@@ -278,6 +278,22 @@ export default function App() {
           return () => clearTimeout(timer);
      }, [query])
 
+     useEffect(() => {
+          if(Object.keys(infoContent).length) return;
+
+          setInfoContent({
+               primaryInfo: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi consequuntur dolore aliquam tempore dolores suscipit quo ab iure dicta est.",
+               secondaryInfo: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aliquam minus accusantium odio perferendis ipsum velit necessitatibus libero dolor fugit. Vitae ipsam voluptatem architecto, mollitia perspiciatis quae earum sit, voluptatum molestiae officia, exercitationem debitis possimus voluptas libero sapiente obcaecati illo?",
+               agree: () => {
+                    console.log("Agreed")
+               },
+               disagree: () => {
+                    console.log("Diagreed")
+               }
+          })
+
+     }, [])
+
      return (
           <>
                <main className="root">
@@ -286,15 +302,6 @@ export default function App() {
                               <button className="icon-btn" onClick={() => setTodoOpen(!todoOpen)} title="To-do"><ListTodo strokeWidth="2.5" size={25} color="var(--dark-bg)" /></button>
                          </div>
                          <div className="nav-right alignC">
-                              {/* <form className="search-wrapper" onSubmit={doSearch}>
-                                   <Search size={19} className="search-icon" />
-                                   <input onKeyDown={(e) => {
-                                        if(e.key === "Enter"){
-                                             window.location.href = "https://google.com/search?q="+googleSearchQuery
-                                        }
-                                   }} placeholder="Search with Google" type="text" className="nav-search" value={googleSearchQuery} onChange={e => setGoogleSearchQuery(e.target.value)} />
-                                   <img src="google.png" alt="Google" loading="lazy" height={18} width={18} />
-                              </form> */}
                               <button
                                    onClick={() => setShowWeatherPanel(true)}
                                    className="icon-btn"
@@ -541,11 +548,20 @@ export default function App() {
 
                     {showError && (
                          <Error
-                         onClose={() =>
-                              setShowError(false)
-                         }
-                         errTitle={Object.keys(errorInfo).length ? errorInfo.errTitle : "Network error"}
-                         errMessage={Object.keys(errorInfo).length ? errorInfo.errMessage : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero explicabo sunt ab accusamus? Ad veritatis, quod nesciunt porro et vitae. Quisquam dolor, quo error incidunt ratione natus velit inventore sunt!"}/>
+                              onClose={() =>
+                                   setShowError(false)
+                              }
+                              errTitle={Object.keys(errorInfo).length ? errorInfo.errTitle : "Network error"}
+                              errMessage={Object.keys(errorInfo).length ? errorInfo.errMessage : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero explicabo sunt ab accusamus? Ad veritatis, quod nesciunt porro et vitae. Quisquam dolor, quo error incidunt ratione natus velit inventore sunt!"} />
+                    )}
+
+                    {showInfo && (
+                         <Informer
+                              onClose={() => setShowInfo(false)}
+                              primaryInfo={Object.keys(infoContent).length ? infoContent.primaryInfo : "Random info"}
+                              secondaryInfo={Object.keys(infoContent).length ? infoContent.secondaryInfo : "Random secondary info"}
+                              actionFunctions={{}}
+                         />
                     )}
                </main>
           </>

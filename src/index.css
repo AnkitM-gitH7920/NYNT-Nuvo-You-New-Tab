@@ -55,15 +55,15 @@
      --dark-bg: #3b4a2f;
      --light-bg: #f4f5ec;
 
-     /* Arctic frost */
-     --bg: #a8c5da;
-     --dark-bg: #1b4f72;
-     --light-bg: #f0f8ff;
-
      /* Rustic charm 2 */
      --bg: #f19269;
      --dark-bg: #252422;
      --light-bg: #ebeae9;
+
+     /* Arctic frost */
+     --bg: #a8c5da;
+     --dark-bg: #1b4f72;
+     --light-bg: #f0f8ff;
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
