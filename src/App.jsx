@@ -63,9 +63,9 @@ export default function App() {
 
      //useState
      const [query, setQuery] = useState("");
-     const [showInfo, setShowInfo] = useState(true);
+     const [showInfo, setShowInfo] = useState(false);
      const [todoOpen, setTodoOpen] = useState(false);
-     const [showError, setShowError] = useState(false);
+     const [showError, setShowError] = useState(true);
      const [infoContent, setInfoContent] = useState({});
      const [errorInfo, setShowErrorInfo] = useState({}); // errTitle AND errMessage"
      const [showShortcuts, setShowShortcuts] = useState(false);
@@ -560,7 +560,10 @@ export default function App() {
                               onClose={() => setShowInfo(false)}
                               primaryInfo={Object.keys(infoContent).length ? infoContent.primaryInfo : "Random info"}
                               secondaryInfo={Object.keys(infoContent).length ? infoContent.secondaryInfo : "Random secondary info"}
-                              actionFunctions={{}}
+                              actionFunctions={{
+                                   "onAgree": infoContent.agree,
+                                   "onDisagree": infoContent.disagree
+                              }}
                          />
                     )}
                </main>

@@ -1,4 +1,4 @@
-.error-wrapper {
+.info-wrapper {
      position: absolute;
      right: 0;
      left: 0;
@@ -19,9 +19,9 @@
      }
 }
 
-.error-container {
+.info-container {
      border: 12px solid var(--bg);
-     box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.3);
+     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
      overflow: hidden;
      position: absolute;
      background-color: var(--light-bg);
@@ -45,45 +45,49 @@
      }
 }
 
-
-.error-container-title,
-.error-container-message {
-     color: var(--black-text);
-}
-
-.error-container-title {
-     font-family: var(---main-font);
-     font-size: 2.9rem;
-     font-weight: 700;
-     margin-right: 20px;
-     text-align: left;
-
-}
-
-.error-container-message {
+.primary-info-text,
+.secondary-info-text {
      font-size: 0.94rem;
      max-width: 350px;
-     font-weight: 600;
+     font-weight: 500;
      line-height: 1.3;
      text-align: left;
      margin: 10px 0px;
+     color: var(--black-text);
      font-family: var(--plus-jakarta-font);
 }
 
-.error-cancel-button {
+.agree-button,
+.disagree-button {
+     border: 2px solid var(--light-bg);
+     font-size: 1.0rem;
+     margin: 0px 5px;
+}
+
+.popup-cancel-button {
+     border: 3px solid var(--light-bg);
+     font-size: 1.2rem;
+}
+
+.agree-button,
+.disagree-button,
+.popup-cancel-button {
+     width: 100%;
      border: 3px solid var(--light-bg);
      outline: none;
      background-color: var(--dark-bg);
-     font-size: 1.2rem;
-     width: 100%;
+
      margin-top: 20px;
      color: var(--white-text);
      border-radius: var(--radius-full);
      padding: 10px 30px;
      font-weight: 600;
      transition: all var(--transition);
+
 }
 
-.error-cancel-button:hover {
+.agree-button:hover,
+.disagree-button:hover,
+.popup-cancel-button:hover {
      box-shadow: 0px 0px 0px 4px var(--dark-bg);
 }

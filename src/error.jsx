@@ -14,7 +14,7 @@ export default function Error({ onClose, errTitle, errMessage }) {
                     <button
                          onClick={onClose}
                          className="error-cancel-button"
-                         type="button">Cancel</button>
+                         type="button">Dismiss</button>
                </div>
           </div>
      )
