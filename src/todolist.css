@@ -7,10 +7,10 @@
      background-color: var(--light-bg);
      top: 80px;
      left: 30px;
-     width: 300px;
+     width: 320px;
      border: 8px solid var(--bg);
      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
-     animation: popDown 0.15s ease;
+     animation: popDown var(--transition);
 }
 
 @keyframes popDown {
@@ -54,7 +54,8 @@
      caret-color: var(--dark-bg);
      transition: all var(--transition);
 }
-.todo-input:focus{
+
+.todo-input:focus {
      box-shadow: 0px 0px 0px 2px var(--dark-bg);
 }
 

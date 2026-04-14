@@ -30,11 +30,6 @@
      --dark-bg: #a87d08;
      --light-bg: #fff6c3;
 
-     /* Lavender dusk */
-     --bg: #b8a9c9;
-     --dark-bg: #4a2c6e;
-     --light-bg: #f7f3fd;
-
      /* Charcoal Rose 2 */
      --bg: #e05c7a;
      --dark-bg: #2e2e2e;
@@ -55,11 +50,6 @@
      --dark-bg: #252422;
      --light-bg: #ebeae9;
 
-     /* Arctic frost */
-     --bg: #a8c5da;
-     --dark-bg: #1b4f72;
-     --light-bg: #f0f8ff;
-
      /* Pink legacy */
      --bg: #ffa39c;
      --dark-bg: #d84136;
@@ -69,6 +59,16 @@
      --bg: #f9c8d6;
      --dark-bg: #ec5e78;
      --light-bg: #faf2f5;
+
+     /* Lavender dusk */
+     --bg: #b8a9c9;
+     --dark-bg: #4a2c6e;
+     --light-bg: #f7f3fd;
+
+     /* Arctic frost */
+     --bg: #a8c5da;
+     --dark-bg: #1b4f72;
+     --light-bg: #f0f8ff;
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
@@ -155,5 +155,5 @@ button {
 }
 
 input {
-     font-family: inherit;
+     font-family: var(--gm-font);
 }

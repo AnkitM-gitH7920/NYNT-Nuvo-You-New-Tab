@@ -63,9 +63,9 @@ export default function App() {
 
      //useState
      const [query, setQuery] = useState("");
-     const [showInfo, setShowInfo] = useState(false);
+     const [showInfo, setShowInfo] = useState(true);
      const [todoOpen, setTodoOpen] = useState(false);
-     const [showError, setShowError] = useState(true);
+     const [showError, setShowError] = useState(false);
      const [infoContent, setInfoContent] = useState({});
      const [errorInfo, setShowErrorInfo] = useState({}); // errTitle AND errMessage"
      const [showShortcuts, setShowShortcuts] = useState(false);
@@ -261,7 +261,7 @@ export default function App() {
           // Start by fixing this
           if (!searchSuggestions.length) return;
           const clickHandler = (event) => {
-               if (searchSuggestionWrapperRef.current && !searchSuggestionWrapperRef.current.contains(event.target)) { setSearchSuggestions([]); }
+               if (searchSuggestionWrapperRef.current && !searchSuggestionWrapperRef.current.contains(event.target)) { setSearchSuggestions([]) }
           }
           document.addEventListener("mousedown", clickHandler);
           return () => removeEventListener("mousedown", clickHandler);
@@ -271,7 +271,7 @@ export default function App() {
      useEffect(() => {
           if (!query.length) {
                setSearchSuggestions([]);
-               return
+               return;
           };
           const timer = setTimeout(() => { fetchSearchSuggestions() }, 400);
 
@@ -279,7 +279,7 @@ export default function App() {
      }, [query])
 
      useEffect(() => {
-          if(Object.keys(infoContent).length) return;
+          if (Object.keys(infoContent).length) return;
 
           setInfoContent({
                primaryInfo: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi consequuntur dolore aliquam tempore dolores suscipit quo ab iure dicta est.",
@@ -288,11 +288,12 @@ export default function App() {
                     console.log("Agreed")
                },
                disagree: () => {
-                    console.log("Diagreed")
+                    setShowInfo(false);
+                    console.log("DisAgreed")
                }
           })
 
-     }, [])
+     }, []);
 
      return (
           <>
@@ -304,11 +305,25 @@ export default function App() {
                          <div className="nav-right alignC">
                               <button
                                    onClick={() => setShowWeatherPanel(true)}
-                                   className="icon-btn"
+                                   className="icon-btn-rounded center"
                                    title="Weather">
-                                   {isLocationAllowed ? <Cloud strokeWidth="2.5" size={25} color="var(--dark-bg)" /> : <CloudOff strokeWidth="2.5" size={25} color="var(--dark-bg)" />}
+                                   {isLocationAllowed ? <Cloud strokeWidth="3.0" size={20} color="var(--dark-bg)" /> : <CloudOff strokeWidth="2.5" size={25} color="var(--dark-bg)" />}
 
                               </button>
+                              <button
+                                   onClick={() => setShowWeatherPanel(true)}
+                                   className="icon-btn-rounded center"
+                                   title="Weather">
+                                   {isLocationAllowed ? <Cloud strokeWidth="3.0" size={20} color="var(--dark-bg)" /> : <CloudOff strokeWidth="2.5" size={25} color="var(--dark-bg)" />}
+
+                              </button>
+                              {/* Start by :-
+                               1. create more button options (song selector, recent searches, google apps, social media apps)
+                               2. create a function that, when user press down arrow button , the active search suggestion changes position
+                               3. Complete the front UI
+                              */}
+
+
                          </div>
                     </nav>
 
