@@ -10,11 +10,6 @@
      --white-text: #ffffff;
      --black-text: #444444;
 
-     /* Midnight slate */
-     --bg: #bbd6fd;
-     --dark-bg: #4382ec;
-     --light-bg: #e2eeff;
-
      /* Rustic charm 1 */
      --bg: #ccc5b9;
      --dark-bg: #403d39;
@@ -35,40 +30,46 @@
      --dark-bg: #2e2e2e;
      --light-bg: #fdf0f3;
 
-     /* Blueberry cream */
-     --bg: #6e67c9;
-     --dark-bg: #1e1f52;
-     --light-bg: #d7d8db;
-
      /* Forest frog 1*/
      --bg: #8a9a5b;
      --dark-bg: #3b4a2f;
      --light-bg: #f4f5ec;
 
-     /* Rustic charm 2 */
-     --bg: #f19269;
-     --dark-bg: #252422;
-     --light-bg: #ebeae9;
+     /* Arctic frost */
+     --bg: #a8c5da;
+     --dark-bg: #1b4f72;
+     --light-bg: #f0f8ff;
 
-     /* Pink legacy */
-     --bg: #ffa39c;
-     --dark-bg: #d84136;
-     --light-bg: #fdfcdc;
-
-     /* Light pink */
-     --bg: #f9c8d6;
-     --dark-bg: #ec5e78;
-     --light-bg: #faf2f5;
+     /* Midnight slate */
+     --bg: #bbd6fd;
+     --dark-bg: #4382ec;
+     --light-bg: #e2eeff;
 
      /* Lavender dusk */
      --bg: #b8a9c9;
      --dark-bg: #4a2c6e;
      --light-bg: #f7f3fd;
 
-     /* Arctic frost */
-     --bg: #a8c5da;
-     --dark-bg: #1b4f72;
-     --light-bg: #f0f8ff;
+     /* Light pink */
+     --bg: #f9c8d6;
+     --dark-bg: #ec5e78;
+     --light-bg: #faf2f5;
+
+     /* Pink legacy */
+     --bg: #ffa39c;
+     --dark-bg: #d84136;
+     --light-bg: #fdfcdc;
+
+     /* Rustic charm 2 */
+     --bg: #f19269;
+     --dark-bg: #252422;
+     --light-bg: #ebeae9;
+
+     /* Blueberry cream */
+     --bg: #6e67c9;
+     --dark-bg: #1e1f52;
+     --light-bg: #d7d8db;
+
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 

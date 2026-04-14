@@ -73,6 +73,7 @@ export default function App() {
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [searchSuggestions, setSearchSuggestions] = useState([]);
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
+     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [engine, setEngine] = useState(() => Number.parseInt(localStorage.getItem("selectedEngine") || 0));
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
@@ -99,6 +100,17 @@ export default function App() {
                let target = isSongPlaying ? "_blank" : "_self";
                window.open(SEARCH_OPTIONS[engine].url + encodeURIComponent(query), target);
           }
+     }
+     function updateActiveSuggestion(e) {
+          if (e.code === "ArrowUp") {
+               console.log("Arrow up")
+
+          }
+          if (e.code === "ArrowDown") {
+               console.log("Arrow Down")
+          }
+
+          return;
      }
 
      async function fetchSearchSuggestions() {
@@ -273,7 +285,7 @@ export default function App() {
                setSearchSuggestions([]);
                return;
           };
-          const timer = setTimeout(() => { fetchSearchSuggestions() }, 400);
+          const timer = setTimeout(() => { fetchSearchSuggestions() }, 300);
 
           return () => clearTimeout(timer);
      }, [query])
@@ -339,7 +351,13 @@ export default function App() {
                               <div className="search-block">
                                    <form className="big-search-form" onSubmit={doSearch}>
                                         <div className="big-search-bar alignC">
-                                             <input type="text" className="big-search-input" placeholder="What are you looking for..." value={query} onChange={e => setQuery(e.target.value)} />
+                                             <input
+                                                  onKeyDown={(e) => updateActiveSuggestion(e)}
+                                                  type="text"
+                                                  className="big-search-input"
+                                                  placeholder="What are you looking for..."
+                                                  value={query}
+                                                  onChange={e => setQuery(e.target.value)} />
                                              <button type="submit" className="big-search-btn"><ChevronRight size={20} /></button>
                                         </div>
                                         <div ref={searchSuggestionWrapperRef} className={`search-suggestions-wrapper ${searchSuggestions.length ? "ssw-active" : ""}`}>
@@ -351,6 +369,7 @@ export default function App() {
                                                             window.open(SEARCH_OPTIONS[engine].url + encodeURIComponent(suggestion), target)
                                                        }}
                                                        key={index}
+                                                       // search-suggestion-active
                                                        className="search-suggestion-list-item">
                                                        {suggestion}
                                                   </button>
