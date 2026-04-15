@@ -2,7 +2,7 @@
      "manifest_version": 3,
      "name": "Nuvo You New tab",
      "version": "1.0",
-     "permissions": ["location"],
+     "permissions": ["geolocation"],
      "description": "A new tab chrome extension, it contains all the essential widgets that improves the user experience such as music player, to-do list, weather, different browsers to search on and many more",
      "chrome_url_overrides": {
           "newtab": "index.html"

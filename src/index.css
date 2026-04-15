@@ -25,11 +25,6 @@
      --dark-bg: #a87d08;
      --light-bg: #fff6c3;
 
-     /* Charcoal Rose 2 */
-     --bg: #e05c7a;
-     --dark-bg: #2e2e2e;
-     --light-bg: #fdf0f3;
-
      /* Forest frog 1*/
      --bg: #8a9a5b;
      --dark-bg: #3b4a2f;
@@ -70,6 +65,10 @@
      --dark-bg: #1e1f52;
      --light-bg: #d7d8db;
 
+     /* Charcoal Rose 2 */
+     --bg: #e05c7a;
+     --dark-bg: #2e2e2e;
+     --light-bg: #fdf0f3;
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
@@ -143,6 +142,7 @@
      box-sizing: border-box;
      margin: 0;
      padding: 0;
+     scroll-behavior: smooth;
 }
 
 a {

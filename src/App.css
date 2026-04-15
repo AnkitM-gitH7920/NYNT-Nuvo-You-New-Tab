@@ -272,18 +272,6 @@
      transition: all 0.3s;
 }
 
-/* .search-suggestions-wrapper::-webkit-scrollbar {
-     display: block;
-     width: 5px;
-     background-color: transparent;
-     border-radius: var(--radius-full);
-}
-
-.search-suggestions-wrapper::-webkit-scrollbar-thumb {
-     background-color: var(--dark-bg);
-     border-radius: var(--radius-full);
-} */
-
 .search-suggestions-wrapper.ssw-active {
      opacity: 1;
      top: 65px;
