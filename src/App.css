@@ -91,8 +91,8 @@
 }
 
 .icon-btn-rounded{
-     width: 2.4rem;
-     height: 2.4rem;
+     width: 2.8rem;
+     height: 2.6rem;
      border-radius: var(--radius-full);
      border: 3px solid var(--dark-bg);
 }

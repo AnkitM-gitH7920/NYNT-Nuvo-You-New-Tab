@@ -1,12 +1,21 @@
 // css imports
 import "./App.css";
 import "./weather-panel.css";
+import "./player.css";
 
 //Libraries imports
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useClock } from "./lib/hooks";
-import { ListTodo, Cloud, Settings, Grid2X2, ChevronRight, MapPin, Droplets, CloudRain, X, CloudOff, Wind, Shield } from "lucide-react";
+import { ListTodo, Cloud, Settings, Grid2X2, ChevronRight, MapPin, Droplets, CloudRain, X, CloudOff, Wind, Shield, Music } from "lucide-react";
+import { SiGoogle, SiDuckduckgo, SiBrave, SiYoutube, SiReddit } from '@icons-pack/react-simple-icons';
+// import { Bing, Yandex, StartPage } from "./icons.exports";
+
+// Missing
+/*
+Bing
+yandex
+*/
 
 // File imports
 import TodoList from "./TodoList";
@@ -32,14 +41,14 @@ import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
 //PENDING :- create a function that would return weather unit types(metric, kelvin) , selected as per user and loads the units on its basis
 const SEARCH_OPTIONS = [
-     { label: "Google", url: "https://google.com/search?q=" },
-     { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
-     { label: "Brave", url: "https://search.brave.com/search?q=" },
-     { label: "Bing", url: "https://bing.com/search?q=" },
-     { label: "Startpage", url: "https://startpage.com/search?q=" },
-     { label: "Yandex", url: "https://yandex.com/search/?text=" },
-     { label: "YouTube", url: "https://youtube.com/results?search_query=" },
-     { label: "Reddit", url: "https://www.reddit.com/search/?q=" }
+     { label: "Google", url: "https://google.com/search?q=", broswerIcon: (<SiGoogle size={20} />) },
+     { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=", broswerIcon: (<SiDuckduckgo  size={20}/>) },
+     { label: "Brave", url: "https://search.brave.com/search?q=", broswerIcon: (<SiBrave size={20} />) },
+     { label: "Bing", url: "https://bing.com/search?q=", broswerIcon: (<SiDuckduckgo size={20} />) },
+     { label: "Startpage", url: "https://startpage.com/search?q=", broswerIcon: (<SiDuckduckgo size={20} />) },
+     { label: "Yandex", url: "https://yandex.com/search/?text=", broswerIcon: (<SiDuckduckgo size={20} />) },
+     { label: "YouTube", url: "https://youtube.com/results?search_query=", broswerIcon: (<SiYoutube size={20} />) },
+     { label: "Reddit", url: "https://www.reddit.com/search/?q=", broswerIcon: (<SiReddit size={20} />) }
 ];
 const AI_TOOLS = [
      { name: "Gemini", favicon: "https://www.google.com/s2/favicons?domain=gemini.google.com&sz=32", targetURL: "https://gemini.google.com" },
@@ -70,6 +79,7 @@ export default function App() {
 
      // useRef
      const todoRef = useRef(null);
+     const playerRef = useRef(null);
      const inputBarRef = useRef(null);
      const typedUserQuery = useRef("");
      const shortcutsRef = useRef(null);
@@ -83,6 +93,7 @@ export default function App() {
      const [todoOpen, setTodoOpen] = useState(false);
      const [showError, setShowError] = useState(false);
      const [infoContent, setInfoContent] = useState({});
+     const [showPlayer, setShowPlayer] = useState(false);
      const [errorInfo, setShowErrorInfo] = useState({}); // errTitle AND errMessage"
      const [showShortcuts, setShowShortcuts] = useState(false);
      const [isSongPlaying, setIsSongPlaying] = useState(false); //Not in use
@@ -237,7 +248,6 @@ export default function App() {
      }
 
      // useEffect
-
      // PURPOSE :- Manages logic for fetching and storing coordinates and weather
      useEffect(() => {
           if (!isLocationAllowed) {
@@ -314,6 +324,16 @@ export default function App() {
           return () => removeEventListener("mousedown", clickHandler);
      }, [showShortcuts]);
 
+     // PURPOSE :- to close the Player div whenever user click outside the shortcuts(UX improve)
+     useEffect(() => {
+          if (!playerRef) return;
+          const clickHandler = (event) => {
+               if (playerRef.current && !playerRef.current.contains(event.target)) { setShowPlayer(false) }
+          }
+          document.addEventListener("mousedown", clickHandler);
+          return () => removeEventListener("mousedown", clickHandler);
+     }, [showPlayer]);
+
      // PURPOSE :- to close the SEARCH SUGGESTIONS wrapper whenever user click outside the shortcuts(UX improve)
      useEffect(() => {
           // Start by fixing this
@@ -330,7 +350,6 @@ export default function App() {
 
      // PURPOSE :- Provide search suggestions
      useEffect(() => {
-          console.log("fetching")
           if (!query.length) {
                setSearchSuggestions([]);
                return;
@@ -339,7 +358,7 @@ export default function App() {
                isNavigating.current = false;
                return;
           }
-          const timer = setTimeout(() => { fetchSearchSuggestions() }, 300);
+          const timer = setTimeout(() => { fetchSearchSuggestions() }, 100);
 
           return () => clearTimeout(timer);
      }, [query]);
@@ -370,14 +389,15 @@ export default function App() {
      }, [activeSuggestionIndex]);
 
      useEffect(() => {
-          async function fetchSong(){
-              const response =  await axios.get(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=arijit&type=video&maxResults=5&key={}`)
-              console.log(response);
-          }
+          //           // https://www.googleapis.com/youtube/v3/search?part=snippet&q=a&type=audio&maxResults=20&key=AIzaSyDiZH4a_oLZaL71c9NFxD7PfgBArZSr8f4
+          //           async function fetchSong() {
+          //                const { data } = await axios.get(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=ajjubhai&type=video&videoCategoryId=10&videoDuration=short&key=AIzaSyDiZH4a_oLZaL71c9NFxD7PfgBArZSr8f4`)
+          //                console.log(data);
+          //           }
+          //
+          //           fetchSong();
 
-          fetchSong();
-
-     }, [])
+     }, []);
 
      return (
           <>
@@ -388,17 +408,15 @@ export default function App() {
                          </div>
                          <div className="nav-right alignC">
                               <button
-                                   onClick={() => setShowWeatherPanel(true)}
+                                   onClick={() => setShowPlayer(true)}
                                    className="icon-btn-rounded center"
-                                   title="Weather">
-                                   {isLocationAllowed ? <Cloud strokeWidth="3.0" size={20} color="var(--dark-bg)" /> : <CloudOff strokeWidth="2.5" size={20} color="var(--dark-bg)" />}
-
+                                   title="Player"><Music strokeWidth="3.0" size={25} color="var(--dark-bg)" />
                               </button>
                               <button
                                    onClick={() => setShowWeatherPanel(true)}
                                    className="icon-btn-rounded center"
                                    title="Weather">
-                                   {isLocationAllowed ? <Cloud strokeWidth="3.0" size={20} color="var(--dark-bg)" /> : <CloudOff strokeWidth="2.5" size={20} color="var(--dark-bg)" />}
+                                   {isLocationAllowed ? <Cloud strokeWidth="3.0" size={25} color="var(--dark-bg)" /> : <CloudOff strokeWidth="2.5" size={25} color="var(--dark-bg)" />}
 
                               </button>
                               {/* Start by :-
@@ -459,11 +477,15 @@ export default function App() {
                                         {SEARCH_OPTIONS.map((eng, i) => (
                                              <button
                                                   key={eng.label}
-                                                  className={`engine-tab ${engine === i ? "search-opt-btn-active" : ""}`}
+                                                  style={{gap: "5px"}}
+                                                  className={`engine-tab alignC ${engine === i ? "search-opt-btn-active" : ""}`}
                                                   onClick={() => {
                                                        setEngine(i)
                                                        localStorage.setItem("selectedEngine", i);
-                                                  }}>{eng.label}</button>
+                                                  }}>
+                                                       {eng.broswerIcon}
+                                                       {eng.label}
+                                             </button>
                                         ))}
                                    </div>
                               </div>
@@ -678,19 +700,38 @@ export default function App() {
                          )
                     }
 
-                    {
-                         showInfo && (
-                              <Informer
-                                   onClose={() => setShowInfo(false)}
-                                   primaryInfo={Object.keys(infoContent).length ? infoContent.primaryInfo : "Random info"}
-                                   secondaryInfo={Object.keys(infoContent).length ? infoContent.secondaryInfo : "Random secondary info"}
-                                   actionFunctions={{
-                                        "onAgree": infoContent.agree,
-                                        "onDisagree": infoContent.disagree
-                                   }}
-                              />
-                         )
+                    {showInfo && (
+                         <Informer
+                              onClose={() => setShowInfo(false)}
+                              primaryInfo={Object.keys(infoContent).length ? infoContent.primaryInfo : "Random info"}
+                              secondaryInfo={Object.keys(infoContent).length ? infoContent.secondaryInfo : "Random secondary info"}
+                              actionFunctions={{
+                                   "onAgree": infoContent.agree,
+                                   "onDisagree": infoContent.disagree
+                              }}
+                         />
+                    )
                     }
+
+                    {showPlayer && (
+                         <div
+                              ref={playerRef}
+                              className={`player-container`}>
+                              <span className="player-title">Player</span>
+                              <div className="player-search">
+                                   <input type="text" placeholder="What was that Song ?" />
+                              </div>
+                              <div className="player-search-list">
+                                   <div style={{ gap: "15px" }} className="player-search-list-item alignC">
+                                        <img height={50} width={50} src="/weather_icons/clear-day.png" alt="Loading.." loading="lazy" />
+                                        <div className="player-search-details">
+                                             <p title="">Building my new castle in netherlands</p>
+                                             <p>Techno gamers</p>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                    )}
                </main >
           </>
      );

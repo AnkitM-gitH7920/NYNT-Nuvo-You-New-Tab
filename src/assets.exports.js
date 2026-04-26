@@ -1,4 +1,4 @@
-export const quotes = [
+export const QUOTES = [
      {
           "quote": "The only limit to our realization of tomorrow is our doubts of today.",
           "author": "Franklin D. Roosevelt"
@@ -355,9 +355,4 @@ export const quotes = [
           "quote": "Small deeds done are better than great deeds planned.",
           "author": "Peter Marshall"
      }
-]
-
-
-export const AI_ICONS_SVG = [
-     
 ]

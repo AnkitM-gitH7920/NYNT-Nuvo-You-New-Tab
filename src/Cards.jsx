@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { MapPin, Droplets, CloudRain, CloudOff, Quote } from "lucide-react";
 
 // File imports
-import { quotes } from "./assets.exports";
+import { QUOTES } from "./assets.exports";
 import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
 export function QuoteCard() {
@@ -21,7 +21,7 @@ export function QuoteCard() {
           const todayQuote = storedQuote ? JSON.parse(storedQuote) : {};
 
           const randomQuoteObject = {
-               ...quotes[Math.floor(Math.random() * quotes.length)],
+               ...QUOTES[Math.floor(Math.random() * QUOTES.length)],
                quoteSavedTS : Date.now()
           }
 

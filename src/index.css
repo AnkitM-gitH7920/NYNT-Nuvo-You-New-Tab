@@ -10,21 +10,6 @@
      --white-text: #ffffff;
      --black-text: #444444;
 
-     /* Rustic charm 1 */
-     --bg: #ccc5b9;
-     --dark-bg: #403d39;
-     --light-bg: #fffcf2;
-
-     /* Sand dunes */
-     --bg: #c9a87c;
-     --dark-bg: #8b4513;
-     --light-bg: #fdf8f0;
-
-     /* Yellow */
-     --bg: #e7d77c;
-     --dark-bg: #a87d08;
-     --light-bg: #fff6c3;
-
      /* Forest frog 1*/
      --bg: #8a9a5b;
      --dark-bg: #3b4a2f;
@@ -45,11 +30,6 @@
      --dark-bg: #4a2c6e;
      --light-bg: #f7f3fd;
 
-     /* Light pink */
-     --bg: #f9c8d6;
-     --dark-bg: #ec5e78;
-     --light-bg: #faf2f5;
-
      /* Pink legacy */
      --bg: #ffa39c;
      --dark-bg: #d84136;
@@ -60,16 +40,35 @@
      --dark-bg: #252422;
      --light-bg: #ebeae9;
 
-     /* Blueberry cream */
-     --bg: #6e67c9;
-     --dark-bg: #1e1f52;
-     --light-bg: #d7d8db;
-
      /* Charcoal Rose 2 */
      --bg: #e05c7a;
      --dark-bg: #2e2e2e;
      --light-bg: #fdf0f3;
 
+     /* Blueberry cream */
+     --bg: #6e67c9;
+     --dark-bg: #1e1f52;
+     --light-bg: #d7d8db;
+
+     /* Yellow */
+     --bg: #e7d77c;
+     --dark-bg: #a87d08;
+     --light-bg: #fff6c3;
+
+     /* Rustic charm 1 */
+     --bg: #ccc5b9;
+     --dark-bg: #403d39;
+     --light-bg: #fffcf2;
+
+     /* Light pink */
+     --bg: #f9c8d6;
+     --dark-bg: #ec5e78;
+     --light-bg: #faf2f5;
+
+     /* Sand dunes */
+     --bg: #c9a87c;
+     --dark-bg: #8b4513;
+     --light-bg: #fdf8f0;
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
      /* Constant/more frequently used variables to keep the theme design consistent */
