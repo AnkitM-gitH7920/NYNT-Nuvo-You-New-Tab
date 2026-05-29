@@ -7,24 +7,17 @@ import "./player.css";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useClock } from "./lib/hooks";
-import { ListTodo, Cloud, Settings, Grid2X2, ChevronRight, MapPin, Droplets, CloudRain, X, CloudOff, Wind, Shield, Music } from "lucide-react";
+import { ListTodo, Cloud, Settings, Grid2X2, ChevronRight, X, CloudOff, Music } from "lucide-react";
 import { SiGoogle, SiDuckduckgo, SiBrave, SiYoutube, SiReddit } from '@icons-pack/react-simple-icons';
 // import { Bing, Yandex, StartPage } from "./icons.exports";
 
-// Missing
-/*
-Bing
-yandex
-*/
-
 // File imports
+import SettingsWindow from "./SettingsWindow";
 import TodoList from "./TodoList";
-import AddShortcutPanel from "./AddShortcutPanel";
-import ToggleButton from "./ToggleButton";
-import { WeatherCard, QuoteCard } from "./Cards";
+import AddShortcutPanel from "./AddShortcutPanel"
 import Error from "./Error";
 import Informer from "./Informer";
-import returnMappedWeatherIcon from "./mappedWeatherIcons";
+// import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
 
 // setInfoContent({
@@ -42,7 +35,7 @@ import returnMappedWeatherIcon from "./mappedWeatherIcons";
 //PENDING :- create a function that would return weather unit types(metric, kelvin) , selected as per user and loads the units on its basis
 const SEARCH_OPTIONS = [
      { label: "Google", url: "https://google.com/search?q=", broswerIcon: (<SiGoogle size={20} />) },
-     { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=", broswerIcon: (<SiDuckduckgo  size={20}/>) },
+     { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=", broswerIcon: (<SiDuckduckgo size={20} />) },
      { label: "Brave", url: "https://search.brave.com/search?q=", broswerIcon: (<SiBrave size={20} />) },
      { label: "Bing", url: "https://bing.com/search?q=", broswerIcon: (<SiDuckduckgo size={20} />) },
      { label: "Startpage", url: "https://startpage.com/search?q=", broswerIcon: (<SiDuckduckgo size={20} />) },
@@ -81,6 +74,7 @@ export default function App() {
      const todoRef = useRef(null);
      const playerRef = useRef(null);
      const inputBarRef = useRef(null);
+     const settingsRef = useRef(null);
      const typedUserQuery = useRef("");
      const shortcutsRef = useRef(null);
      const isNavigating = useRef(false);
@@ -100,6 +94,7 @@ export default function App() {
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [searchSuggestions, setSearchSuggestions] = useState([]);
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
+     const [showSettingsWindow, setShowSettingsWindow] = useState(false);
      const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [engine, setEngine] = useState(() => Number.parseInt(localStorage.getItem("selectedEngine") || 0));
@@ -196,7 +191,7 @@ export default function App() {
                console.log(searchSuggestionError);
                setSearchSuggestions([]);
                if (searchSuggestionError.status === 502) {
-                    // Add a warning information container here , that warns the user about diffrent error
+                    // Add a warning information container here , that warns the user about different error
                     // alert("Your internet connection seems to be offline, cannot fetch search suggestions")
                     return;
                }
@@ -314,7 +309,7 @@ export default function App() {
           return () => document.removeEventListener("mousedown", clickHandler);
      }, [todoOpen]);
 
-     // PURPOSE :- to close the SHORTCUTS TAB div whenever user click outside the shortcuts(UX improve)
+     // PURPOSE :- to close the Shortcuts tab div whenever user click outside the shortcuts(UX improve)
      useEffect(() => {
           if (!showShortcuts) return;
           const clickHandler = (event) => {
@@ -324,7 +319,7 @@ export default function App() {
           return () => removeEventListener("mousedown", clickHandler);
      }, [showShortcuts]);
 
-     // PURPOSE :- to close the Player div whenever user click outside the shortcuts(UX improve)
+     // PURPOSE :- to close the Player div whenever user click outside the player(UX improve)
      useEffect(() => {
           if (!playerRef) return;
           const clickHandler = (event) => {
@@ -333,6 +328,17 @@ export default function App() {
           document.addEventListener("mousedown", clickHandler);
           return () => removeEventListener("mousedown", clickHandler);
      }, [showPlayer]);
+
+     // PURPOSE :- to close the Settings div whenever user click outside the settings(UX improve)
+     useEffect(() => {
+          if (!settingsRef) return;
+          const clickHandler = (event) => {
+               if (settingsRef.current && !settingsRef.current.contains(event.target)) { setShowSettingsWindow(false) }
+          }
+          document.addEventListener("mousedown", clickHandler);
+          return () => removeEventListener("mousedown", clickHandler);
+     }, [showSettingsWindow]);
+
 
      // PURPOSE :- to close the SEARCH SUGGESTIONS wrapper whenever user click outside the shortcuts(UX improve)
      useEffect(() => {
@@ -477,14 +483,14 @@ export default function App() {
                                         {SEARCH_OPTIONS.map((eng, i) => (
                                              <button
                                                   key={eng.label}
-                                                  style={{gap: "5px"}}
+                                                  style={{ gap: "5px" }}
                                                   className={`engine-tab alignC ${engine === i ? "search-opt-btn-active" : ""}`}
                                                   onClick={() => {
                                                        setEngine(i)
                                                        localStorage.setItem("selectedEngine", i);
                                                   }}>
-                                                       {eng.broswerIcon}
-                                                       {eng.label}
+                                                  {eng.broswerIcon}
+                                                  {eng.label}
                                              </button>
                                         ))}
                                    </div>
@@ -496,7 +502,7 @@ export default function App() {
                          <WeatherCard weatherInfo={weatherInfo}/> */}
                     </div >
                     <footer className="main-footer">
-                         <button className="icon-btn footer-btn" title="Settings"><Settings strokeWidth="2.5" size={25} color="var(--dark-bg)" /></button>
+                         <button onClick={() => setShowSettingsWindow(true)} className="icon-btn footer-btn" title="Settings"><Settings strokeWidth="2.5" size={25} color="var(--dark-bg)" /></button>
                          <div className="ai-tools center">
                               {AI_TOOLS.map((tool, i) => (
                                    <button key={i} onClick={() => window.open(tool.targetURL, isSongPlaying ? "_blank" : "_self")} className="ai-btn center">
@@ -523,8 +529,6 @@ export default function App() {
                                                        window.open(s.url, isSongPlaying ? "_blank" : "_self")
                                                   }} key={i} className="shortcut-item" style={{ justifyContent: "space-between" }}>
                                                        {/* Can remove this anchor but kept it */}
-
-                                                       {/* Start by loading my own extension into the chrome and generate multiple openweatherapi keys */}
 
                                                        <a style={{ gap: "8px" }} className="alignC" href={s.url} target={isSongPlaying ? "_blank" : "_self"} title={s.name}>
                                                             <img height={23} width={23} src={s.faviconURL} alt="?" style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
@@ -564,131 +568,6 @@ export default function App() {
                               />
                          )
                     }
-
-                    {
-                         showWeatherPanel && (
-                              <div className="weather-panel-overlay center" onClick={() => setShowWeatherPanel(false)}>
-                                   <div className="weather-panel" onClick={(e) => e.stopPropagation()}>
-                                        <div className="weather-panel-head alignC">
-                                             <div className="weather-panel-title-wrapper alignC">
-                                                  <div className="weather-title-icon center">
-                                                       <Cloud strokeWidth="2.5" size={22} />
-                                                  </div>
-                                                  <span className="weather-panel-title">Weather</span>
-                                             </div>
-                                             <button
-                                                  onClick={() => setShowWeatherPanel(false)}
-                                                  className="weather-panel-close center"
-                                             >
-                                                  <X size={22} />
-                                             </button>
-                                        </div>
-                                        <div className="weather-permission-card alignC">
-                                             <div className="permission-info flex">
-                                                  <div className={`permission-status alignC ${isLocationAllowed ? 'active' : ''}`}>
-                                                       <div className="status-dot"></div>
-                                                       <span>{isLocationAllowed ? "Location enabled" : "Location disabled"}</span>
-                                                  </div>
-                                                  <p className="permission-desc">
-                                                       {isLocationAllowed
-                                                            ? "Fetching weather for your area"
-                                                            : "Enable to see local weather"
-                                                       }
-                                                  </p>
-                                             </div>
-                                             <ToggleButton
-                                                  defaultChecked={isLocationAllowed}
-                                                  onChange={(checked) => {
-                                                       localStorage.setItem("isLocationAllowed", checked);
-                                                       setIsLocationAllowed(checked);
-                                                       setTimeout(() => { window.location.reload() }, 300);
-                                                  }}
-                                             />
-                                        </div>
-                                        {Object.keys(weatherInfo).length === 0 ? (
-                                             <div className="weather-empty-state center">
-                                                  <div className="empty-icon center"><CloudOff size={32} /> </div>
-                                                  <span className="empty-title">No Weather Data</span>
-                                                  <span className="empty-desc">Enable location access to see current weather conditions</span>
-                                             </div>
-                                        ) : (
-                                             <div className="weather-content">
-                                                  <div className="weather-location center">
-                                                       <MapPin className="location-pin" size={14} />
-                                                       <span>
-                                                            {weatherInfo?.locationName}, {weatherInfo?.country}
-                                                       </span>
-                                                  </div>
-                                                  <div className="weather-main-display center">
-                                                       <div className="weather-icon-wrapper center">
-                                                            <img
-                                                                 src={returnMappedWeatherIcon(weatherInfo.weatherCode).wmoIconUrl}
-                                                                 alt="Weather"
-                                                                 loading="lazy"
-                                                            />
-                                                            <div className="icon-glow"></div>
-                                                       </div>
-                                                       <div className="weather-temp-info flex">
-                                                            <div className="temp-value flex">
-                                                                 <span className="temp-number">{weatherInfo.temperature.tempInC}</span>
-                                                                 <span className="temp-unit">&deg;C</span>
-                                                            </div>
-                                                            <span className="weather-condition">
-                                                                 {returnMappedWeatherIcon(weatherInfo.weatherCode).main}
-                                                            </span>
-                                                       </div>
-                                                  </div>
-                                                  <div className="weather-stats-grid">
-                                                       <div className="weather-stat-card humidity">
-                                                            <div className="stat-icon-wrapper">
-                                                                 <Droplets size={20} />
-                                                            </div>
-                                                            <div className="stat-details">
-                                                                 <span className="stat-value">
-                                                                      {weatherInfo.humidity.humidity}
-                                                                      <small>%</small>
-                                                                 </span>
-                                                                 <span className="stat-label">Humidity</span>
-                                                            </div>
-                                                       </div>
-
-                                                       <div className="weather-stat-card wind">
-                                                            <div className="stat-icon-wrapper">
-                                                                 <Wind size={20} />
-                                                            </div>
-                                                            <div className="stat-details">
-                                                                 <span className="stat-value">
-                                                                      {weatherInfo.wind.windSpeed}
-                                                                      <small>km/h</small>
-                                                                 </span>
-                                                                 <span className="stat-label">Wind Speed</span>
-                                                            </div>
-                                                       </div>
-
-                                                       <div className="weather-stat-card rain">
-                                                            <div className="stat-icon-wrapper">
-                                                                 <CloudRain size={20} />
-                                                            </div>
-                                                            <div className="stat-details">
-                                                                 <span className="stat-value">
-                                                                      {weatherInfo.rain.rain}
-                                                                      <small>mm</small>
-                                                                 </span>
-                                                                 <span className="stat-label">Rain</span>
-                                                            </div>
-                                                       </div>
-                                                  </div>
-                                                  <div className="weather-privacy-notice">
-                                                       <Shield size={23} />
-                                                       <span>Your location data stays private and is only used for weather</span>
-                                                  </div>
-                                             </div>
-                                        )}
-                                   </div>
-                              </div>
-                         )
-                    }
-
                     {
                          showError && (
                               <Error
@@ -730,6 +609,12 @@ export default function App() {
                                         </div>
                                    </div>
                               </div>
+                         </div>
+                    )}
+
+                    {showSettingsWindow && (
+                         <div ref={settingsRef} className="settings-container">
+                              <SettingsWindow closeSettings={() => setShowSettingsWindow(false)} />
                          </div>
                     )}
                </main >

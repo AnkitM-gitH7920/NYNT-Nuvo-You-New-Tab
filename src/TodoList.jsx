@@ -1,7 +1,7 @@
 import "./todolist.css";
 import "./utilities.css";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 export default function TodoList() {
      const [val, setVal] = useState("");
