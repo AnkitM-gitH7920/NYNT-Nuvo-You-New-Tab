@@ -1,10 +1,13 @@
 /*Start of Overlay design*/
 .settings-window {
      position: absolute;
+     padding: 20px;
      bottom: 80px;
      left: 50px;
-     height: 500px;
-     width: 500px;
+     overflow: auto;
+     height: 550px;
+     width: 440px;
+     max-height: 550px;
      border-radius: var(--radius-lg);
      border: 8px solid var(--bg);
      backdrop-filter: blur(20px);
@@ -24,7 +27,113 @@
           transform: translateY(0);
      }
 }
+
 /*End of Overlay design*/
 
-/* bottom: 70px;
-     left: 95px; */
+
+/* Start of Accordion design */
+.sw-accordion-head {
+     justify-content: space-between;
+}
+
+.sw-accordion {
+     margin: 10px 0px;
+     overflow: hidden;
+     width: 100%;
+     padding: 0px 7px 0px 7px;
+     background-color: color-mix(in srgb, var(--bg), transparent 20%);
+     border-radius: var(--radius-md);
+     height: fit-content;
+     transition: all var(--transition);
+
+}
+
+.sw-accordion.accordion-expanded {
+     height: fit-content;
+}
+
+.sw-accordion-head {
+     padding: 13px 18px;
+}
+
+.sw-accordion-head-title {
+     font-family: var(--plus-jakarta-font);
+     color: var(--black-text);
+     font-weight: 800;
+}
+
+.sw-accordion-chevron {
+     border: none;
+     outline: none;
+     background-color: transparent;
+     transition: all var(--transition);
+
+}
+
+.sw-accordion-chevron.chevron-rotate {
+     transform: rotate(-180deg)
+}
+
+.sw-accordion-body {
+     padding: 0 15px;
+     transition: max-height var(--transition), padding var(--transition), opacity var(--transition), margin var(--transition);
+     max-height: 0;
+     overflow: hidden;
+     opacity: 0;
+     flex-direction: column;
+     border-radius: var(--radius-md);
+     background-color: color-mix(in srgb, var(--light-bg), transparent 20%);
+}
+
+.sw-accordion-body.accordion-expanded {
+     max-height: 600px;
+     padding: 10px 15px 10px 15px;
+     opacity: 1;
+     margin-bottom: 7px;
+}
+
+.single-setting {
+     padding: 14px 0px;
+     width: 100%;
+     justify-content: space-between;
+     border-bottom: 1px solid color-mix(in srgb, var(--black-text), transparent 90%);
+}
+
+.single-setting:first-child {
+     padding-top: 6px;
+     border-top: none;
+}
+
+.single-setting:last-child {
+     padding-bottom: 7px;
+     border-bottom: none;
+}
+
+.setting-desc p {
+     width: 100%;
+     margin-top: 1px;
+}
+
+.setting-desc p:first-child {
+     font-size: 1.2rem;
+     font-weight: 600;
+     font-family: var(--main-font);
+     color: var(--black-text);
+     color: color-mix(in srgb, var(--black-text) 90%, var(--bg) 30%);
+}
+
+.setting-desc p:last-child {
+     font-family: var(--main-font);
+     font-size: 0.9rem;
+     color: color-mix(in srgb, var(--black-text) 90%, var(--bg) 0%);
+     font-weight: 400;
+}
+
+.setting-function-toggle {
+     height: 30px;
+     width: 20px;
+     background-color: var(--dark-bg);
+     opacity: 0.89;
+}
+
+/* End of Accordion design*/

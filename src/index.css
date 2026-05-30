@@ -10,16 +10,6 @@
      --white-text: #ffffff;
      --black-text: #444444;
 
-     /* Forest frog 1*/
-     --bg: #8a9a5b;
-     --dark-bg: #3b4a2f;
-     --light-bg: #f4f5ec;
-
-     /* Arctic frost */
-     --bg: #a8c5da;
-     --dark-bg: #1b4f72;
-     --light-bg: #f0f8ff;
-
      /* Midnight slate */
      --bg: #bbd6fd;
      --dark-bg: #4382ec;
@@ -30,10 +20,6 @@
      --dark-bg: #4a2c6e;
      --light-bg: #f7f3fd;
 
-     /* Pink legacy */
-     --bg: #ffa39c;
-     --dark-bg: #d84136;
-     --light-bg: #fdfcdc;
 
      /* Rustic charm 2 */
      --bg: #f19269;
@@ -45,20 +31,11 @@
      --dark-bg: #2e2e2e;
      --light-bg: #fdf0f3;
 
-     /* Blueberry cream */
-     --bg: #6e67c9;
-     --dark-bg: #1e1f52;
-     --light-bg: #d7d8db;
 
      /* Yellow */
      --bg: #e7d77c;
      --dark-bg: #a87d08;
      --light-bg: #fff6c3;
-
-     /* Rustic charm 1 */
-     --bg: #ccc5b9;
-     --dark-bg: #403d39;
-     --light-bg: #fffcf2;
 
      /* Light pink */
      --bg: #f9c8d6;
@@ -69,6 +46,32 @@
      --bg: #c9a87c;
      --dark-bg: #8b4513;
      --light-bg: #fdf8f0;
+
+     /* Pink legacy */
+     --bg: #ffa39c;
+     --dark-bg: #d84136;
+     --light-bg: #fdfcdc;
+
+     /* Rustic charm 1 */
+     --bg: #ccc5b9;
+     --dark-bg: #403d39;
+     --light-bg: #fffcf2;
+
+     /* Blueberry cream */
+     --bg: #6e67c9;
+     --dark-bg: #1e1f52;
+     --light-bg: #d7d8db;
+
+     /* Arctic frost */
+     --bg: #a8c5da;
+     --dark-bg: #1b4f72;
+     --light-bg: #f0f8ff;
+
+     /* Forest frog 1*/
+     --bg: #8a9a5b;
+     --dark-bg: #3b4a2f;
+     --light-bg: #f4f5ec;
+
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 
      /* Constant/more frequently used variables to keep the theme design consistent */
@@ -148,12 +151,39 @@ a {
      text-decoration: none;
      color: inherit;
 }
-
 button {
      cursor: pointer;
      font-family: inherit;
+     border: none;
+     outline: none;
 }
 
 input {
      font-family: var(--gm-font);
 }
+
+
+/* <div className="settings-window">
+               <div className="sw-body">
+                    <div className="sw-accordion">
+                         <div className="sw-accordion-head alignC">
+                              <span className="sw-accordion-head-title">Customization</span>
+                              <button
+                                   onClick={() => setIsAccordionExpanded((s) => !s)}
+                                   className={`sw-accordion-chevron center ${isAccordionExpanded ? "chevron-rotate" : ""}`}
+                              >
+                                   <ChevronDown size={25} />
+                              </button>
+                         </div>
+
+                         <div className={`sw-accordion-body ${isAccordionExpanded ? "accordion-expanded" : "accordion-collapsed"}`}>
+                              <p>setting name</p>
+                              <p>setting name</p>
+                              <p>setting name</p>
+                              <p>setting name</p>
+                              <p>setting name</p>
+                              <p>setting name</p>
+                         </div>
+                    </div>
+               </div>
+          </div> */
