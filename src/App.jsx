@@ -5,18 +5,18 @@ import "./player.css";
 
 //Libraries imports
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
 import { useClock } from "./lib/hooks";
+import { useState, useEffect, useRef } from "react";
 import { ListTodo, Cloud, Settings, Grid2X2, ChevronRight, X, CloudOff, Music } from "lucide-react";
 import { SiGoogle, SiDuckduckgo, SiBrave, SiYoutube, SiReddit } from '@icons-pack/react-simple-icons';
 import { Bing, Yandex, StartPage } from "./Assets";
 
 // File imports
-import SettingsWindow from "./SettingsWindow";
 import TodoList from "./TodoList";
 import AddShortcutPanel from "./AddShortcutPanel"
 import Error from "./Error";
 import Informer from "./Informer";
+import SettingsPopup from "./SettingsPopup";
 // import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
 
@@ -94,7 +94,7 @@ export default function App() {
      const [showAddShortcut, setShowAddShortcut] = useState(false);
      const [searchSuggestions, setSearchSuggestions] = useState([]);
      const [showWeatherPanel, setShowWeatherPanel] = useState(false);
-     const [showSettingsWindow, setShowSettingsWindow] = useState(false);
+     const [showSettingsPopup, setShowSettingsPopup] = useState(false);
      const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [engine, setEngine] = useState(() => Number.parseInt(localStorage.getItem("selectedEngine") || 0));
@@ -333,11 +333,11 @@ export default function App() {
      useEffect(() => {
           if (!settingsRef) return;
           const clickHandler = (event) => {
-               if (settingsRef.current && !settingsRef.current.contains(event.target)) { setShowSettingsWindow(false) }
+               if (settingsRef.current && !settingsRef.current.contains(event.target)) { setShowSettingsPopup(false) }
           }
           document.addEventListener("mousedown", clickHandler);
           return () => removeEventListener("mousedown", clickHandler);
-     }, [showSettingsWindow]);
+     }, [showSettingsPopup]);
 
 
      // PURPOSE :- to close the SEARCH SUGGESTIONS wrapper whenever user click outside the shortcuts(UX improve)
@@ -452,7 +452,7 @@ export default function App() {
                                                   onKeyDown={(e) => updateActiveSuggestion(e)}
                                                   type="text"
                                                   className="big-search-input"
-                                                  placeholder="What are you looking for..."
+                                                  placeholder="What are you looking for ?"
                                                   value={query}
                                                   onChange={e => {
                                                        setActiveSuggestionIndex(null);
@@ -502,7 +502,7 @@ export default function App() {
                          <WeatherCard weatherInfo={weatherInfo}/> */}
                     </div >
                     <footer className="main-footer">
-                         <button onClick={() => setShowSettingsWindow(true)} className="icon-btn footer-btn" title="Settings"><Settings strokeWidth="2.5" size={25} color="var(--dark-bg)" /></button>
+                         <button onClick={() => setShowSettingsPopup(true)} className="icon-btn footer-btn" title="Settings"><Settings strokeWidth="2.5" size={25} color="var(--dark-bg)" /></button>
                          <div className="ai-tools center">
                               {AI_TOOLS.map((tool, i) => (
                                    <button key={i} onClick={() => window.open(tool.targetURL, isSongPlaying ? "_blank" : "_self")} className="ai-btn center">
@@ -532,7 +532,7 @@ export default function App() {
 
                                                        <a style={{ gap: "8px" }} className="alignC" href={s.url} target={isSongPlaying ? "_blank" : "_self"} title={s.name}>
                                                             <img height={23} width={23} src={s.faviconURL} alt="?" style={{ marginLeft: "3px", borderRadius: "100px" }}></img>
-                                                            <span className="shortcut-name">{s.name}</span>
+                                                            <p className="shortcut-name">{s.name}</p>
                                                        </a>
                                                        <button onClick={() => removeShortcut(i)} className="remove-shortcut-btn">✕</button>
                                                   </div>
@@ -612,9 +612,10 @@ export default function App() {
                          </div>
                     )}
 
-                    {showSettingsWindow && (
-                         <div ref={settingsRef} className="settings-container">
-                              <SettingsWindow closeSettings={() => setShowSettingsWindow(false)} />
+                    {showSettingsPopup && (
+                         <div ref={settingsRef} onClick={() => setShowSettingsPopup(false)} className="settings-overlay center
+                         ">
+                              <SettingsPopup />
                          </div>
                     )}
                </main >

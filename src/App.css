@@ -12,48 +12,6 @@
      z-index: 1;
 }
 
-/* Animated purplish floating glow effect */
-/* .root::before,
-.root::after {
-     content: '';
-     position: absolute;
-     border-radius: 50%;
-     filter: blur(100px);
-     z-index: -1;
-     animation: float 20s infinite ease-in-out alternate;
-}
-
-.root::before {
-     top: -10%;
-     left: -10%;
-     width: 50vw;
-     height: 50vw;
-     Use a good glow effect here using css variables
-}
-
-.root::after {
-     bottom: -20%;
-     right: -10%;
-     width: 60vw;
-     height: 60vw;
-     Use a good glow effect here using css variables
-     animation-delay: -10s;
-} */
-
-@keyframes float {
-     0% {
-          transform: translate(0, 0) scale(1);
-     }
-
-     50% {
-          transform: translate(5%, 5%) scale(1.1);
-     }
-
-     100% {
-          transform: translate(-5%, -5%) scale(0.9);
-     }
-}
-
 /* ── Main body navbar ── */
 .main-nav {
      justify-content: space-between;
@@ -70,11 +28,11 @@
 .nav-right {
      background-color: var(--dark-bg);
      padding: 10px;
-     border-radius: var(--radius-md);
+     border-radius: var(--radius-full);
 }
 
 .icon-btn,
-.icon-btn-rounded{
+.icon-btn-rounded {
      display: flex;
      align-items: center;
      justify-content: center;
@@ -83,20 +41,22 @@
      color: var(--dark-bg);
      transition: all var(--transition);
 }
-.icon-btn{
+
+.icon-btn {
      border-radius: var(--radius-sm);
      width: 2.5rem;
      height: 2.5rem;
      border: 3px solid inherit;
 }
 
-.icon-btn-rounded{
+.icon-btn-rounded {
      width: 2.8rem;
      height: 2.6rem;
      border-radius: var(--radius-full);
      border: 3px solid var(--dark-bg);
 }
-.icon-btn-rounded:hover{
+
+.icon-btn-rounded:hover {
      box-shadow: 0px 0px 0px 2px white;
 }
 
@@ -107,43 +67,6 @@
      transform: translateY(-1px);
      box-shadow: 0px 0px 0px 3px var(--dark-bg);
 }
-
-/* ----GOOGLE SEARCH INPUT---- */
-/* .search-wrapper {
-     display: flex;
-     align-items: center;
-     gap: 8px;
-     border: none;
-     outline: none;
-     border: 1px solid var(--border);
-     border-radius: var(--radius-full);
-     padding: 9px 10px;
-     height: 36px;
-     transition: border-color var(--transition), box-shadow var(--transition);
-}
-
-.search-wrapper:focus-within {
-     border-color: var(--dark-bg);
-}
-
-.search-icon {
-     color: var(--white-text);
-     flex-shrink: 0;
-}
-
-.nav-search {
-     background: transparent;
-     outline: none;
-     border: none;
-     color: var(--white-text);
-     font-size: 13px;
-     width: 20vw;
-     font-weight: 300;
-}
-
-.nav-search::placeholder {
-     color: var(--white-text);
-} */
 
 /* ── BODY GRID ── */
 .body-grid {
@@ -352,7 +275,10 @@
      font-weight: 500;
      transition: all var(--transition);
 }
-.engine-tab svg{ transition: all var(--transition) }
+
+.engine-tab svg {
+     transition: all var(--transition)
+}
 
 .engine-tab:hover {
      border-color: var(--dark-bg);
@@ -368,7 +294,7 @@
      background-color: var(--dark-bg);
 }
 
-.engine-tab.search-opt-btn-active svg{
+.engine-tab.search-opt-btn-active svg {
      fill: white;
 }
 
@@ -550,5 +476,8 @@
      font-size: 0.85rem;
      color: var(--white-text);
      font-weight: 600;
+     max-width: 11.5rem;
      color: var(--black-text);
+     overflow: clip;
+     text-overflow: ellipsis;
 }
