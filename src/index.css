@@ -15,11 +15,6 @@
      --dark-bg: #4382ec;
      --light-bg: #e2eeff;
 
-     /* Lavender dusk */
-     --bg: #b8a9c9;
-     --dark-bg: #4a2c6e;
-     --light-bg: #f7f3fd;
-
      /* Rustic charm 2 */
      --bg: #f19269;
      --dark-bg: #252422;
@@ -69,6 +64,11 @@
      --bg: #8a9a5b;
      --dark-bg: #3b4a2f;
      --light-bg: #f4f5ec;
+
+     /* Lavender dusk */
+     --bg: #b8a9c9;
+     --dark-bg: #4a2c6e;
+     --light-bg: #f7f3fd;
 
      /* --------VARIABLES CHANGEAGLE (according to user input)--------*/
 

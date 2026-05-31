@@ -329,17 +329,6 @@ export default function App() {
           return () => removeEventListener("mousedown", clickHandler);
      }, [showPlayer]);
 
-     // PURPOSE :- to close the Settings div whenever user click outside the settings(UX improve)
-     useEffect(() => {
-          if (!settingsRef) return;
-          const clickHandler = (event) => {
-               if (settingsRef.current && !settingsRef.current.contains(event.target)) { setShowSettingsPopup(false) }
-          }
-          document.addEventListener("mousedown", clickHandler);
-          return () => removeEventListener("mousedown", clickHandler);
-     }, [showSettingsPopup]);
-
-
      // PURPOSE :- to close the SEARCH SUGGESTIONS wrapper whenever user click outside the shortcuts(UX improve)
      useEffect(() => {
           // Start by fixing this
@@ -613,7 +602,11 @@ export default function App() {
                     )}
 
                     {showSettingsPopup && (
-                         <div ref={settingsRef} onClick={() => setShowSettingsPopup(false)} className="settings-overlay center
+                         <div ref={settingsRef} onClick={(event) => {
+                              if (event.target === event.currentTarget) {
+                                   setShowSettingsPopup(false)
+                              }
+                         }} className="settings-overlay center
                          ">
                               <SettingsPopup />
                          </div>
