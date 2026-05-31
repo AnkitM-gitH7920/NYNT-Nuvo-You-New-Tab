@@ -9,7 +9,7 @@ import { useState, useEffect, useRef } from "react";
 import { useClock } from "./lib/hooks";
 import { ListTodo, Cloud, Settings, Grid2X2, ChevronRight, X, CloudOff, Music } from "lucide-react";
 import { SiGoogle, SiDuckduckgo, SiBrave, SiYoutube, SiReddit } from '@icons-pack/react-simple-icons';
-// import { Bing, Yandex, StartPage } from "./icons.exports";
+import { Bing, Yandex, StartPage } from "./Assets";
 
 // File imports
 import SettingsWindow from "./SettingsWindow";
@@ -37,9 +37,9 @@ const SEARCH_OPTIONS = [
      { label: "Google", url: "https://google.com/search?q=", broswerIcon: (<SiGoogle size={20} />) },
      { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=", broswerIcon: (<SiDuckduckgo size={20} />) },
      { label: "Brave", url: "https://search.brave.com/search?q=", broswerIcon: (<SiBrave size={20} />) },
-     { label: "Bing", url: "https://bing.com/search?q=", broswerIcon: (<SiDuckduckgo size={20} />) },
-     { label: "Startpage", url: "https://startpage.com/search?q=", broswerIcon: (<SiDuckduckgo size={20} />) },
-     { label: "Yandex", url: "https://yandex.com/search/?text=", broswerIcon: (<SiDuckduckgo size={20} />) },
+     { label: "Bing", url: "https://bing.com/search?q=", broswerIcon: (<Bing size={20} />) },
+     { label: "Startpage", url: "https://startpage.com/search?q=", broswerIcon: (<StartPage size={20} />) },
+     { label: "Yandex", url: "https://yandex.com/search/?text=", broswerIcon: (<Yandex size={20} />) },
      { label: "YouTube", url: "https://youtube.com/results?search_query=", broswerIcon: (<SiYoutube size={20} />) },
      { label: "Reddit", url: "https://www.reddit.com/search/?q=", broswerIcon: (<SiReddit size={20} />) }
 ];

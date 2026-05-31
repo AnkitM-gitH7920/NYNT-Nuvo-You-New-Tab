@@ -352,6 +352,7 @@
      font-weight: 500;
      transition: all var(--transition);
 }
+.engine-tab svg{ transition: all var(--transition) }
 
 .engine-tab:hover {
      border-color: var(--dark-bg);
@@ -365,6 +366,10 @@
      border-color: var(--dark-bg);
      color: var(--white-text);
      background-color: var(--dark-bg);
+}
+
+.engine-tab.search-opt-btn-active svg{
+     fill: white;
 }
 
 /* ── FOOTER ── */
