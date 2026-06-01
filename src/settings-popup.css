@@ -70,7 +70,7 @@
      border-radius: 90px;
 }
 
-.category-selector-button{
+.category-selector-button {
      display: flex;
      align-items: center;
      gap: 12px;
@@ -234,9 +234,7 @@
 }
 
 .theme-option {
-     display: flex;
      flex-direction: column;
-     align-items: center;
      gap: 8px;
      padding: 8px;
      background: transparent;
@@ -246,8 +244,16 @@
      transition: all var(--transition);
 }
 
+.theme-option.active-theme-option {
+     background-color: color-mix(in srgb, var(--dark-bg) 90%, transparent 30%);
+}
+
+.theme-option.active-theme-option span {
+     color: color-mix(in srgb, var(--white-text) 90%, var(--dark-bg) 10%);
+}
+
 .theme-option:hover {
-     border-color: var(--dark-bg);
+     box-shadow: 0px 0px 5px 1px var(--dark-bg);
      transform: translateY(-2px);
 }
 
@@ -263,19 +269,26 @@
 .theme-color-accent,
 .theme-color-light {
      width: 20px;
-     height: 30px;
+     height: 35px;
      border: none;
 }
 
 .theme-name {
      font-size: 11px;
      font-weight: 600;
-     color: var(--dark-bg);
+     color: color-mix(in srgb, var(--black-text) 90%, var(--dark-bg) 25%);
      text-align: center;
      white-space: nowrap;
      overflow: hidden;
      text-overflow: ellipsis;
      width: 100%;
+}
+/* ── BACKGROUND IMAGE SELECTOR ── */
+.background-image-controls{
+
+}
+.upload-image-button{
+     
 }
 
 /* ── ANIMATIONS ── */

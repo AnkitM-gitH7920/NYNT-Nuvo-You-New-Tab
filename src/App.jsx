@@ -5,18 +5,19 @@ import "./player.css";
 
 //Libraries imports
 import axios from "axios";
+import { themes } from "./themes";
 import { useClock } from "./lib/hooks";
+import { Bing, Yandex, StartPage } from "./Assets";
 import { useState, useEffect, useRef } from "react";
 import { ListTodo, Cloud, Settings, Grid2X2, ChevronRight, X, CloudOff, Music } from "lucide-react";
 import { SiGoogle, SiDuckduckgo, SiBrave, SiYoutube, SiReddit } from '@icons-pack/react-simple-icons';
-import { Bing, Yandex, StartPage } from "./Assets";
 
 // File imports
-import TodoList from "./TodoList";
-import AddShortcutPanel from "./AddShortcutPanel"
 import Error from "./Error";
 import Informer from "./Informer";
+import TodoList from "./TodoList";
 import SettingsPopup from "./SettingsPopup";
+import AddShortcutPanel from "./AddShortcutPanel"
 // import returnMappedWeatherIcon from "./mappedWeatherIcons";
 
 
@@ -98,6 +99,7 @@ export default function App() {
      const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [engine, setEngine] = useState(() => Number.parseInt(localStorage.getItem("selectedEngine") || 0));
+     const [appliedThemeIndex, setAppliedThemeIndex] = useState(() => localStorage.getItem("themeIndex") || 0);
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
      const [userCoordinates, setUserCoordinates] = useState(() => JSON.parse(localStorage.getItem("user-coords")) || {});
      const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("isLocationAllowed") === "true");
@@ -382,6 +384,15 @@ export default function App() {
                }
           }
      }, [activeSuggestionIndex]);
+
+     // PURPOSE :- To apply the last selected theme to the UI
+     useEffect(() => {
+          const themesObject = themes[appliedThemeIndex];
+          const root = document.documentElement;
+          root.style.setProperty("--bg", themesObject.colors.bg);
+          root.style.setProperty("--dark-bg", themesObject.colors.dark);
+          root.style.setProperty("--light-bg", themesObject.colors.light);
+     }, [appliedThemeIndex])
 
      useEffect(() => {
           //           // https://www.googleapis.com/youtube/v3/search?part=snippet&q=a&type=audio&maxResults=20&key=AIzaSyDiZH4a_oLZaL71c9NFxD7PfgBArZSr8f4

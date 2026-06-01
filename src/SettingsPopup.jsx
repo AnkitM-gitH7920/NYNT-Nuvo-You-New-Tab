@@ -1,23 +1,14 @@
 import "./settings-popup.css";
 import "./utilities.css";
 
-import { useState } from "react";
+import { themes } from "./themes";
 import ToggleButton from "./ToggleButton";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function SettingsPopup() {
-     const [activeSetting, setActiveSetting] = useState("SEARCH");
-
-     const themes = [
-          { id: "slate", name: "Midnight Slate", colors: { bg: "#bbd6fd", dark: "#4382ec", light: "#e2eeff" } },
-          { id: "lavender", name: "Lavender Dusk", colors: { bg: "#b8a9c9", dark: "#4a2c6e", light: "#f7f3fd" } },
-          { id: "rustic", name: "Rustic Charm", colors: { bg: "#f19269", dark: "#252422", light: "#ebeae9" } },
-          { id: "rose", name: "Charcoal Rose", colors: { bg: "#e05c7a", dark: "#2e2e2e", light: "#fdf0f3" } },
-          { id: "yellow", name: "Golden Hour", colors: { bg: "#e7d77c", dark: "#a87d08", light: "#fff6c3" } },
-          { id: "pink", name: "Light Pink", colors: { bg: "#f9c8d6", dark: "#ec5e78", light: "#faf2f5" } },
-          { id: "sand", name: "Sand Dunes", colors: { bg: "#c9a87c", dark: "#8b4513", light: "#fdf8f0" } },
-          { id: "forest", name: "Forest Green", colors: { bg: "#8a9a5b", dark: "#3b4a2f", light: "#f4f5ec" } },
-     ];
+     const [activeSetting, setActiveSetting] = useState("GENERAL");
+     const [appliedThemeIndex, setAppliedThemeIndex] = useState(() => Number(localStorage.getItem("themeIndex")) || 0);
 
      const settings = {
           appearance: [
@@ -52,29 +43,38 @@ export default function SettingsPopup() {
           { id: "BOOKMARKS", label: "Bookmarks" },
      ];
 
+     // Synced functions
+     function handleThemeChange(themeIndex){
+          const { bg, dark, light } = themes[themeIndex].colors;
+          let root = document.documentElement;
+          root.style.setProperty("--bg", bg);
+          root.style.setProperty("--dark-bg", dark);
+          root.style.setProperty("--light-bg", light);
+
+          localStorage.setItem("themeIndex", themeIndex)
+          setAppliedThemeIndex(themeIndex);
+     }
+
+
+     useEffect(() => {
+          let root = document.documentElement;
+          root.style.setProperty("--bg", themes[appliedThemeIndex].colors.bg);
+          root.style.setProperty("--dark-bg", themes[appliedThemeIndex].colors.dark);
+          root.style.setProperty("--light-bg", themes[appliedThemeIndex].colors.light);
+
+     }, [appliedThemeIndex])
+
      return (
           <div className="setting-container">
                {/* Left Sidebar */}
                <div className="settings-sidebar">
                     <span className="settings-title">Settings</span>
                     <ul style={{ flexDirection: "column" }} className="setting-categories">
-                         {/* {categoryButtons.map((category) => (
-                                   <li key={category.id}>
-                                        <button
-                                             className={`category-selector-button ${activeSetting === category.id ? "active" : ""}`}
-                                             onClick={() => setActiveTab(category.id)}
-                                        >
-                                             <span className="category-icon">{category.icon}</span>
-                                             <span>{category.label}</span>
-                                             <ChevronRight size={18} className="chevron-icon" />
-                                        </button>
-                                   </li>
-                              ))} */}
                          {categoryButtons.map((category) => (
                               <li>
                                    <button
-                                   onClick={() => setActiveSetting(category.id)}
-                                   className={`category-selector-button alignC ${category.id === activeSetting ? "active" : ""}`}>{category.label}</button>
+                                        onClick={() => setActiveSetting(category.id)}
+                                        className={`category-selector-button alignC ${category.id === activeSetting ? "active" : ""}`}>{category.label}</button>
                               </li>
                          ))
                          }
@@ -89,27 +89,36 @@ export default function SettingsPopup() {
 
                     <div className="settings-items">
                          {activeSetting === "APPEARANCE" && (
-                              <div className="appearance-settings">
-                                   <label className="setting-item">
+                              <div style={{flexDirection: "column", gap: "10px"}} className="appearance-settings flex">
+                                   <div className="setting-item">
                                         <span className="setting-label">Choose Theme</span>
                                         <div className="theme-grid">
-                                             {themes.map((theme) => (
+                                             {themes.map((theme, index) => (
                                                   <button
                                                        key={theme.id}
-                                                       className="theme-option"
+                                                       className={`theme-option alignC ${appliedThemeIndex === index ? "active-theme-option" : ""}`}
                                                        title={theme.name}
-                                                       onClick={() => console.log("Theme selected:", theme.id)}
+                                                       onClick={() => handleThemeChange(index)}
                                                   >
                                                        <div className="theme-preview">
-                                                            <div className="theme-color-main" style={{ backgroundColor: theme.colors.bg }}></div>
                                                             <div className="theme-color-accent" style={{ backgroundColor: theme.colors.dark }}></div>
+                                                            <div className="theme-color-main" style={{ backgroundColor: theme.colors.bg }}></div>
                                                             <div className="theme-color-light" style={{ backgroundColor: theme.colors.light }}></div>
                                                        </div>
                                                        <span className="theme-name">{theme.name}</span>
                                                   </button>
                                              ))}
                                         </div>
-                                   </label>
+                                   </div>
+                                   <div className="setting-item">
+                                        <span className="setting-label">Background Image</span>
+                                        <div className="background-image-controls alignC">
+                                             <button className="upload-image-button">
+                                                  Upload Image
+                                             </button>
+                                             <button  className="center"><Trash2 size={20}/></button>
+                                        </div>
+                                   </div>
                               </div>
                          )}
 
