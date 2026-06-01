@@ -81,6 +81,7 @@ export default function App() {
      const isNavigating = useRef(false);
      const activeSuggestionRef = useRef(null);
      const searchSuggestionWrapperRef = useRef(null);
+     const appliedThemeIndexRef = useRef(Number(localStorage.getItem("themeIndex")) || 0)
 
      //useState
      const [query, setQuery] = useState("");
@@ -99,7 +100,6 @@ export default function App() {
      const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(null);
      const [shortcuts, setShortcuts] = useState(() => JSON.parse(localStorage.getItem("shortcuts")) || []);
      const [engine, setEngine] = useState(() => Number.parseInt(localStorage.getItem("selectedEngine") || 0));
-     const [appliedThemeIndex, setAppliedThemeIndex] = useState(() => localStorage.getItem("themeIndex") || 0);
      const [weatherInfo, setWeatherInfo] = useState(() => JSON.parse(localStorage.getItem("weatherInfo")) || {})
      const [userCoordinates, setUserCoordinates] = useState(() => JSON.parse(localStorage.getItem("user-coords")) || {});
      const [isLocationAllowed, setIsLocationAllowed] = useState(() => localStorage.getItem("isLocationAllowed") === "true");
@@ -387,12 +387,12 @@ export default function App() {
 
      // PURPOSE :- To apply the last selected theme to the UI
      useEffect(() => {
-          const themesObject = themes[appliedThemeIndex];
+          const themesObject = themes[appliedThemeIndexRef.current];
           const root = document.documentElement;
           root.style.setProperty("--bg", themesObject.colors.bg);
           root.style.setProperty("--dark-bg", themesObject.colors.dark);
           root.style.setProperty("--light-bg", themesObject.colors.light);
-     }, [appliedThemeIndex])
+     }, [appliedThemeIndexRef])
 
      useEffect(() => {
           //           // https://www.googleapis.com/youtube/v3/search?part=snippet&q=a&type=audio&maxResults=20&key=AIzaSyDiZH4a_oLZaL71c9NFxD7PfgBArZSr8f4

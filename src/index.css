@@ -20,7 +20,7 @@
      --radius-full: 9999px;
 
      /* other variables */
-     --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
      /*Used in navbar and footer*/
      --glass-blur: 24px;
