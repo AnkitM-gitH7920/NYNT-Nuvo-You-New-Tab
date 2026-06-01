@@ -514,8 +514,7 @@ export default function App() {
                          <button className="icon-btn footer-btn" onClick={() => setShowShortcuts(!showShortcuts)} title="Shortcuts"><Grid2X2 strokeWidth="2.5" size={25} color="var(--dark-bg)" /></button>
                     </footer>
 
-                    {
-                         showShortcuts && (
+                    {showShortcuts && (
                               <div ref={shortcutsRef} className="shortcuts-panel">
                                    <div className="center" style={{ justifyContent: "space-between", marginBottom: "12px" }}>
                                         <div className="shortcut-panel-label" style={{ margin: "0px" }}>Quick Shortcuts</div>
@@ -545,16 +544,14 @@ export default function App() {
                          )
                     }
 
-                    {
-                         todoOpen && (
+                    {todoOpen && (
                               <div ref={todoRef} className="todo-panel">
                                    <TodoList />
                               </div>
                          )
                     }
 
-                    {
-                         showAddShortcut && (
+                    {showAddShortcut && (
                               <AddShortcutPanel
                                    onClose={() => {
                                         setShowAddShortcut(false);
@@ -568,8 +565,7 @@ export default function App() {
                               />
                          )
                     }
-                    {
-                         showError && (
+                    {showError && (
                               <Error
                                    onClose={() =>
                                         setShowError(false)
